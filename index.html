@@ -88,12 +88,21 @@
             const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
             
             doc.open();
-            doc.write(\`
-                <html>
-                <head><style>\${css}</style></head>
-                <body>\${html}<script>\${js}<\/script></body>
+            doc.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Preview</title>
+                    <style>${css}</style>
+                </head>
+                <body>
+                    ${html}
+                    <script>${js}<\/script>
+                </body>
                 </html>
-            \`);
+            `);
             doc.close();
         }
 
@@ -102,21 +111,21 @@
             const css = document.getElementById("cssCode").value;
             const js = document.getElementById("jsCode").value;
             
-            const fullCode = \`
+            const fullCode = `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>My Web Page</title>
-                    <style>\${css}</style>
+                    <style>${css}</style>
                 </head>
                 <body>
-                    \${html}
-                    <script>\${js}</script>
+                    ${html}
+                    <script>${js}<\/script>
                 </body>
                 </html>
-            \`;
+            `;
 
             const blob = new Blob([fullCode], { type: "text/html" });
             const a = document.createElement("a");
