@@ -3,73 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Creator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Live Web Page Creator</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            text-align: center;
         }
         header {
-            background: #333;
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
+            background: #161b22;
+            padding: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
         }
-        .hero {
-            background: url('hero-image.jpg') no-repeat center center/cover;
-            height: 400px;
-            color: #fff;
+        main {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            text-align: center;
+            padding: 20px;
         }
-        .features, .testimonials, footer {
-            padding: 2rem;
+        .editor-container {
+            display: flex;
+            width: 90%;
+            gap: 10px;
+            margin-bottom: 10px;
         }
-        .feature-item {
-            border: 1px solid #ccc;
-            padding: 1rem;
-            margin: 1rem;
-            text-align: center;
+        textarea {
+            flex: 1;
+            height: 200px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 10px;
+            font-size: 14px;
+        }
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #2ea043;
+        }
+        iframe {
+            width: 90%;
+            height: 400px;
+            background: white;
+            border: 1px solid #30363d;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Page Creator</h1>
-        <nav>
-            <a href="#features">Features</a>
-            <a href="#testimonials">Testimonials</a>
-        </nav>
+        <h1>Live Web Page Creator</h1>
     </header>
-    <section class="hero">
-        <h2>Welcome to Page Creator</h2>
-        <p>Create and publish your pages live with ease</p>
-        <button>Get Started</button>
-    </section>
-    <section id="features" class="features">
-        <h2>Features</h2>
-        <div class="feature-item">
-            <h3>Easy to Use</h3>
-            <p>Create stunning pages with our intuitive editor</p>
+
+    <main>
+        <div class="editor-container">
+            <textarea id="htmlCode" placeholder="Write your HTML here..."></textarea>
+            <textarea id="cssCode" placeholder="Write your CSS here..."></textarea>
+            <textarea id="jsCode" placeholder="Write your JavaScript here..."></textarea>
         </div>
-        <div class="feature-item">
-            <h3>Live Publishing</h3>
-            <p>Publish your pages live with a single click</p>
-        </div>
-        <!-- Add more features as needed -->
-    </section>
-    <section id="testimonials" class="testimonials">
-        <h2>Customer Testimonials</h2>
-        <!-- Testimonials go here -->
-    </section>
-    <footer>
-        <p>Contact us: info@pagecreator.com</p>
-        <p>Follow us on social media</p>
-    </footer>
+        <button onclick="updatePreview()">Run</button>
+        <button onclick="downloadPage()">Download</button>
+        
+        <iframe id="preview"></iframe>
+    </main>
+
+    <script>
+        function updatePreview() {
+            const html = document.getElementById("htmlCode").value;
+            const css = document.getElementById("cssCode").value;
+            const js = document.getElementById("jsCode").value;
+            
+            const previewFrame = document.getElementById("preview");
+            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            
+            doc.open();
+            doc.write(\`
+                <html>
+                <head><style>\${css}</style></head>
+                <body>\${html}<script>\${js}<\/script></body>
+                </html>
+            \`);
+            doc.close();
+        }
+
+        function downloadPage() {
+            const html = document.getElementById("htmlCode").value;
+            const css = document.getElementById("cssCode").value;
+            const js = document.getElementById("jsCode").value;
+            
+            const fullCode = \`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>My Web Page</title>
+                    <style>\${css}</style>
+                </head>
+                <body>
+                    \${html}
+                    <script>\${js}</script>
+                </body>
+                </html>
+            \`;
+
+            const blob = new Blob([fullCode], { type: "text/html" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "webpage.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
 </body>
 </html>
