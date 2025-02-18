@@ -3,138 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Web Page Creator</title>
+    <meta name="google-site-verification" content="z8k3qUwR_WyArVK7p-5305mUs4ADwfofiYtfQJw2ZmI" />
+    <meta name="description" content="Explore our wide range of electronics, including smart home devices, mini PCs, gaming consoles, LED lights, power inverters, and more. Upgrade your tech today!">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BXPMGL2HPW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BXPMGL2HPW');
+</script>
+    <title>The Web Market</title>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
+            background-color: #2C2C2C;
+            color: #fff;
             margin: 0;
             padding: 0;
+            font-size: 14px;
+            scroll-behavior: smooth;
+        }
+
+        /* Website Header */
+        .header {
+            background-color: #333;
+            padding: 20px;
             text-align: center;
         }
-        header {
-            background: #161b22;
-            padding: 15px;
-            font-size: 1.5em;
+
+        .website-name {
+            font-size: 24px;
             font-weight: bold;
         }
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        .editor-container {
-            display: flex;
-            width: 90%;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        textarea {
-            flex: 1;
-            height: 200px;
-            background: #161b22;
-            border: 1px solid #30363d;
-            color: #c9d1d9;
-            padding: 10px;
-            font-size: 14px;
-        }
-        button {
-            background: #238636;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
+
+        .description {
             font-size: 16px;
+            margin: 5px 0;
         }
-        button:hover {
-            background: #2ea043;
+
+        .tagline {
+            font-size: 12px;
+            color: #777;
         }
-        iframe {
-            width: 90%;
-            height: 400px;
-            background: white;
-            border: 1px solid #30363d;
+
+        /* Navigation Bar */
+        .navbar {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            background-color: #444;
+            padding: 10px;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            margin: 0;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #333;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .navbar a:hover {
+            background-color: #007BFF;
+        }
+
+        /* Product Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .product-card {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            max-width: 180px;
+            margin: 0 auto;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .product-detail-card {
+            display: none;
+            background-color: #333;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 15px auto;
+        }
+
+        .product-detail-card img {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .similar-products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .similar-product {
+            background-color: #444;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .similar-product:hover {
+            transform: scale(1.05);
+        }
+
+        .back-btn {
+            background-color: #444;
+            padding: 8px;
+            color: #fff;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
             margin-top: 10px;
         }
+
+        .no-follow-btn {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .no-follow-btn:visited {
+            color: #fff;
+        }
+
+        .product-url {
+            text-align: center;
+            margin-top: 15px;
+        }
+       
+  ul, footer, section, p {
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  footer {
+    width: 100%;
+  }
+
+  section {
+    max-width: 800px; /* Adjust as needed */
+    margin: 0 auto;
+  }
+
+  p {
+    max-width: 900px; /* Adjust as needed */
+    margin: 0 auto;
+  }
+
     </style>
 </head>
 <body>
-    <header>
-        <h1>Live Web Page Creator</h1>
-    </header>
 
-    <main>
-        <div class="editor-container">
-            <textarea id="htmlCode" placeholder="Write your HTML here..."></textarea>
-            <textarea id="cssCode" placeholder="Write your CSS here..."></textarea>
-            <textarea id="jsCode" placeholder="Write your JavaScript here..."></textarea>
+    <!-- Website Header -->
+    <div class="header">
+        <a href="https://thewebmarketpage.github.io/thewebmarketpage/index.html">
+  <div class="website-name">The Web Market</div>
+</a>
+
+        <div class="description">The Largest Products Directory</div>
+        <div class="tagline">Worldwide Products Database And Best Price</div>
+    </div>
+<a href="https://shopsamsung.page.link/?link=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral%26iosparam%3Dsamsungestore%25253A%25252F%25252Fgototab%252523tab%25253D4%252523referral_code%25253Dref-k7b12k%252523utm_source%25253Ds_com%252523utm_medium%25253Dsocial%252523utm_campaign%25253Dreferral&utm_source=s_com&utm_medium=social&utm_campaign=referral&apn=com.samsung.ecomm&al=samsungestore%3A%2F%2Fgototab%23tab%3D4%23referral_code%3Dref-k7b12k%23utm_source%3Ds_com%23utm_medium%3Dsocial%23utm_campaign%3Dreferral&afl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&isi=1274679179&ibi=com.samsung.ShopSamsung&ius=samsungestore&ifl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&efr=1" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+    <div style="text-align: center; font-family: Arial, sans-serif; color: #fff; background: #0074cc; padding: 15px; border-radius: 8px; max-width: 800px; margin: auto;">
+        <h2 style="margin: 0; font-size: 24px;">Get 5% Off on Samsung Deals!</h2>
+    </div>
+    <img src="https://image-us.samsung.com/SamsungUS/home/shop/all-deals/02072025/Presidentsday-SCOMPARA-231-Paradigm-PA3-ETI-Offer-ADP-KV-DT.jpg?$cm-g-fb-full-bleed-img-jpg" 
+         alt="Samsung Deal" 
+         style="width: 100%; max-width: 800px; display: block; margin: auto; border-radius: 8px;">
+    <div style="text-align: center; font-family: Arial, sans-serif; color: #fff; background: #0074cc; padding: 10px; border-radius: 8px; max-width: 800px; margin: 10px auto;">
+        <p style="margin: 0; font-size: 18px;">Click to claim your discount now!</p>
+    </div>
+</a>
+
+
+<p>
+  Discover a variety of quality home items including the Phantoscope 12x20 Pillow and Phantoscope Bathroom Rugs, perfect for adding comfort and style to your bathroom. The Phantoscope 3D Butterfly designs bring a unique touch to any space. Enhance your décor with the PHANTOSCOPE Pack of 2 Faux items, ideal for a chic look. For convenience, the Squatty Potty Stockholm Folding Bamboo Toilet Stool offers a practical and stylish solution. Finally, the Stock Your Home DVD Storage Box provides an organized way to store your favorite movies.
+</p>
+
+    <!-- Navigation Bar -->
+    <div class="navbar" id="category-nav">
+        <!-- Categories Will Be Dynamically Loaded Here -->
+    </div>
+
+    <div id="product-grid" class="grid">
+        <!-- Product Cards Will Be Dynamically Loaded Here -->
+    </div>
+
+    <div id="product-detail" class="product-detail-card">
+        <button class="back-btn" onclick="backToGrid()">Back to Product List</button>
+        <h2 id="product-title"></h2>
+        <img id="product-image" src="" alt="Product Image">
+        <p id="product-description"></p>
+        <p id="product-category"></p>
+        <div class="product-url">
+            <a id="product-link" class="no-follow-btn" href="" target="_blank" rel="nofollow">View Product</a>
         </div>
-        <button onclick="updatePreview()">Run</button>
-        <button onclick="downloadPage()">Download</button>
-        
-        <iframe id="preview"></iframe>
-    </main>
+        <h3>Similar Products</h3>
+        <div id="similar-products" class="similar-products"></div>
+    </div>
 
     <script>
-        function updatePreview() {
-            const html = document.getElementById("htmlCode").value;
-            const css = document.getElementById("cssCode").value;
-            const js = document.getElementById("jsCode").value;
-            
-            const previewFrame = document.getElementById("preview");
-            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-            
-            doc.open();
-            doc.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Preview</title>
-                    <style>${css}</style>
-                </head>
-                <body>
-                    ${html}
-                    <script>${js}<\/script>
-                </body>
-                </html>
-            `);
-            doc.close();
+        // Fetch data from data.json file
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                loadCategoryNav(data);
+                loadProductGrid(data);
+            } catch (error) {
+                console.error("Error loading data:", error);
+            }
         }
 
-        function downloadPage() {
-            const html = document.getElementById("htmlCode").value;
-            const css = document.getElementById("cssCode").value;
-            const js = document.getElementById("jsCode").value;
-            
-            const fullCode = `
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>My Web Page</title>
-                    <style>${css}</style>
-                </head>
-                <body>
-                    ${html}
-                    <script>${js}<\/script>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob([fullCode], { type: "text/html" });
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "webpage.html";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        // Load categories into navigation bar
+        function loadCategoryNav(data) {
+            const nav = document.getElementById("category-nav");
+            const categories = [...new Set(data.map(product => product.category))]; // Get unique categories
+            categories.forEach(category => {
+                const categoryLink = document.createElement('a');
+                categoryLink.innerText = category;
+                categoryLink.href = '#';
+                categoryLink.onclick = () => filterByCategory(category, data);
+                nav.appendChild(categoryLink);
+            });
         }
+
+        // Load products by category
+        function filterByCategory(category, data) {
+            const filteredData = data.filter(product => product.category === category);
+            loadProductGrid(filteredData);
+        }
+
+        // Load product grid from data
+        function loadProductGrid(data) {
+            const grid = document.getElementById("product-grid");
+            grid.innerHTML = ''; // Clear previous grid content
+            data.forEach((product, index) => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.onclick = () => showProductDetail(index, data);
+
+                productCard.innerHTML = `
+                    <img src="${product.image}" class="product-img" alt="${product.title}">
+                    <div class="product-title">${product.title}</div>
+                `;
+                grid.appendChild(productCard);
+            });
+        }
+
+        // Show product details
+        function showProductDetail(index, data) {
+            const product = data[index];
+            document.getElementById("product-title").innerText = product.title;
+            document.getElementById("product-description").innerText = product.description;
+            document.getElementById("product-category").innerText = `Category: ${product.category}`;
+            document.getElementById("product-image").src = product.image;
+            document.getElementById("product-link").href = product.url;
+
+            // Show similar products based on the clicked product's category
+            const similarProductsContainer = document.getElementById("similar-products");
+            similarProductsContainer.innerHTML = ''; // Clear previous similar products
+
+            // Filter products that share the same category
+            const similarProducts = data.filter(p => p.category === product.category && p !== product);
+
+            similarProducts.forEach((similarProduct) => {
+                const similarProductCard = document.createElement('div');
+                similarProductCard.classList.add('similar-product');
+                similarProductCard.onclick = () => showProductDetail(data.indexOf(similarProduct), data);
+
+                similarProductCard.innerHTML = `
+                    <img src="${similarProduct.image}" class="product-img" alt="${similarProduct.title}">
+                    <div class="product-title">${similarProduct.title}</div>
+                `;
+                similarProductsContainer.appendChild(similarProductCard);
+            });
+
+            // Hide grid and show details
+            document.getElementById("product-grid").style.display = 'none';
+            document.getElementById("product-detail").style.display = 'block';
+
+            // Scroll to the product details section
+            document.getElementById("product-detail").scrollIntoView({ behavior: "smooth" });
+        }
+
+        // Back to product grid
+        function backToGrid() {
+            document.getElementById("product-grid").style.display = 'grid';
+            document.getElementById("product-detail").style.display = 'none';
+        }
+
+        // Initial load of products and categories
+        loadData(); // Call the function to load data from the JSON file
+        
     </script>
+<center>
+<h3>About The Web Market: The Largest Products Directory, Worldwide Products Database, and Best Price</h3>
+</center>
+
+<p>
+  The Web Market stands as one of the largest online marketplaces, offering an extensive products directory that covers everything from Interior, Car Care, and Automotive to Car Parts, Baby products, Books, and Electronic Devices. Whether you're in the market for top-tier PC components, Household essentials, or Phone Accessories, The Web Market has it all. For those seeking unique Crafts & Accessories, Jewelry, or Gifts, the platform delivers an abundant selection at the best prices. You can also find everything from Camera & Accessories to Travel & Entertainment products, and essential tools for any project. Men's Shoes, Office & Accessories, and a wide range of Electronic Components are just a few more categories where consumers can access the finest products at unbeatable rates. With its vast database of worldwide products and commitment to providing the best prices, The Web Market ensures an ideal shopping experience for everyone.
+</p>
+<ln>
+<section class="navigation-guide">
+  <h3>How to Navigate Through Our Website</h3>
+  <p>Welcome to The Web Market! Here’s a quick guide to help you find what you're looking for:</p>
+  
+  <p>Explore our categories for a wide variety of products:</p>
+  <ul style="list-style-type: none; padding: 0;">
+    <li>• <strong>Interior</strong> – Find everything you need to spruce up your living spaces.</li>
+    <li>• <strong>Car Care</strong> – Products to keep your car in top shape.</li>
+    <li>• <strong>Automotive</strong> – Tools, accessories, and parts for your vehicle.</li>
+    <li>• <strong>Car Parts</strong> – Get replacement parts for your car or upgrade it.</li>
+    <li>• <strong>Baby</strong> – Essentials for babies, from toys to furniture.</li>
+    <li>• <strong>Books</strong> – A wide selection of reading material for all interests.</li>
+    <li>• <strong>Electronic Devices</strong> – Gadgets and electronics to enhance your lifestyle.</li>
+    <li>• <strong>PC</strong> – Computers, laptops, and accessories to meet all your needs.</li>
+    <li>• <strong>Household</strong> – Everything you need to make your home comfortable and functional.</li>
+    <li>• <strong>Exterior</strong> – Outdoor furniture and decor to enhance your exterior spaces.</li>
+    <li>• <strong>Phone Accessories</strong> – All the must-have accessories for your mobile devices.</li>
+    <li>• <strong>Crafts & Accessories</strong> – DIY supplies and creative materials.</li>
+    <li>• <strong>Cables</strong> – A variety of cables for your devices and gadgets.</li>
+    <li>• <strong>Casters</strong> – Wheels and casters for furniture or industrial use.</li>
+    <li>• <strong>Jewelry</strong> – Elegant jewelry to suit any occasion.</li>
+    <li>• <strong>Gifts</strong> – Find the perfect gift for any special occasion.</li>
+    <li>• <strong>Camera & Accessories</strong> – Photography gear to capture your best moments.</li>
+    <li>• <strong>Travel & Accessories</strong> – Everything you need for a smooth trip.</li>
+    <li>• <strong>Entertainment</strong> – Movies, games, and more for your leisure time.</li>
+    <li>• <strong>PC Parts</strong> – Components to build or upgrade your computer.</li>
+    <li>• <strong>3D Printed</strong> – Explore the world of 3D printed items and accessories.</li>
+    <li>• <strong>Tools</strong> – Handy tools for any job around the house or workplace.</li>
+    <li>• <strong>School</strong> – Supplies, gadgets, and gear for students of all ages.</li>
+    <li>• <strong>Men's Shoes</strong> – Find a variety of footwear to match your style.</li>
+    <li>• <strong>Office & Accessories</strong> – Organize and enhance your workspace.</li>
+    <li>• <strong>Wallets</strong> – Browse a selection of stylish and functional wallets.</li>
+    <li>• <strong>Electronic Components & Suppliers</strong> – Find parts for electronics, repair, or build your projects.</li>
+  </ul>
+
+  <p>Simply click on any category to start exploring products that interest you! You can also use the search bar for specific items, or navigate through our sub-categories for a more tailored shopping experience.</p>
+  <p>Happy shopping!</p>
+</section>
+<br>
+<center>
+<a href="https://thewebmarketpage.github.io/thewebmarketpage/index.html">
+  <h2>The Web Market</h2>
+</a>
+<p>
+  Explore a wide range of home essentials at The Web Market, featuring the Phantoscope 12x20 Pillow and luxurious Phantoscope Bathroom Rugs for added comfort. The Phantoscope 3D Butterfly designs make a stunning addition to any room, while the PHANTOSCOPE Pack of 2 Faux items bring modern elegance. Upgrade your bathroom experience with the Squatty Potty Stockholm Folding Bamboo Toilet Stool, combining functionality with style. Keep your DVDs neatly organized with the Stock Your Home DVD Storage Box, available at The Web Market for the best prices.
+</p>
+<ln>
+<br>
+<p><small>Our electronics collection features a wide range of products, including the Pyle Curb Parking Garage, 4PCS Wireless LED lights, the ALLWEI 300W Car Power inverter, and the Exaust Headers for improved vehicle performance. We also offer the Baby ACEBELL Smart WiFi Camera, a variety of mini PCs like the ACEMAGIC Vista V1, and cutting-edge accessories like wireless WiFi video doorbells, LED night lights, and high-quality power strips. For tech enthusiasts, we have options like the Roku Express HD Streaming Device, the AMD Ryzen 7 5700X3D processor, and advanced gaming consoles like the ANBERNIC RG35XXSP. Whether you’re upgrading your car, home, or workspace, we have the perfect electronic products for you.</small></p>
+
+</center>
+<ln>
+<footer style="text-align: center; font-size: 16px; padding: 20px; background-color: #333; color: #fff;">
+  <p>Discover the Best Deals on a Wide Range of Products – From Electronics and Automotive to Fashion, Home Goods, and Beyond!</p>
+  <p>At The Web Market, we offer high-quality items at unbeatable prices. Shop now and find exactly what you need with fast shipping and secure payments.</p>
+  <p>Our global marketplace connects buyers and sellers from around the world, providing amazing products and exclusive deals.</p>
+  <p>Experience the convenience of online shopping at The Web Market – Quality and affordability all in one place!</p>
+</footer>
+
 </body>
 </html>
