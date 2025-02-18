@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern CSS Designs</title>
+    <style>
+        /* Version 1: Minimalist Dark Mode */
+        body { background: #121212; color: white; font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Dark Mode Minimalist</h1>
+            <p>This version focuses on a sleek, modern dark theme.</p>
+        </div>
+    </div>
+
+    <script>
+        console.log("Dark mode version loaded.");
+    </script>
+</body>
+</html>
+
+<!-- Version 2: Light Theme with Animation -->
+<style>
+    body.light { background: #f5f5f5; color: black; }
+    .card.light { background: white; transition: transform 0.3s ease-in-out; }
+    .card.light:hover { transform: scale(1.05); }
+</style>
+<body class="light">
+    <div class="container">
+        <div class="card light">
+            <h1>Light Mode with Animation</h1>
+            <p>This version adds interactive hover effects.</p>
+        </div>
+    </div>
+</body>
+
+<!-- Version 3: Grid-Based Layout -->
+<style>
+    .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .grid-item { background: #ccc; padding: 20px; text-align: center; }
+</style>
+<body>
+    <div class="grid-container">
+        <div class="grid-item">Box 1</div>
+        <div class="grid-item">Box 2</div>
+        <div class="grid-item">Box 3</div>
+    </div>
+</body>
+
+<!-- Version 4: Glassmorphism Effect -->
+<style>
+    .glass { background: rgba(255, 255, 255, 0.1); border-radius: 15px; backdrop-filter: blur(10px); padding: 20px; }
+</style>
+<body>
+    <div class="glass">
+        <h1>Glassmorphism Design</h1>
+        <p>Futuristic glass effect using backdrop filters.</p>
+    </div>
+</body>
+
+<!-- Version 5: Container Queries Example -->
+<style>
+    @container (max-width: 600px) {
+        .responsive-box { background: blue; color: white; padding: 20px; }
+    }
+</style>
+<body>
+    <div class="responsive-box">
+        <h1>Container Query Example</h1>
+        <p>Adapts styling based on container width.</p>
+    </div>
+</body>
