@@ -4,93 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern CSS Designs</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; transition: background 0.3s, color 0.3s; }
-        .container { max-width: 800px; margin: auto; text-align: center; }
-        .card { padding: 20px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); margin-top: 20px; }
-        
-        /* Dark Mode */
-        .dark { background: #121212; color: white; }
-        .dark .card { background: #1e1e1e; }
-        
-        /* Light Mode */
-        .light { background: #f5f5f5; color: black; }
-        .light .card { background: white; transition: transform 0.3s ease-in-out; }
-        .light .card:hover { transform: scale(1.05); }
-        
-        /* Grid-Based Layout */
-        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .grid-item { background: #ccc; padding: 20px; text-align: center; }
-        
-        /* Glassmorphism */
-        .glass { background: rgba(255, 255, 255, 0.1); border-radius: 15px; backdrop-filter: blur(10px); padding: 20px; }
-        
-        /* Neumorphism */
-        .neumorphism { background: #e0e0e0; border-radius: 10px; box-shadow: 5px 5px 15px #bebebe, -5px -5px 15px #ffffff; padding: 20px; text-align: center; }
-        
-        /* Retro Pixel */
-        .retro { font-family: 'Press Start 2P', cursive; background: black; color: green; text-align: center; padding: 20px; }
-        
-        /* Parallax Scrolling */
-        .parallax { background-image: url('https://source.unsplash.com/random'); height: 100vh; background-attachment: fixed; background-size: cover; text-align: center; color: white; display: flex; align-items: center; justify-content: center; }
-        
-        /* Cyberpunk Neon */
-        .cyberpunk { background: black; color: cyan; text-shadow: 0px 0px 5px cyan, 0px 0px 10px magenta; font-family: 'Orbitron', sans-serif; text-align: center; padding: 20px; }
-        
-        /* Magazine Layout */
-        .magazine { display: flex; flex-wrap: wrap; gap: 10px; }
-        .magazine article { flex: 1; min-width: 300px; background: white; padding: 20px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="dark">
-    <div class="container">
-        <h1>Modern CSS Designs</h1>
-        <label for="theme">Select Theme:</label>
-        <select id="theme">
+<body class="bg-gray-900 text-white p-5 transition-all">
+    <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-3xl font-bold mb-5">Modern CSS Designs</h1>
+        <label for="theme" class="block mb-2">Select Theme:</label>
+        <select id="theme" class="p-2 bg-gray-800 text-white border border-gray-700 rounded-md">
             <option value="dark">Dark Mode</option>
             <option value="light">Light Mode</option>
-            <option value="grid">Grid Layout</option>
             <option value="glass">Glassmorphism</option>
             <option value="neumorphism">Neumorphism</option>
             <option value="retro">Retro Pixel</option>
-            <option value="parallax">Parallax Scrolling</option>
             <option value="cyberpunk">Cyberpunk Neon</option>
-            <option value="magazine">Magazine Layout</option>
         </select>
         
-        <div class="card">
-            <h2>Welcome to the Design Showcase</h2>
-            <p>Use the dropdown to change the theme.</p>
+        <div class="mt-5 p-5 rounded-lg shadow-lg bg-gray-800">
+            <h2 class="text-2xl font-semibold">Welcome to the Design Showcase</h2>
+            <p class="text-gray-400">Use the dropdown to change the theme.</p>
         </div>
         
-        <div class="card">
-            <h3>Sample Form</h3>
-            <form>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name"><br><br>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email"><br><br>
-                <button type="submit">Submit</button>
+        <div class="mt-5 p-5 rounded-lg shadow-lg bg-gray-800">
+            <h3 class="text-xl font-semibold">Sample Form</h3>
+            <form class="mt-3">
+                <label for="name" class="block">Name:</label>
+                <input type="text" id="name" class="p-2 w-full bg-gray-700 text-white rounded-md mb-3">
+                <label for="email" class="block">Email:</label>
+                <input type="email" id="email" class="p-2 w-full bg-gray-700 text-white rounded-md mb-3">
+                <button type="submit" class="px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500">Submit</button>
             </form>
         </div>
         
-        <div class="card">
-            <h3>Sample Table</h3>
-            <table border="1" width="100%">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Age</th>
+        <div class="mt-5 p-5 rounded-lg shadow-lg bg-gray-800">
+            <h3 class="text-xl font-semibold">Sample Table</h3>
+            <table class="w-full mt-3 border border-gray-700">
+                <tr class="bg-gray-700">
+                    <th class="p-2">ID</th>
+                    <th class="p-2">Name</th>
+                    <th class="p-2">Age</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>John Doe</td>
-                    <td>28</td>
+                <tr class="border-t border-gray-700">
+                    <td class="p-2">1</td>
+                    <td class="p-2">John Doe</td>
+                    <td class="p-2">28</td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jane Doe</td>
-                    <td>25</td>
+                <tr class="border-t border-gray-700">
+                    <td class="p-2">2</td>
+                    <td class="p-2">Jane Doe</td>
+                    <td class="p-2">25</td>
                 </tr>
             </table>
         </div>
@@ -98,7 +59,21 @@
     
     <script>
         document.getElementById("theme").addEventListener("change", function() {
-            document.body.className = this.value;
+            const body = document.body;
+            body.className = "transition-all p-5";
+            if (this.value === "light") {
+                body.classList.add("bg-gray-100", "text-black");
+            } else if (this.value === "glass") {
+                body.classList.add("backdrop-blur-lg", "bg-white/10");
+            } else if (this.value === "neumorphism") {
+                body.classList.add("bg-gray-300", "text-gray-900", "shadow-inner");
+            } else if (this.value === "retro") {
+                body.classList.add("bg-black", "text-green-500", "font-mono");
+            } else if (this.value === "cyberpunk") {
+                body.classList.add("bg-black", "text-cyan-400", "font-bold", "text-lg");
+            } else {
+                body.classList.add("bg-gray-900", "text-white");
+            }
         });
     </script>
 </body>
