@@ -91,17 +91,49 @@
 </head>
 <body>
 
-    <div class="card dark-blue">
-        <img src="https://via.placeholder.com/300x200" alt="Card Image">
+    <div class="card dark-blue" id="card-container">
+        <!-- Content will be dynamically loaded here -->
+        <img id="card-image" src="" alt="Product Image">
         <div class="card-body">
-            <h3>Card with Multiple Features</h3>
-            <p>This card has a combination of bottom border, interactive image zoom, badges, hover effect, rounded corners with shadow, and a dark blue theme.</p>
+            <h3 id="card-title">Card with Multiple Features</h3>
+            <p id="card-description">This card has a combination of bottom border, interactive image zoom, badges, hover effect, rounded corners with shadow, and a dark blue theme.</p>
 
-            <!-- Badges and Labels -->
-            <div class="badge">New</div>
-            <div class="label">Sale</div>
+            <!-- Badges and Labels will be dynamically added -->
+            <div id="card-badges"></div>
         </div>
     </div>
+
+    <script>
+        // Function to fetch data from data.json
+        async function loadCardData() {
+            try {
+                const response = await fetch('data.json'); // Load data.json file
+                const data = await response.json();
+
+                // Update the card with the data from the JSON
+                document.getElementById('card-title').innerText = data.title;
+                document.getElementById('card-description').innerText = data.description;
+                document.getElementById('card-image').src = data.image;
+
+                // Add badges and labels if needed (e.g., "New" and "Sale")
+                const badgesContainer = document.getElementById('card-badges');
+                const badgeNew = document.createElement('div');
+                badgeNew.classList.add('badge');
+                badgeNew.innerText = 'New';
+                badgesContainer.appendChild(badgeNew);
+
+                const labelSale = document.createElement('div');
+                labelSale.classList.add('label');
+                labelSale.innerText = 'Sale';
+                badgesContainer.appendChild(labelSale);
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Load the data when the page loads
+        window.onload = loadCardData;
+    </script>
 
 </body>
 </html>
