@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://thewebmarketpage.github.io/thewebmarketpage/sitemap.xml
+Sitemap: http://giantwebmarket.com/sitemap.xml
