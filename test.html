@@ -95,8 +95,8 @@
         <!-- Content will be dynamically loaded here -->
         <img id="card-image" src="" alt="Product Image">
         <div class="card-body">
-            <h3 id="card-title">Card with Multiple Features</h3>
-            <p id="card-description">This card has a combination of bottom border, interactive image zoom, badges, hover effect, rounded corners with shadow, and a dark blue theme.</p>
+            <h3 id="card-title">Loading...</h3>
+            <p id="card-description">Please wait while the product data is being loaded.</p>
 
             <!-- Badges and Labels will be dynamically added -->
             <div id="card-badges"></div>
@@ -110,6 +110,11 @@
             try {
                 const response = await fetch('data.json'); // Load data.json file
                 const data = await response.json();
+
+                // Check if the data has been successfully loaded
+                if (!data.title || !data.description || !data.image || !data.url) {
+                    throw new Error('Invalid data structure');
+                }
 
                 // Update the card with the data from the JSON
                 document.getElementById('card-title').innerText = data.title;
@@ -130,6 +135,9 @@
                 badgesContainer.appendChild(labelSale);
             } catch (error) {
                 console.error('Error loading data:', error);
+                // Display error message if data load fails
+                document.getElementById('card-title').innerText = 'Error';
+                document.getElementById('card-description').innerText = 'Failed to load product data.';
             }
         }
 
