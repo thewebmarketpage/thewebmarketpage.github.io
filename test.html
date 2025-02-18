@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #eaeaea;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: #1c1c1c;
+            border-radius: 20px;
+            width: 300px;
+            overflow: hidden;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            color: #fff;
+            position: relative;
+            border-bottom: 5px solid #3498db; /* Bottom border */
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.2); /* Image zoom effect */
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-body h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #3498db; /* Title color */
+        }
+
+        .card-body p {
+            font-size: 1em;
+            color: #b0b0b0;
+            margin-top: 10px;
+        }
+
+        /* Badges and Labels */
+        .badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .label {
+            background-color: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            margin-right: 5px;
+        }
+
+        /* Hover Effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Dark Blue Mode */
+        .dark-blue .card-body h3 {
+            color: #3498db;
+        }
+
+        .product-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="product-grid" id="product-grid">
+        <!-- Product cards will be dynamically loaded here -->
+    </div>
+
+    <script>
+        // Fetch data from data.json file
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                loadProductGrid(data);
+            } catch (error) {
+                console.error("Error loading data:", error);
+            }
+        }
+
+        // Load product grid from data
+        function loadProductGrid(data) {
+            const grid = document.getElementById("product-grid");
+            grid.innerHTML = ''; // Clear previous grid content
+            data.forEach((product) => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('card');
+
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}">
+                    <div class="card-body">
+                        <h3>${product.title}</h3>
+                        <p>${product.description}</p>
+                        <div class="badge">${product.category}</div>
+                        <a href="${product.url}" class="label" target="_blank">Buy Now</a>
+                    </div>
+                `;
+                grid.appendChild(productCard);
+            });
+        }
+
+        // Initial load of products
+        loadData(); // Call the function to load data from the JSON file
+    </script>
+
+</body>
+</html>
