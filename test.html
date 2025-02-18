@@ -100,6 +100,7 @@
 
             <!-- Badges and Labels will be dynamically added -->
             <div id="card-badges"></div>
+            <a id="card-url" href="#" target="_blank">View on Amazon</a>
         </div>
     </div>
 
@@ -114,17 +115,18 @@
                 document.getElementById('card-title').innerText = data.title;
                 document.getElementById('card-description').innerText = data.description;
                 document.getElementById('card-image').src = data.image;
+                document.getElementById('card-url').href = data.url;
 
                 // Add badges and labels if needed (e.g., "New" and "Sale")
                 const badgesContainer = document.getElementById('card-badges');
                 const badgeNew = document.createElement('div');
                 badgeNew.classList.add('badge');
-                badgeNew.innerText = 'New';
+                badgeNew.innerText = 'New'; // Example badge
                 badgesContainer.appendChild(badgeNew);
 
                 const labelSale = document.createElement('div');
                 labelSale.classList.add('label');
-                labelSale.innerText = 'Sale';
+                labelSale.innerText = 'Sale'; // Example label
                 badgesContainer.appendChild(labelSale);
             } catch (error) {
                 console.error('Error loading data:', error);
