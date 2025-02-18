@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combined Card Styles</title>
+    <title>Card with Multiple Features</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,21 +17,16 @@
             height: 100vh;
         }
 
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-
         .card {
             background-color: #1c1c1c;
-            border-radius: 10px;
+            border-radius: 20px;
             width: 300px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             color: #fff;
+            position: relative;
+            border-bottom: 5px solid #3498db; /* Bottom border */
         }
 
         .card img {
@@ -42,7 +37,7 @@
         }
 
         .card:hover img {
-            transform: scale(1.1);
+            transform: scale(1.2); /* Image zoom effect */
         }
 
         .card-body {
@@ -52,6 +47,7 @@
         .card-body h3 {
             margin: 0;
             font-size: 1.5em;
+            color: #3498db; /* Title color */
         }
 
         .card-body p {
@@ -60,17 +56,7 @@
             margin-top: 10px;
         }
 
-        /* Bottom Border Card */
-        .card-bottom-border {
-            border-bottom: 5px solid #3498db;
-        }
-
-        /* Card with Interactive Image Zoom */
-        .card-zoom img:hover {
-            transform: scale(1.2);
-        }
-
-        /* Card with Badges and Labels */
+        /* Badges and Labels */
         .badge {
             background-color: #e74c3c;
             color: white;
@@ -90,108 +76,30 @@
             margin-right: 5px;
         }
 
-        /* Hover Effect Card */
+        /* Hover Effect */
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
-        /* Rounded Cards with Shadow */
-        .card-rounded {
-            border-radius: 20px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-
         /* Dark Blue Mode */
-        .dark-blue {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-        }
-
         .dark-blue .card-body h3 {
             color: #3498db;
         }
 
-        /* Card container styles */
-        .card-container {
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        /* Badge and Label Example */
-        .card-with-badge .card-body {
-            position: relative;
-        }
-
-        .card-with-badge .badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #e74c3c;
-        }
     </style>
 </head>
 <body>
 
-    <div class="card-container">
-        <!-- Card with Bottom Border -->
-        <div class="card card-bottom-border">
-            <img src="https://via.placeholder.com/300x200" alt="Card Image">
-            <div class="card-body">
-                <h3>Bottom Border Card</h3>
-                <p>This card has a stylish bottom border with a blue accent.</p>
-            </div>
-        </div>
+    <div class="card dark-blue">
+        <img src="https://via.placeholder.com/300x200" alt="Card Image">
+        <div class="card-body">
+            <h3>Card with Multiple Features</h3>
+            <p>This card has a combination of bottom border, interactive image zoom, badges, hover effect, rounded corners with shadow, and a dark blue theme.</p>
 
-        <!-- Card with Interactive Image Zoom -->
-        <div class="card card-zoom">
-            <img src="https://via.placeholder.com/300x200" alt="Card Image">
-            <div class="card-body">
-                <h3>Zoom Image Card</h3>
-                <p>Hover over the image to zoom in for a closer look.</p>
-            </div>
-        </div>
-
-        <!-- Card with Badges and Labels -->
-        <div class="card card-with-badge">
-            <img src="https://via.placeholder.com/300x200" alt="Card Image">
-            <div class="card-body">
-                <h3>Card with Badges</h3>
-                <p>This card has badges and labels attached to it.</p>
-                <div class="badge">New</div>
-                <div class="label">Sale</div>
-            </div>
-        </div>
-
-        <!-- Hover Effect Card -->
-        <div class="card">
-            <img src="https://via.placeholder.com/300x200" alt="Card Image">
-            <div class="card-body">
-                <h3>Hover Effect Card</h3>
-                <p>Hover over this card to see the effect.</p>
-            </div>
-        </div>
-
-        <!-- Rounded Cards with Shadow -->
-        <div class="card card-rounded">
-            <img src="https://via.placeholder.com/300x200" alt="Card Image">
-            <div class="card-body">
-                <h3>Rounded Card</h3>
-                <p>This card has rounded corners and a subtle shadow.</p>
-            </div>
-        </div>
-
-        <!-- Dark Blue Mode -->
-        <div class="card dark-blue">
-            <img src="https://via.placeholder.com/300x200" alt="Card Image">
-            <div class="card-body">
-                <h3>Dark Blue Mode</h3>
-                <p>This card is styled with a dark blue mode for a modern look.</p>
-            </div>
+            <!-- Badges and Labels -->
+            <div class="badge">New</div>
+            <div class="label">Sale</div>
         </div>
     </div>
 
