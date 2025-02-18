@@ -3,236 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #eaeaea;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            height: 100vh;
-        }
-
-        /* Centered Navigation Bar */
-        .navbar {
-            background-color: #1c1c1c;
-            padding: 15px;
-            border-radius: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            margin-top: 20px;
-        }
-
-        /* Category Buttons */
-        .nav-btn {
-            background-color: #333638;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 15px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background-color: #333638;
-        }
-
-        /* Extra Button at Bottom */
-        .nav-bottom-btn {
-            background-color: #333638;
-            color: white;
-            padding: 12px 18px;
-            border: none;
-            border-radius: 20px;
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
-
-        .nav-bottom-btn:hover {
-            background-color: #2980b9;
-        }
-
-        .product-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .card {
-            background-color: #1c1c1c;
-            border-radius: 20px;
-            width: 300px;
-            overflow: hidden;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            color: #fff;
-            position: relative;
-            border-bottom: 5px solid #3498db;
-        }
-
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover img {
-            transform: scale(1.2);
-        }
-
-        .card-body {
-            padding: 15px;
-        }
-
-        .card-body h3 {
-            margin: 0;
-            font-size: 1.5em;
-            color: #3498db;
-        }
-
-        .card-body p {
-            font-size: 1em;
-            color: #b0b0b0;
-            margin-top: 10px;
-        }
-
-        .badge {
-            background-color: #e74c3c;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8em;
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        .label {
-            background-color: #3498db;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 0.9em;
-            margin-right: 5px;
-            text-decoration: none;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Footer */
-        .footer {
-            width: 100%;
-            text-align: center;
-            padding: 15px;
-            background-color: #1c1c1c;
-            color: #b0b0b0;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+    <title>Tailwind CSS Full Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100">
 
-<!-- Navigation Bar -->
-<div class="navbar" id="category-nav">
-    <h1>Giant Web Market</h1>
-    <h2>The Largest Products Directory</h2>
-    <p>Worldwide Products Database And Best Price</p>
-    
-    <button class="nav-bottom-btn" onclick="window.location.href='http://giantwebmarket.com/index.html'">Giant Web Market</button>
-</div>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div>
+                        <!-- Website Logo -->
+                        <a href="#" class="flex items-center py-4 px-2">
+                            <span class="font-semibold text-gray-500 text-lg">MyWebsite</span>
+                        </a>
+                    </div>
+                    <!-- Primary Navbar items -->
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Home</a>
+                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Services</a>
+                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">About</a>
+                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
+    <!-- Hero Section -->
+    <section class="bg-green-500 text-white py-20">
+        <div class="container mx-auto text-center">
+            <h1 class="text-5xl font-bold mb-6">Welcome to MyWebsite</h1>
+            <p class="text-xl mb-8">Your one-stop solution for all your needs.</p>
+            <a href="#" class="bg-white text-green-500 py-2 px-4 rounded-full font-semibold hover:bg-gray-100 transition duration-300">Get Started</a>
+        </div>
+    </section>
 
-    <!-- Product Grid -->
-    <div class="product-grid" id="product-grid">
-        <!-- Product cards will be dynamically loaded here -->
-    </div>
+    <!-- Features Section -->
+    <section class="py-20">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-12">Our Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">Feature One</h3>
+                    <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">Feature Two</h3>
+                    <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">Feature Three</h3>
+                    <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <div class="footer">
-        © 2025 Your Website - All Rights Reserved
-    </div>
-
-    <script>
-        // Fetch data from data.json file
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                const data = await response.json();
-                loadCategoryNav(data);
-                loadProductGrid(data);
-            } catch (error) {
-                console.error("Error loading data:", error);
-            }
-        }
-
-        // Load categories into navigation bar
-        function loadCategoryNav(data) {
-            const nav = document.getElementById("category-nav");
-            const categories = [...new Set(data.map(product => product.category))]; // Get unique categories
-            
-            categories.forEach(category => {
-                const categoryBtn = document.createElement('button');
-                categoryBtn.classList.add('nav-btn');
-                categoryBtn.innerText = category;
-                categoryBtn.onclick = (e) => {
-                    e.preventDefault();
-                    filterByCategory(category, data);
-                };
-                nav.insertBefore(categoryBtn, nav.lastChild); // Insert before bottom button
-            });
-        }
-
-        // Load products by category
-        function filterByCategory(category, data) {
-            const filteredData = data.filter(product => product.category === category);
-            loadProductGrid(filteredData);
-        }
-
-        // Load product grid from data
-        function loadProductGrid(data) {
-            const grid = document.getElementById("product-grid");
-            grid.innerHTML = ''; // Clear previous grid content
-            data.forEach((product) => {
-                const productCard = document.createElement('div');
-                productCard.classList.add('card');
-
-                productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.title}">
-                    <div class="card-body">
-                        <h3>${product.title}</h3>
-                        <p>${product.description}</p>
-                        <div class="badge">${product.category}</div>
-                        <a href="${product.url}" class="label" target="_blank">Buy Now</a>
-                    </div>
-                `;
-                grid.appendChild(productCard);
-            });
-        }
-
-        // Initial load of products
-        loadData();
-    </script>
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2023 MyWebsite. All rights reserved.</p>
+        </div>
+    </footer>
 
 </body>
 </html>
