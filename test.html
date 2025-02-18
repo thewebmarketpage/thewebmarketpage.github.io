@@ -3,70 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tailwind CSS Full Page</title>
+    <title>Dark Modern Cards</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for image zoom effect */
+        .zoom-effect {
+            transition: transform 0.3s ease;
+        }
+        .zoom-effect:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-900 text-gray-100">
 
-    <!-- Navbar -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex justify-between">
-                <div class="flex space-x-7">
-                    <div>
-                        <!-- Website Logo -->
-                        <a href="#" class="flex items-center py-4 px-2">
-                            <span class="font-semibold text-gray-500 text-lg">MyWebsite</span>
-                        </a>
-                    </div>
-                    <!-- Primary Navbar items -->
-                    <div class="hidden md:flex items-center space-x-1">
-                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Home</a>
-                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Services</a>
-                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">About</a>
-                        <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">Contact Us</a>
-                    </div>
+    <!-- Container -->
+    <div class="container mx-auto p-8">
+
+        <!-- Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Card 1: Bottom Border -->
+            <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:shadow-xl">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Card with Bottom Border</h3>
+                    <p class="text-gray-400">This card has a bottom border that adds a nice accent.</p>
                 </div>
             </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="bg-green-500 text-white py-20">
-        <div class="container mx-auto text-center">
-            <h1 class="text-5xl font-bold mb-6">Welcome to MyWebsite</h1>
-            <p class="text-xl mb-8">Your one-stop solution for all your needs.</p>
-            <a href="#" class="bg-white text-green-500 py-2 px-4 rounded-full font-semibold hover:bg-gray-100 transition duration-300">Get Started</a>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="py-20">
-        <div class="container mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-12">Our Features</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-bold mb-4">Feature One</h3>
-                    <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <!-- Card 2: Interactive Image Zoom -->
+            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:shadow-xl">
+                <div class="zoom-effect">
+                    <img src="https://via.placeholder.com/400x200" alt="Placeholder" class="w-full h-48 object-cover">
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-bold mb-4">Feature Two</h3>
-                    <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-bold mb-4">Feature Three</h3>
-                    <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Interactive Image Zoom</h3>
+                    <p class="text-gray-400">Hover over the image to see the zoom effect.</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-10">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2023 MyWebsite. All rights reserved.</p>
+            <!-- Card 3: Badges and Labels -->
+            <div class="bg-gray-800 rounded-lg shadow-lg transform transition duration-300 hover:shadow-xl">
+                <div class="p-6">
+                    <div class="flex space-x-2 mb-4">
+                        <span class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full">New</span>
+                        <span class="bg-green-500 text-white text-sm px-2 py-1 rounded-full">Popular</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Card with Badges</h3>
+                    <p class="text-gray-400">This card includes badges for additional context.</p>
+                </div>
+            </div>
+
+            <!-- Card 4: Hover Effect -->
+            <div class="bg-gray-800 rounded-lg shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Card with Hover Effect</h3>
+                    <p class="text-gray-400">This card scales up slightly when hovered.</p>
+                </div>
+            </div>
+
+            <!-- Card 5: Rounded Cards with Shadow -->
+            <div class="bg-gray-800 rounded-lg shadow-lg transform transition duration-300 hover:shadow-xl">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Rounded Card with Shadow</h3>
+                    <p class="text-gray-400">This card has rounded corners and a subtle shadow.</p>
+                </div>
+            </div>
+
+            <!-- Card 6: Dark Modern Theme -->
+            <div class="bg-gray-800 rounded-lg shadow-lg transform transition duration-300 hover:shadow-xl">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2">Dark Modern Theme</h3>
+                    <p class="text-gray-400">This card fits perfectly into the dark modern theme.</p>
+                </div>
+            </div>
+
         </div>
-    </footer>
+    </div>
 
 </body>
 </html>
