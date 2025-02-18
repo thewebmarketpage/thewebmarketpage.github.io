@@ -18,25 +18,54 @@
             height: 100vh;
         }
 
-        /* Navigation Bar */
+        /* Centered Navigation Bar */
         .navbar {
-            width: 100%;
             background-color: #1c1c1c;
             padding: 15px;
-            text-align: center;
+            border-radius: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
         }
 
-        .navbar a {
-            color: #3498db;
-            text-decoration: none;
-            font-size: 1.2em;
-            margin: 0 15px;
-            transition: color 0.3s ease;
+        /* Category Buttons */
+        .nav-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
 
-        .navbar a:hover {
-            color: #e74c3c;
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Extra Button at Bottom */
+        .nav-bottom-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-bottom-btn:hover {
+            background-color: #2980b9;
         }
 
         .product-grid {
@@ -127,6 +156,7 @@
     <!-- Navigation Bar -->
     <div class="navbar" id="category-nav">
         <!-- Categories will be dynamically loaded here -->
+        <button class="nav-bottom-btn">Browse All Products</button>
     </div>
 
     <!-- Product Grid -->
@@ -156,15 +186,16 @@
         function loadCategoryNav(data) {
             const nav = document.getElementById("category-nav");
             const categories = [...new Set(data.map(product => product.category))]; // Get unique categories
+            
             categories.forEach(category => {
-                const categoryLink = document.createElement('a');
-                categoryLink.innerText = category;
-                categoryLink.href = '#';
-                categoryLink.onclick = (e) => {
+                const categoryBtn = document.createElement('button');
+                categoryBtn.classList.add('nav-btn');
+                categoryBtn.innerText = category;
+                categoryBtn.onclick = (e) => {
                     e.preventDefault();
                     filterByCategory(category, data);
                 };
-                nav.appendChild(categoryLink);
+                nav.insertBefore(categoryBtn, nav.lastChild); // Insert before bottom button
             });
         }
 
