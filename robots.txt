@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: http://giantwebmarket.com/sitemap.xml
+Sitemap: https://giantwebmarket.com/sitemap.xml
