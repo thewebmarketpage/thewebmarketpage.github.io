@@ -10,6 +10,51 @@
         <loc>http://giantwebmarket.com/urnews/index.html</loc>
         <lastmod>2025-02-19T12:00:00+00:00</lastmod>
         <changefreq>daily</changefreq>
-        <priority>0.8</priority>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/Business.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/Europe.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/MiddleEast.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/MoneyMoves.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/RealTimeMarket.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/Science.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/Technology.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/index.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>http://giantwebmarket.com/urnews/stock.html</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
     </url>
 </urlset>
