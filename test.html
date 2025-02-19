@@ -13,26 +13,16 @@
         .zoom-effect:hover {
             transform: scale(1.05);
         }
-
-        /* Custom CSS for dark/light mode */
-        .dark-mode {
-            background-color: #1a202c; /* Dark background */
-            color: #f7fafc; /* Light text */
-        }
-        .light-mode {
-            background-color: #f7fafc; /* Light background */
-            color: #1a202c; /* Dark text */
-        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
+<body class="bg-gray-900 text-gray-100 dark-mode">
 
     <!-- Navbar -->
-    <nav class="bg-gray-800 shadow-lg">
+    <nav class="bg-gray-800 shadow-lg dark:bg-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <a href="/index.html" class="text-xl font-bold text-white">Giant Web Market</a>
+                    <a href="/index.html" class="text-xl font-bold text-white dark:text-gray-100">Giant Web Market</a>
                     <!-- Dark/Light Mode Toggle Icon -->
                     <button id="themeToggle" class="ml-4 text-gray-300 hover:text-white focus:outline-none">
                         <svg id="darkIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,33 +34,32 @@
                     </button>
                 </div>
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="/index.html" class="text-gray-300 hover:text-white">Home</a>
-                    <a href="/about.html" class="text-gray-300 hover:text-white">About</a>
+                    <a href="/index.html" class="text-gray-300 hover:text-white dark:text-gray-400 dark:hover:text-gray-100">Home</a>
+                    <a href="/about.html" class="text-gray-300 hover:text-white dark:text-gray-400 dark:hover:text-gray-100">About</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="bg-gray-800 py-20">
+    <section class="bg-gray-800 py-20 dark:bg-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-5xl font-bold mb-6">Welcome to Giant Web Market</h1>
-            <h3>The Largest Products Directory</h3>
-            <small>Worldwide Products Database And Best Price</small>
-            <p class="text-xl mb-8">Your one-stop solution for all your needs.</p>
+            <h1 class="text-5xl font-bold mb-6 dark:text-gray-100">Welcome to Giant Web Market</h1>
+            <h3 class="text-gray-300 dark:text-gray-400">The Largest Products Directory</h3>
+            <small class="text-gray-400 dark:text-gray-300">Worldwide Products Database And Best Price</small>
+            <p class="text-xl mb-8 dark:text-gray-300">Your one-stop solution for all your needs.</p>
             <br>
-            <h1>Get 5% Off on Samsung Deals!</h1>
+            <h1 class="text-gray-300 dark:text-gray-400">Get 5% Off on Samsung Deals!</h1>
             
             <!-- Image -->
             <img src="https://image-us.samsung.com/SamsungUS/home/shop/all-deals/02072025/Presidentsday-SCOMPARA-231-Paradigm-PA3-ETI-Offer-ADP-KV-DT.jpg?$cm-g-fb-full-bleed-img-jpg" 
                  alt="Samsung Deal" 
-                 style="width: 100%; max-width: 800px; display: block; margin: auto; border-radius: 8px;">
+                 class="w-full max-w-800 mx-auto rounded-lg">
             
             <!-- Button -->
-            <div style="text-align: center; margin-top: 10px;">
+            <div class="text-center mt-4">
                 <a href="https://shopsamsung.page.link/?link=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral%26iosparam%3Dsamsungestore%25253A%25252F%25252Fgototab%252523tab%25253D4%252523referral_code%25253Dref-k7b12k%252523utm_source%25253Ds_com%252523utm_medium%25253Dsocial%252523utm_campaign%25253Dreferral&utm_source=s_com&utm_medium=social&utm_campaign=referral&apn=com.samsung.ecomm&al=samsungestore%3A%2F%2Fgototab%23tab%3D4%23referral_code%3Dref-k7b12k%23utm_source%3Ds_com%23utm_medium%3Dsocial%23utm_campaign%3Dreferral&afl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&isi=1274679179&ibi=com.samsung.ShopSamsung&ius=samsungestore&ifl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&efr=1" 
-                   class="bg-blue-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-blue-600 transition duration-300" 
-                   style="display: inline-block; margin-top: 10px;">
+                   class="bg-blue-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-blue-600 transition duration-300 inline-block mt-4">
                     Click to claim your discount now!
                 </a>
             </div>
@@ -80,7 +69,7 @@
     <!-- Products Directory -->
     <section class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Our Products</h2>
+            <h2 class="text-3xl font-bold text-center mb-12 dark:text-gray-100">Our Products</h2>
 
             <!-- Search Box -->
             <div class="mb-8">
@@ -88,7 +77,7 @@
                     type="text"
                     id="searchBox"
                     placeholder="Search products..."
-                    class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-gray-100"
                 />
             </div>
 
@@ -100,9 +89,9 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 py-10">
+    <footer class="bg-gray-800 py-10 dark:bg-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-gray-400">&copy; 2023 Giant Web Market. All rights reserved.</p>
+            <p class="text-gray-400 dark:text-gray-300">&copy; 2023 Giant Web Market. All rights reserved.</p>
         </div>
     </footer>
 
@@ -128,7 +117,7 @@
                     item.description.toLowerCase().includes(searchQuery.toLowerCase())
                 ) {
                     const card = `
-                        <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-700">
                             <div class="zoom-effect overflow-hidden">
                                 <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover">
                             </div>
@@ -136,8 +125,8 @@
                                 <div class="flex space-x-2 mb-4">
                                     <span class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full">${item.category}</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2">${item.title}</h3>
-                                <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
+                                <h3 class="text-xl font-bold mb-2 dark:text-gray-100">${item.title}</h3>
+                                <p class="text-gray-400 dark:text-gray-300">${item.description.substring(0, 100)}...</p>
                                 <a href="${item.url}" target="_blank" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">Learn More</a>
                             </div>
                         </div>
