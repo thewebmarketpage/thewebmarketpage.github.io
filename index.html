@@ -5,462 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="z8k3qUwR_WyArVK7p-5305mUs4ADwfofiYtfQJw2ZmI" />
     <meta name="description" content="Explore our wide range of electronics, including smart home devices, mini PCs, gaming consoles, LED lights, power inverters, and more. Upgrade your tech today!">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
-<script>
+    <title>Giant Web Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
+    <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   gtag('config', 'G-5FB2YTV3KP');
-</script>
-    <title>Giant Web Market</title>
-    
+    </script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #2C2C2C;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-            font-size: 14px;
-            scroll-behavior: smooth;
-        }
-    
-        /* Website Header */
-        .header {
-            background-color: #333;
-            padding: 20px;
-            text-align: center;
-        }
-    
-        .website-name {
-            font-size: 24px;
-            font-weight: bold;
-        }
-    
-        .description {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-    
-        .tagline {
-            font-size: 12px;
-            color: #777;
-        }
-    
-        /* Navigation Bar */
-        .navbar {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            background-color: #444;
-            padding: 10px;
-        }
-    
-        .navbar a {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px;
-            margin: 0;
-            border-radius: 5px;
-            font-size: 14px;
-            background-color: #333;
-            text-align: center;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
-        }
-    
-        .navbar a:hover {
-            background-color: #007BFF;
-        }
-    
-        /* Product Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 10px;
-        }
-    
-        .product-card {
-            background-color: #333;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            max-width: 180px;
-            margin: 0 auto;
-        }
-    
-        .product-card:hover {
-            transform: scale(1.05);
-        }
-    
-        .product-img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-    
-        .product-title {
-            font-size: 14px;
-            margin-top: 8px;
-            font-weight: bold;
-        }
-    
-        .product-detail-card {
-            display: none;
-            background-color: #333;
-            padding: 20px;
-            margin: 15px;
-            border-radius: 8px;
-            max-width: 600px;
-            margin: 15px auto;
-        }
-    
-        .product-detail-card img {
-            width: 100%;
-            height: auto;
-            max-width: 200px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-    
-        .similar-products {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-    
-        .similar-product {
-            background-color: #444;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 8px;
+        /* Custom CSS for image zoom effect */
+        .zoom-effect {
             transition: transform 0.3s ease;
         }
-    
-        .similar-product:hover {
+        .zoom-effect:hover {
             transform: scale(1.05);
-        }
-    
-        .back-btn {
-            background-color: #444;
-            padding: 8px;
-            color: #fff;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-    
-        .no-follow-btn {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 12px;
-            display: inline-block;
-            margin-top: 10px;
-        }
-    
-        .no-follow-btn:visited {
-            color: #fff;
-        }
-    
-        .product-url {
-            text-align: center;
-            margin-top: 15px;
-        }
-    
-        ul, footer, section, p {
-            text-align: center;
-            margin: 0 auto;
-        }
-    
-        footer {
-            width: 100%;
-            background-color: #333;
-            padding: 15px;
-            color: #fff;
-        }
-    
-        section {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-    
-        p {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-    
-        /* Additional Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-    
-        h1 {
-            color: #0d6efd;
-        }
-    
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-    
-        nav {
-            background-color: #1e1e1e;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-    
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 5px;
-        }
-    
-        nav a:hover {
-            background-color: #0d6efd;
         }
     </style>
-    
 </head>
-<body>
+<body class="bg-gray-900 text-gray-100">
 
-    <!-- Website Header -->
-    <div class="header">
-        <a href="https://giantwebmarket.com/index.html">
-  <div class="website-name">Giant Web Market</div>
-</a>
-
-        <div class="description">The Largest Products Directory</div>
-        <div class="tagline">Worldwide Products Database And Best Price</div>
-    </div>
-<a href="https://shopsamsung.page.link/?link=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral%26iosparam%3Dsamsungestore%25253A%25252F%25252Fgototab%252523tab%25253D4%252523referral_code%25253Dref-k7b12k%252523utm_source%25253Ds_com%252523utm_medium%25253Dsocial%252523utm_campaign%25253Dreferral&utm_source=s_com&utm_medium=social&utm_campaign=referral&apn=com.samsung.ecomm&al=samsungestore%3A%2F%2Fgototab%23tab%3D4%23referral_code%3Dref-k7b12k%23utm_source%3Ds_com%23utm_medium%3Dsocial%23utm_campaign%3Dreferral&afl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&isi=1274679179&ibi=com.samsung.ShopSamsung&ius=samsungestore&ifl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&efr=1" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-    <div style="text-align: center; font-family: Arial, sans-serif; color: #fff; background: #0074cc; padding: 15px; border-radius: 8px; max-width: 800px; margin: auto;">
-        <h2 style="margin: 0; font-size: 24px;">Get 5% Off on Samsung Deals!</h2>
-    </div>
-    <img src="https://image-us.samsung.com/SamsungUS/home/shop/all-deals/02072025/Presidentsday-SCOMPARA-231-Paradigm-PA3-ETI-Offer-ADP-KV-DT.jpg?$cm-g-fb-full-bleed-img-jpg" 
-         alt="Samsung Deal" 
-         style="width: 100%; max-width: 800px; display: block; margin: auto; border-radius: 8px;">
-    <div style="text-align: center; font-family: Arial, sans-serif; color: #fff; background: #0074cc; padding: 10px; border-radius: 8px; max-width: 800px; margin: 10px auto;">
-        <p style="margin: 0; font-size: 18px;">Click to claim your discount now!</p>
-    </div>
-</a>
-
-
-<p>
-  Discover a variety of quality home items including the Phantoscope 12x20 Pillow and Phantoscope Bathroom Rugs, perfect for adding comfort and style to your bathroom. The Phantoscope 3D Butterfly designs bring a unique touch to any space. Enhance your décor with the PHANTOSCOPE Pack of 2 Faux items, ideal for a chic look. For convenience, the Squatty Potty Stockholm Folding Bamboo Toilet Stool offers a practical and stylish solution. Finally, the Stock Your Home DVD Storage Box provides an organized way to store your favorite movies.
-</p>
-
-    <!-- Navigation Bar -->
-    <div class="navbar" id="category-nav">
-        <!-- Categories Will Be Dynamically Loaded Here -->
-    </div>
-
-    <div id="product-grid" class="grid">
-        <!-- Product Cards Will Be Dynamically Loaded Here -->
-    </div>
-
-    <div id="product-detail" class="product-detail-card">
-        <button class="back-btn" onclick="backToGrid()">Back to Product List</button>
-        <h2 id="product-title"></h2>
-        <img id="product-image" src="" alt="Product Image">
-        <p id="product-description"></p>
-        <p id="product-category"></p>
-        <div class="product-url">
-            <a id="product-link" class="no-follow-btn" href="" target="_blank" rel="nofollow">View Product</a>
+    <!-- Navbar -->
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/index.html" class="text-xl font-bold text-white">Giant Web Market</a>
+                    
+                    
+                    
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/index.html" class="text-gray-300 hover:text-white">Home</a>
+                    <a href="/about.html" class="text-gray-300 hover:text-white">About</a>
+                </div>
+            </div>
         </div>
-        <h3>Similar Products</h3>
-        <div id="similar-products" class="similar-products"></div>
-    </div>
+    </nav>
 
-    <script>
-        // Fetch data from data.json file
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                const data = await response.json();
-                loadCategoryNav(data);
-                loadProductGrid(data);
-            } catch (error) {
-                console.error("Error loading data:", error);
-            }
-        }
+    <!-- Hero Section -->
+    <section class="bg-gray-800 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl font-bold mb-6">Welcome to Giant Web Market</h1>
+            <h3>The Largest Products Directory</h3>
+            <small>Worldwide Products Database And Best Price</small>
+            <p class="text-xl mb-8">Your one-stop solution for all your needs.</p>
+            <br>
+            <h1>Get 5% Off on Samsung Deals!</h1>
+            
+            
+             <!-- Image -->
+             <img src="https://image-us.samsung.com/SamsungUS/home/shop/all-deals/02072025/Presidentsday-SCOMPARA-231-Paradigm-PA3-ETI-Offer-ADP-KV-DT.jpg?$cm-g-fb-full-bleed-img-jpg" 
+                  alt="Samsung Deal" 
+                  style="width: 100%; max-width: 800px; display: block; margin: auto; border-radius: 8px;">
+             
+             <!-- Button -->
+             <div style="text-align: center; margin-top: 10px;">
+                 <a href="https://shopsamsung.page.link/?link=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral%26iosparam%3Dsamsungestore%25253A%25252F%25252Fgototab%252523tab%25253D4%252523referral_code%25253Dref-k7b12k%252523utm_source%25253Ds_com%252523utm_medium%25253Dsocial%252523utm_campaign%25253Dreferral&utm_source=s_com&utm_medium=social&utm_campaign=referral&apn=com.samsung.ecomm&al=samsungestore%3A%2F%2Fgototab%23tab%3D4%23referral_code%3Dref-k7b12k%23utm_source%3Ds_com%23utm_medium%3Dsocial%23utm_campaign%3Dreferral&afl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&isi=1274679179&ibi=com.samsung.ShopSamsung&ius=samsungestore&ifl=https%3A%2F%2Fwww.samsung.com%2Fus%2Fshop%2Freferral-deals%2F%3FreferralCode%3Dref-k7b12k%26utm_source%3Ds_com%26utm_medium%3Dsocial%26utm_campaign%3Dreferral&efr=1" 
+                    class="bg-blue-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-blue-600 transition duration-300" 
+                    style="display: inline-block; margin-top: 10px;">
+                     Click to claim your discount now!
+                 </a>
+             </div>
+         </a>
+    </section>
 
-        // Load categories into navigation bar
-        function loadCategoryNav(data) {
-            const nav = document.getElementById("category-nav");
-            const categories = [...new Set(data.map(product => product.category))]; // Get unique categories
-            categories.forEach(category => {
-                const categoryLink = document.createElement('a');
-                categoryLink.innerText = category;
-                categoryLink.href = '#';
-                categoryLink.onclick = () => filterByCategory(category, data);
-                nav.appendChild(categoryLink);
-            });
-        }
+    <!-- Products Directory -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Products</h2>
 
-        // Load products by category
-        function filterByCategory(category, data) {
-            const filteredData = data.filter(product => product.category === category);
-            loadProductGrid(filteredData);
-        }
+            <!-- Search Box -->
+            <div class="mb-8">
+                <input
+                    type="text"
+                    id="searchBox"
+                    placeholder="Search products..."
+                    class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
 
-        // Load product grid from data
-        function loadProductGrid(data) {
-            const grid = document.getElementById("product-grid");
-            grid.innerHTML = ''; // Clear previous grid content
-            data.forEach((product, index) => {
-                const productCard = document.createElement('div');
-                productCard.classList.add('product-card');
-                productCard.onclick = () => showProductDetail(index, data);
+            <!-- Cards Container -->
+            <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
 
-                productCard.innerHTML = `
-                    <img src="${product.image}" class="product-img" alt="${product.title}">
-                    <div class="product-title">${product.title}</div>
-                `;
-                grid.appendChild(productCard);
-            });
-        }
-
-        // Show product details
-        function showProductDetail(index, data) {
-            const product = data[index];
-            document.getElementById("product-title").innerText = product.title;
-            document.getElementById("product-description").innerText = product.description;
-            document.getElementById("product-category").innerText = `Category: ${product.category}`;
-            document.getElementById("product-image").src = product.image;
-            document.getElementById("product-link").href = product.url;
-
-            // Show similar products based on the clicked product's category
-            const similarProductsContainer = document.getElementById("similar-products");
-            similarProductsContainer.innerHTML = ''; // Clear previous similar products
-
-            // Filter products that share the same category
-            const similarProducts = data.filter(p => p.category === product.category && p !== product);
-
-            similarProducts.forEach((similarProduct) => {
-                const similarProductCard = document.createElement('div');
-                similarProductCard.classList.add('similar-product');
-                similarProductCard.onclick = () => showProductDetail(data.indexOf(similarProduct), data);
-
-                similarProductCard.innerHTML = `
-                    <img src="${similarProduct.image}" class="product-img" alt="${similarProduct.title}">
-                    <div class="product-title">${similarProduct.title}</div>
-                `;
-                similarProductsContainer.appendChild(similarProductCard);
-            });
-
-            // Hide grid and show details
-            document.getElementById("product-grid").style.display = 'none';
-            document.getElementById("product-detail").style.display = 'block';
-
-            // Scroll to the product details section
-            document.getElementById("product-detail").scrollIntoView({ behavior: "smooth" });
-        }
-
-        // Back to product grid
-        function backToGrid() {
-            document.getElementById("product-grid").style.display = 'grid';
-            document.getElementById("product-detail").style.display = 'none';
-        }
-
-        // Initial load of products and categories
-        loadData(); // Call the function to load data from the JSON file
-        
-    </script>
-<center>
-<h3>About Giant Web Market: The Largest Products Directory, Worldwide Products Database, and Best Price</h3>
-</center>
-
-<p>
-  Giant Web Market stands as one of the largest online marketplaces, offering an extensive products directory that covers everything from Interior, Car Care, and Automotive to Car Parts, Baby products, Books, and Electronic Devices. Whether you're in the market for top-tier PC components, Household essentials, or Phone Accessories, Giant Web Market has it all. For those seeking unique Crafts & Accessories, Jewelry, or Gifts, the platform delivers an abundant selection at the best prices. You can also find everything from Camera & Accessories to Travel & Entertainment products, and essential tools for any project. Men's Shoes, Office & Accessories, and a wide range of Electronic Components are just a few more categories where consumers can access the finest products at unbeatable rates. With its vast database of worldwide products and commitment to providing the best prices, Giant Web Market ensures an ideal shopping experience for everyone.
-</p>
-<ln>
-<section class="navigation-guide">
-  <h3>How to Navigate Through Our Website</h3>
-  <p>Welcome to Giant Web Market! Here’s a quick guide to help you find what you're looking for:</p>
-  
-  <p>Explore our categories for a wide variety of products:</p>
-  <ul style="list-style-type: none; padding: 0;">
-    <li>• <strong>Interior</strong> – Find everything you need to spruce up your living spaces.</li>
-    <li>• <strong>Car Care</strong> – Products to keep your car in top shape.</li>
-    <li>• <strong>Automotive</strong> – Tools, accessories, and parts for your vehicle.</li>
-    <li>• <strong>Car Parts</strong> – Get replacement parts for your car or upgrade it.</li>
-    <li>• <strong>Baby</strong> – Essentials for babies, from toys to furniture.</li>
-    <li>• <strong>Books</strong> – A wide selection of reading material for all interests.</li>
-    <li>• <strong>Electronic Devices</strong> – Gadgets and electronics to enhance your lifestyle.</li>
-    <li>• <strong>PC</strong> – Computers, laptops, and accessories to meet all your needs.</li>
-    <li>• <strong>Household</strong> – Everything you need to make your home comfortable and functional.</li>
-    <li>• <strong>Exterior</strong> – Outdoor furniture and decor to enhance your exterior spaces.</li>
-    <li>• <strong>Phone Accessories</strong> – All the must-have accessories for your mobile devices.</li>
-    <li>• <strong>Crafts & Accessories</strong> – DIY supplies and creative materials.</li>
-    <li>• <strong>Cables</strong> – A variety of cables for your devices and gadgets.</li>
-    <li>• <strong>Casters</strong> – Wheels and casters for furniture or industrial use.</li>
-    <li>• <strong>Jewelry</strong> – Elegant jewelry to suit any occasion.</li>
-    <li>• <strong>Gifts</strong> – Find the perfect gift for any special occasion.</li>
-    <li>• <strong>Camera & Accessories</strong> – Photography gear to capture your best moments.</li>
-    <li>• <strong>Travel & Accessories</strong> – Everything you need for a smooth trip.</li>
-    <li>• <strong>Entertainment</strong> – Movies, games, and more for your leisure time.</li>
-    <li>• <strong>PC Parts</strong> – Components to build or upgrade your computer.</li>
-    <li>• <strong>3D Printed</strong> – Explore the world of 3D printed items and accessories.</li>
-    <li>• <strong>Tools</strong> – Handy tools for any job around the house or workplace.</li>
-    <li>• <strong>School</strong> – Supplies, gadgets, and gear for students of all ages.</li>
-    <li>• <strong>Men's Shoes</strong> – Find a variety of footwear to match your style.</li>
-    <li>• <strong>Office & Accessories</strong> – Organize and enhance your workspace.</li>
-    <li>• <strong>Wallets</strong> – Browse a selection of stylish and functional wallets.</li>
-    <li>• <strong>Electronic Components & Suppliers</strong> – Find parts for electronics, repair, or build your projects.</li>
-  </ul>
-
-  <p>Simply click on any category to start exploring products that interest you! You can also use the search bar for specific items, or navigate through our sub-categories for a more tailored shopping experience.</p>
-  <p>Happy shopping!</p>
-</section>
-<br>
-<center>
-    <a href="https://giantwebmarket.com/index.html">
-      <h2>Giant Web Market</h2>
-    </a>
-    <p>
-      Explore a wide range of home essentials at Giant Web Market, featuring the Phantoscope 12x20 Pillow and luxurious Phantoscope Bathroom Rugs for added comfort. The Phantoscope 3D Butterfly designs make a stunning addition to any room, while the PHANTOSCOPE Pack of 2 Faux items bring modern elegance. Upgrade your bathroom experience with the Squatty Potty Stockholm Folding Bamboo Toilet Stool, combining functionality with style. Keep your DVDs neatly organized with the Stock Your Home DVD Storage Box, available at Giant Web Market for the best prices.
-    </p>
-    <ln>
-    <br>
-    <p><small>Our electronics collection features a wide range of products, including the Pyle Curb Parking Garage, 4PCS Wireless LED lights, the ALLWEI 300W Car Power inverter, and the Exaust Headers for improved vehicle performance. We also offer the Baby ACEBELL Smart WiFi Camera, a variety of mini PCs like the ACEMAGIC Vista V1, and cutting-edge accessories like wireless WiFi video doorbells, LED night lights, and high-quality power strips. For tech enthusiasts, we have options like the Roku Express HD Streaming Device, the AMD Ryzen 7 5700X3D processor, and advanced gaming consoles like the ANBERNIC RG35XXSP. Whether you’re upgrading your car, home, or workspace, we have the perfect electronic products for you.</small></p>
-    </center>
-    <ln>
-    <footer style="text-align: center; font-size: 16px; padding: 20px; background-color: #333; color: #fff;">
-      <p>Discover the Best Deals on a Wide Range of Products – From Electronics and Automotive to Fashion, Home Goods, and Beyond!</p>
-      <p>At Giant Web Market, we offer high-quality items at unbeatable prices. Shop now and find exactly what you need with fast shipping and secure payments.</p>
-      <p>Our global marketplace connects buyers and sellers from around the world, providing amazing products and exclusive deals.</p>
-      <p>Experience the convenience of online shopping at Giant Web Market – Quality and affordability all in one place!</p>
-      <div class="footer-navbar" style="display: flex; justify-content: center; gap: 15px;">
-        <a href="/index.html" style="color: #fff; text-decoration: none; padding: 10px; background-color: #444; border-radius: 5px;">Home</a>
-        <a href="/about.html" style="color: #fff; text-decoration: none; padding: 10px; background-color: #444; border-radius: 5px;">About</a>
-      </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">&copy; 2023 Giant Web Market . All rights reserved.</p>
+        </div>
     </footer>
-    
+
+    <!-- Script to Load Data and Render Cards -->
+    <script>
+        // Fetch data from data.json
+        async function fetchData() {
+            const response = await fetch('data.json');
+            const data = await response.json();
+            return data;
+        }
+
+        // Render cards based on data
+        function renderCards(data, searchQuery = '') {
+            const cardsContainer = document.getElementById('cardsContainer');
+            cardsContainer.innerHTML = ''; // Clear existing cards
+
+            data.forEach(item => {
+                // Filter based on search query
+                if (
+                    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.description.toLowerCase().includes(searchQuery.toLowerCase())
+                ) {
+                    const card = `
+                        <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                            <div class="zoom-effect overflow-hidden">
+                                <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-6">
+                                <div class="flex space-x-2 mb-4">
+                                    <span class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full">${item.category}</span>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">${item.title}</h3>
+                                <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
+                                <a href="${item.url}" target="_blank" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">Learn More</a>
+                            </div>
+                        </div>
+                    `;
+                    cardsContainer.innerHTML += card;
+                }
+            });
+        }
+
+        // Load data and render cards on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const data = await fetchData();
+            renderCards(data);
+
+            // Add event listener for search box
+            const searchBox = document.getElementById('searchBox');
+            searchBox.addEventListener('input', (e) => {
+                renderCards(data, e.target.value);
+            });
+        });
+    </script>
 
 </body>
 </html>
