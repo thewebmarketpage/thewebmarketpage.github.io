@@ -3,60 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Learn more about Giant Web Market, an online shop offering a wide range of products with an intuitive shopping experience.">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-5FB2YTV3KP'); </script>
-    <title>About Us - Giant Web Market</title>
+    <meta name="description" content="Learn more about Giant Web Market and how we provide an intuitive and seamless shopping experience.">
+    <title>About Giant Web Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-        h1 {
-            color: #0d6efd;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        nav {
-            background-color: #1e1e1e;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 5px;
-        }
-        nav a:hover {
-            background-color: #0d6efd;
-        }
+        /* Image Zoom Effect */
+        .zoom-effect { transition: transform 0.3s ease; }
+        .zoom-effect:hover { transform: scale(1.05); }
     </style>
 </head>
-<body>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
+<body class="bg-gray-900 text-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-white">Giant Web Market</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-300 hover:text-white">Home</a>
+                    <a href="about.html" class="text-gray-300 hover:text-white">About</a>
+                </div>
+            </div>
+        </div>
     </nav>
 
-    <div class="container">
-        <h1>About Giant Web Market</h1>
-        <p>Welcome to <strong>Giant Web Market</strong>, your ultimate destination for discovering amazing products at great prices.</p>
-        <p>Our goal is to provide an intuitive and seamless shopping experience with a modern, dark-themed interface that makes browsing enjoyable.</p>
-        <p>We offer a wide range of products across different categories, ensuring that there is something for everyone.</p>
-        <p>Explore, compare, and shop with ease. Thank you for visiting Giant Web Market!</p>
-        <p>Visit our website: <a href="https://giantwebmarket.com/index.html" target="_blank" style="color: #0d6efd;">www.giantwebmarket.com</a></p>
-    </div>
+    <!-- Hero Section -->
+    <section class="bg-gray-800 py-20 text-center">
+        <h1 class="text-5xl font-bold mb-6">About Giant Web Market</h1>
+        <p class="text-xl mb-8">Discover amazing products at great prices. We're here to help you find exactly what you need!</p>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">Welcome to Giant Web Market</h2>
+            <p class="text-xl text-gray-400 mb-8">
+                Welcome to Giant Web Market, your ultimate destination for discovering amazing products at great prices.
+                <br><br>
+                Our goal is to provide an intuitive and seamless shopping experience with a modern, dark-themed interface that makes browsing enjoyable. Whether you're looking for the latest in electronics, home goods, or anything in between, we’ve got you covered.
+                <br><br>
+                We offer a wide range of products across different categories, ensuring that there is something for everyone. Our product listings are designed to be easy to browse, compare, and purchase.
+                <br><br>
+                Explore, compare, and shop with ease. Thank you for visiting Giant Web Market, and we look forward to being your go-to online shopping destination!
+                <br><br>
+                Visit our website: <a href="https://www.giantwebmarket.com" class="text-blue-400">www.giantwebmarket.com</a>
+            </p>
+
+            <div class="text-center mt-12">
+                <h3 class="text-2xl font-semibold mb-4">Our Promise</h3>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    At Giant Web Market, we prioritize customer satisfaction. Our mission is to offer the best deals and provide reliable service. We believe in making online shopping simple and secure, so you can focus on finding the perfect products.
+                    <br><br>
+                    We carefully curate our product listings to ensure high quality, great value, and the latest trends. Whether you're shopping for tech, fashion, or home essentials, you can trust us to deliver an exceptional experience.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-10 text-center">
+        <a href="/about.html" class="text-gray-300 hover:text-white">About</a>
+        <a href="/index.html" class="text-gray-300 hover:text-white">Home</a>
+        <a href="/categories.html" class="text-gray-300 hover:text-white">Categories</a>
+        <p class="text-gray-400">&copy; 2024 Giant Web Market. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
