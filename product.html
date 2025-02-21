@@ -68,6 +68,9 @@
                     return;
                 }
 
+                // Update the title dynamically
+                document.title = `${product.title} - Giant Web Market`;
+
                 document.getElementById("product").innerHTML = `
                     <h2 class="text-3xl font-bold mb-4">${product.title}</h2>
                     <img src="${product.image}" alt="${product.title}" class="w-full max-w-md mx-auto rounded-lg zoom-effect">
