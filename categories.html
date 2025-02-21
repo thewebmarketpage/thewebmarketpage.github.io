@@ -50,14 +50,38 @@
 
                 const categoriesListContainer = document.getElementById("categoriesList");
 
+                // Loop through categories
                 categories.forEach(category => {
-                    categoriesListContainer.innerHTML += `
-                        <div class="bg-gray-800 p-4 rounded-lg shadow-lg border-b-2 border-blue-500">
-                            <a href="category.html?category=${encodeURIComponent(category)}" class="text-white font-bold text-lg hover:text-blue-500 transition duration-300">
-                                ${category}
-                            </a>
+                    // Filter the first 3 products in each category
+                    const categoryProducts = data.filter(product => product.category === category).slice(0, 3);
+
+                    // Generate HTML for the category and products
+                    let categoryHtml = `
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg border-b-2 border-blue-500">
+                            <h3 class="text-white font-bold text-xl mb-4">
+                                <a href="category.html?category=${encodeURIComponent(category)}" class="hover:text-blue-500 transition duration-300">${category}</a>
+                            </h3>
+                            <div class="space-y-4">
+                    `;
+
+                    categoryProducts.forEach(product => {
+                        categoryHtml += `
+                            <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
+                                <a href="product.html?id=${product.id}" class="text-white font-semibold hover:text-blue-500 transition duration-300">
+                                    <img src="${product.image}" alt="${product.title}" class="w-full h-32 object-cover rounded-lg mb-2">
+                                    <h4 class="text-sm">${product.title}</h4>
+                                </a>
+                            </div>
+                        `;
+                    });
+
+                    categoryHtml += `
+                            </div>
                         </div>
                     `;
+
+                    // Append the category block to the categories list container
+                    categoriesListContainer.innerHTML += categoryHtml;
                 });
             } catch (error) {
                 document.getElementById("categoriesList").innerHTML = "<p class='text-red-500'>Error loading categories.</p>";
