@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore the newest products added to Giant Web Market. Stay up to date with the latest arrivals!">
+    <meta name="description" content="Explore the latest products and categories at Giant Web Market. Check out random selections every time you visit!">
     <title>New Products | Giant Web Market</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -32,21 +32,33 @@
 
     <!-- Hero Section -->
     <section class="bg-gray-800 py-20 text-center">
-        <h1 class="text-5xl font-bold mb-6">New Arrivals at Giant Web Market</h1>
-        <p class="text-xl mb-8">Stay up to date with the most recent products added to our collection.</p>
+        <h1 class="text-5xl font-bold mb-6">Explore Random Products and Categories</h1>
+        <p class="text-xl mb-8">Every visit brings you new random selections! Check out the latest products and categories.</p>
         <center>
             <a href="/categories.html" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Categories</a>
         </center>
     </section>
 
-    <!-- New Products Directory -->
+    <!-- Random Categories Section -->
+    <section class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">Random Categories</h2>
+
+            <!-- Categories Container -->
+            <div id="categoriesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Random categories will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Random Products Directory -->
     <section class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Newly Added Products</h2>
+            <h2 class="text-3xl font-bold text-center mb-12">Random Products</h2>
 
-            <!-- Cards Container -->
-            <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Products will be dynamically inserted here -->
+            <!-- Products Container -->
+            <div id="productsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Random products will be dynamically inserted here -->
             </div>
         </div>
     </section>
@@ -59,50 +71,76 @@
         <p class="text-gray-400">&copy; 2024 Giant Web Market. All rights reserved.</p>
     </footer>
 
-    <!-- Script to Load Data and Render Cards -->
+    <!-- Script to Load Data and Render Categories and Products -->
     <script>
         async function fetchData() {
             const response = await fetch('data.json');
             return response.json();
         }
 
-        function renderCards(data) {
-            const cardsContainer = document.getElementById('cardsContainer');
-            cardsContainer.innerHTML = '';
+        function getRandomItems(arr, count) {
+            const shuffled = arr.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
 
-            // Sort the products by the date they were added (assuming each product has a 'dateAdded' field)
-            const sortedData = data.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+        function renderCategories(categories) {
+            const categoriesContainer = document.getElementById('categoriesContainer');
+            categoriesContainer.innerHTML = '';
 
-            // Display the most recent products
-            sortedData.forEach(item => {
-                const card = `
+            categories.forEach(category => {
+                const categoryCard = `
+                    <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">${category.name}</h3>
+                            <p class="text-gray-400">${category.description.substring(0, 100)}...</p>
+                            <a href="category.html?category=${encodeURIComponent(category.name)}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Category</a>
+                        </div>
+                    </div>
+                `;
+                categoriesContainer.innerHTML += categoryCard;
+            });
+        }
+
+        function renderProducts(products) {
+            const productsContainer = document.getElementById('productsContainer');
+            productsContainer.innerHTML = '';
+
+            products.forEach(product => {
+                const productCard = `
                     <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
                         <div class="zoom-effect overflow-hidden">
-                            <a href="product.html?id=${item.id}">
-                                <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover">
+                            <a href="product.html?id=${product.id}">
+                                <img src="${product.image}" alt="${product.title}" class="w-full h-48 object-cover">
                             </a>
                         </div>
                         <div class="p-6">
                             <div class="flex space-x-2 mb-4">
-                                <a href="category.html?category=${encodeURIComponent(item.category)}" class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full hover:bg-blue-600">
-                                    ${item.category}
+                                <a href="category.html?category=${encodeURIComponent(product.category)}" class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full hover:bg-blue-600">
+                                    ${product.category}
                                 </a>
                             </div>
                             <h3 class="text-xl font-bold mb-2">
-                                <a href="product.html?id=${item.id}" class="hover:text-blue-400">${item.title}</a>
+                                <a href="product.html?id=${product.id}" class="hover:text-blue-400">${product.title}</a>
                             </h3>
-                            <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
-                            <a href="product.html?id=${item.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
+                            <p class="text-gray-400">${product.description.substring(0, 100)}...</p>
+                            <a href="product.html?id=${product.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
                         </div>
                     </div>
                 `;
-                cardsContainer.innerHTML += card;
+                productsContainer.innerHTML += productCard;
             });
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
             const data = await fetchData();
-            renderCards(data);
+
+            // Get random categories (5)
+            const randomCategories = getRandomItems(data.categories, 5);
+            renderCategories(randomCategories);
+
+            // Get random products (10)
+            const randomProducts = getRandomItems(data.products, 10);
+            renderProducts(randomProducts);
         });
     </script>
 
