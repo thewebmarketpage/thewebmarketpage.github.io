@@ -4,72 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .zoom-effect {
-            transition: transform 0.3s ease;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
         }
-        .zoom-effect:hover {
-            transform: scale(1.05);
+        .product-container {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        a {
+            color: #00aaff;
+            text-decoration: none;
+            font-weight: bold;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
-    <nav class="bg-gray-800 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="index.html" class="text-xl font-bold text-white">Giant Web Market</a>
-            </div>
-        </div>
-    </nav>
-    
-    <section class="py-20">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div id="productContainer" class="bg-gray-800 rounded-lg shadow-lg p-6"></div>
-        </div>
-    </section>
+<body>
 
-    <footer class="bg-gray-800 py-10 text-center">
-        <p class="text-gray-400">&copy; 2023 Giant Web Market . All rights reserved.</p>
-    </footer>
+    <div id="product" class="product-container">Loading...</div>
 
     <script>
-        async function fetchData() {
-            const response = await fetch('data.json');
-            return await response.json();
-        }
-
-        function getProductId() {
+        async function loadProduct() {
             const params = new URLSearchParams(window.location.search);
-            return params.get('id');
-        }
+            const productId = parseInt(params.get("id"));
 
-        async function renderProduct() {
-            const data = await fetchData();
-            const productId = getProductId();
-            const product = data.find(item => item.id === productId);
-            const container = document.getElementById('productContainer');
-            
-            if (product) {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="zoom-effect overflow-hidden">
-                            <img src="${product.image}" alt="${product.title}" class="w-full h-96 object-cover rounded-lg">
-                        </div>
-                        <div>
-                            <h1 class="text-3xl font-bold mb-4">${product.title}</h1>
-                            <p class="text-gray-400 mb-4">Category: <span class="bg-blue-500 text-white px-2 py-1 rounded">${product.category}</span></p>
-                            <p class="text-gray-300 mb-4">${product.description}</p>
-                            <a href="${product.url}" target="_blank" class="bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
-                        </div>
-                    </div>
+            if (isNaN(productId)) {
+                document.getElementById("product").innerHTML = "<p>Invalid product ID.</p>";
+                return;
+            }
+
+            try {
+                const response = await fetch("data.json");
+                const data = await response.json();
+
+                const product = data.find(p => p.id === productId);
+
+                if (!product) {
+                    document.getElementById("product").innerHTML = "<p>Product not found.</p>";
+                    return;
+                }
+
+                document.getElementById("product").innerHTML = `
+                    <h2>${product.title}</h2>
+                    <img src="${product.image}" alt="${product.title}">
+                    <p><strong>Category:</strong> ${product.category}</p>
+                    <p>${product.description}</p>
+                    <a href="${product.url}" target="_blank">View Product</a>
                 `;
-            } else {
-                container.innerHTML = '<p class="text-center text-red-500 text-xl">Product not found</p>';
+            } catch (error) {
+                document.getElementById("product").innerHTML = "<p>Error loading product data.</p>";
             }
         }
 
-        document.addEventListener('DOMContentLoaded', renderProduct);
+        loadProduct();
     </script>
+
 </body>
 </html>
