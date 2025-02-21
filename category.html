@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category - Giant Web Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .zoom-effect {
+            transition: transform 0.3s ease;
+        }
+        .zoom-effect:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    
+    <!-- Navbar -->
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/index.html" class="text-xl font-bold text-white">Giant Web Market</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/index.html" class="text-gray-300 hover:text-white">Home</a>
+                    <a href="/about.html" class="text-gray-300 hover:text-white">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Category Products -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 id="categoryTitle" class="text-3xl font-bold text-center text-white mb-6">Loading...</h2>
+            <div id="categoryProducts" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">&copy; 2023 Giant Web Market. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        async function loadCategory() {
+            const params = new URLSearchParams(window.location.search);
+            const categoryName = params.get("category");
+
+            if (!categoryName) {
+                document.getElementById("categoryTitle").innerText = "Category not specified.";
+                return;
+            }
+
+            try {
+                const response = await fetch("data.json");
+                const data = await response.json();
+
+                const productsInCategory = data.filter(p => p.category.toLowerCase() === categoryName.toLowerCase());
+                
+                if (productsInCategory.length === 0) {
+                    document.getElementById("categoryTitle").innerText = `No products found in the "${categoryName}" category.`;
+                    return;
+                }
+
+                document.getElementById("categoryTitle").innerText = `Products in "${categoryName}"`;
+
+                const categoryProductsContainer = document.getElementById("categoryProducts");
+
+                productsInCategory.forEach(product => {
+                    categoryProductsContainer.innerHTML += `
+                        <div class="bg-gray-800 p-4 rounded-lg shadow-lg border-b-2 border-blue-500">
+                            <a href="product.html?id=${product.id}">
+                                <img src="${product.image}" alt="${product.title}" class="w-full h-32 object-cover rounded-lg mb-2 zoom-effect">
+                                <h4 class="text-sm font-bold text-white">${product.title}</h4>
+                                <p class="text-sm text-gray-400">${product.category}</p>
+                            </a>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                document.getElementById("categoryTitle").innerText = "Error loading category data.";
+            }
+        }
+
+        loadCategory();
+    </script>
+    
+</body>
+</html>
