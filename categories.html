@@ -67,7 +67,7 @@
 
                     // Category Button
                     const categoryButton = document.createElement("a");
-                    categoryButton.href = `category.html?category=${category.toLowerCase()}`;
+                    categoryButton.href = `category.html?category=${encodeURIComponent(category.toLowerCase())}`;
                     categoryButton.classList.add("inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300");
                     categoryButton.innerText = category;
                     categorySection.appendChild(categoryButton);
