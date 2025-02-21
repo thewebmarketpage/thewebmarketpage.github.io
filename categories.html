@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Giant Web Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .zoom-effect {
+            transition: transform 0.3s ease;
+        }
+        .zoom-effect:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    
+    <!-- Navbar -->
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/index.html" class="text-xl font-bold text-white">Giant Web Market</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/index.html" class="text-gray-300 hover:text-white">Home</a>
+                    <a href="/about.html" class="text-gray-300 hover:text-white">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Categories Section -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-white mb-8">Categories</h2>
+            <div id="categoriesList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">&copy; 2023 Giant Web Market. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        async function loadCategories() {
+            try {
+                const response = await fetch("data.json");
+                const data = await response.json();
+
+                // Extract unique categories from data
+                const categories = [...new Set(data.map(p => p.category))];
+
+                const categoriesListContainer = document.getElementById("categoriesList");
+
+                categories.forEach(category => {
+                    // Filter products by category and get the first 3
+                    const productsInCategory = data.filter(p => p.category === category).slice(0, 3);
+
+                    // Create category button and product grid
+                    const categorySection = document.createElement("div");
+                    categorySection.classList.add("text-center");
+
+                    // Category Button
+                    const categoryButton = document.createElement("a");
+                    categoryButton.href = `category.html?category=${category.toLowerCase()}`;
+                    categoryButton.classList.add("inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300");
+                    categoryButton.innerText = category;
+                    categorySection.appendChild(categoryButton);
+
+                    // Product Grid
+                    const productGrid = document.createElement("div");
+                    productGrid.classList.add("mt-6", "grid", "grid-cols-1", "sm:grid-cols-2", "md:grid-cols-3", "gap-6");
+
+                    productsInCategory.forEach(product => {
+                        const productCard = document.createElement("div");
+                        productCard.classList.add("bg-gray-800", "p-4", "rounded-lg", "shadow-lg", "border-b-2", "border-blue-500");
+
+                        const productLink = document.createElement("a");
+                        productLink.href = `product.html?id=${product.id}`;
+                        productLink.classList.add("block");
+
+                        const productImage = document.createElement("img");
+                        productImage.src = product.image;
+                        productImage.alt = product.title;
+                        productImage.classList.add("w-full", "h-32", "object-cover", "rounded-lg", "mb-2", "zoom-effect");
+
+                        const productTitle = document.createElement("h4");
+                        productTitle.classList.add("text-sm", "font-bold", "text-white");
+                        productTitle.innerText = product.title;
+
+                        const productCategory = document.createElement("p");
+                        productCategory.classList.add("text-sm", "text-gray-400");
+                        productCategory.innerText = product.category;
+
+                        productLink.appendChild(productImage);
+                        productLink.appendChild(productTitle);
+                        productLink.appendChild(productCategory);
+
+                        productCard.appendChild(productLink);
+                        productGrid.appendChild(productCard);
+                    });
+
+                    categorySection.appendChild(productGrid);
+                    categoriesListContainer.appendChild(categorySection);
+                });
+            } catch (error) {
+                document.getElementById("categoriesList").innerHTML = "<p>Error loading category data.</p>";
+            }
+        }
+
+        loadCategories();
+    </script>
+    
+</body>
+</html>
