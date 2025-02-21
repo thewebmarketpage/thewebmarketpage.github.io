@@ -3,39 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details</title>
+    <title>Product Details - Giant Web Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
+        .zoom-effect {
+            transition: transform 0.3s ease;
         }
-        .product-container {
-            background: #1e1e1e;
-            border-radius: 10px;
-            padding: 20px;
-            max-width: 500px;
-            margin: auto;
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-        }
-        img {
-            max-width: 100%;
-            border-radius: 10px;
-        }
-        a {
-            color: #00aaff;
-            text-decoration: none;
-            font-weight: bold;
+        .zoom-effect:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
-<body>
-
-    <div id="product" class="product-container">Loading...</div>
-
+<body class="bg-gray-900 text-gray-100">
+    
+    <!-- Navbar -->
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/index.html" class="text-xl font-bold text-white">Giant Web Market</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/index.html" class="text-gray-300 hover:text-white">Home</a>
+                    <a href="/about.html" class="text-gray-300 hover:text-white">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Product Details -->
+    <section class="py-20">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div id="product" class="bg-gray-800 p-6 rounded-lg shadow-lg border-b-4 border-blue-500">Loading...</div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400">&copy; 2023 Giant Web Market. All rights reserved.</p>
+        </div>
+    </footer>
+    
     <script>
         async function loadProduct() {
             const params = new URLSearchParams(window.location.search);
@@ -58,11 +67,11 @@
                 }
 
                 document.getElementById("product").innerHTML = `
-                    <h2>${product.title}</h2>
-                    <img src="${product.image}" alt="${product.title}">
-                    <p><strong>Category:</strong> ${product.category}</p>
-                    <p>${product.description}</p>
-                    <a href="${product.url}" target="_blank">View Product</a>
+                    <h2 class="text-3xl font-bold mb-4">${product.title}</h2>
+                    <img src="${product.image}" alt="${product.title}" class="w-full max-w-md mx-auto rounded-lg zoom-effect">
+                    <p class="text-lg mt-4"><strong>Category:</strong> ${product.category}</p>
+                    <p class="mt-2">${product.description}</p>
+                    <a href="${product.url}" target="_blank" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
                 `;
             } catch (error) {
                 document.getElementById("product").innerHTML = "<p>Error loading product data.</p>";
@@ -71,6 +80,6 @@
 
         loadProduct();
     </script>
-
+    
 </body>
 </html>
