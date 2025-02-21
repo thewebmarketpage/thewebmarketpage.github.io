@@ -49,10 +49,19 @@
     <script>
         async function loadCategories() {
             try {
+                // Fetch the data.json file
                 const response = await fetch("data.json");
+                if (!response.ok) {
+                    throw new Error("Data file could not be loaded.");
+                }
                 const data = await response.json();
 
-                // Extract unique categories from data
+                // Check if the data is valid and has content
+                if (!Array.isArray(data) || data.length === 0) {
+                    throw new Error("No products found in data.json.");
+                }
+
+                // Extract unique categories
                 const categories = [...new Set(data.map(p => p.category))];
 
                 const categoriesListContainer = document.getElementById("categoriesList");
