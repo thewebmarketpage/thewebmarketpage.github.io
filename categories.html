@@ -109,6 +109,7 @@
                     categoriesListContainer.appendChild(categorySection);
                 });
             } catch (error) {
+                console.error('Error loading category data:', error);
                 document.getElementById("categoriesList").innerHTML = "<p>Error loading category data.</p>";
             }
         }
