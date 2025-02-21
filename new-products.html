@@ -87,13 +87,14 @@
             const categoriesContainer = document.getElementById('categoriesContainer');
             categoriesContainer.innerHTML = '';
 
+            // Here we can use a placeholder for random categories
             categories.forEach(category => {
                 const categoryCard = `
                     <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
                         <div class="p-6">
-                            <h3 class="text-xl font-bold mb-2">${category.name}</h3>
-                            <p class="text-gray-400">${category.description.substring(0, 100)}...</p>
-                            <a href="category.html?category=${encodeURIComponent(category.name)}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Category</a>
+                            <h3 class="text-xl font-bold mb-2">${category}</h3>
+                            <p class="text-gray-400">Explore various products in this category.</p>
+                            <a href="category.html?category=${encodeURIComponent(category)}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Category</a>
                         </div>
                     </div>
                 `;
@@ -109,7 +110,7 @@
                 const productCard = `
                     <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
                         <div class="zoom-effect overflow-hidden">
-                            <a href="product.html?id=${product.id}">
+                            <a href="${product.url}" target="_blank">
                                 <img src="${product.image}" alt="${product.title}" class="w-full h-48 object-cover">
                             </a>
                         </div>
@@ -120,10 +121,10 @@
                                 </a>
                             </div>
                             <h3 class="text-xl font-bold mb-2">
-                                <a href="product.html?id=${product.id}" class="hover:text-blue-400">${product.title}</a>
+                                <a href="${product.url}" target="_blank" class="hover:text-blue-400">${product.title}</a>
                             </h3>
                             <p class="text-gray-400">${product.description.substring(0, 100)}...</p>
-                            <a href="product.html?id=${product.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
+                            <a href="${product.url}" target="_blank" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
                         </div>
                     </div>
                 `;
@@ -134,12 +135,13 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const data = await fetchData();
 
-            // Get random categories (5)
-            const randomCategories = getRandomItems(data.categories, 5);
+            // Randomize and show 5 categories (you can define them here)
+            const predefinedCategories = ["Baby", "Electronics", "Clothing", "Furniture", "Sports"];
+            const randomCategories = getRandomItems(predefinedCategories, 5);
             renderCategories(randomCategories);
 
-            // Get random products (10)
-            const randomProducts = getRandomItems(data.products, 10);
+            // Show 10 random products
+            const randomProducts = getRandomItems(data, 10);
             renderProducts(randomProducts);
         });
     </script>
