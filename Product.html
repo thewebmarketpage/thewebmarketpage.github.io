@@ -33,8 +33,11 @@
     
     <!-- Product Details -->
     <section class="py-20">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div id="product" class="bg-gray-800 p-6 rounded-lg shadow-lg border-b-4 border-blue-500">Loading...</div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
+            <!-- Similar Products -->
+            <div id="similarProducts" class="w-1/4 pr-4 hidden md:block"></div>
+            <!-- Main Product -->
+            <div id="product" class="w-3/4 bg-gray-800 p-6 rounded-lg shadow-lg border-b-4 border-blue-500 text-center">Loading...</div>
         </div>
     </section>
     
@@ -60,7 +63,6 @@
                 const data = await response.json();
 
                 const product = data.find(p => p.id === productId);
-
                 if (!product) {
                     document.getElementById("product").innerHTML = "<p>Product not found.</p>";
                     return;
@@ -73,6 +75,24 @@
                     <p class="mt-2">${product.description}</p>
                     <a href="${product.url}" target="_blank" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
                 `;
+
+                // Display similar products
+                const similarProductsContainer = document.getElementById("similarProducts");
+                const similarProducts = data.filter(p => p.category === product.category && p.id !== productId);
+                
+                if (similarProducts.length > 0) {
+                    similarProductsContainer.innerHTML = '<h3 class="text-xl font-bold mb-4">Similar Products</h3>';
+                    similarProducts.forEach(item => {
+                        similarProductsContainer.innerHTML += `
+                            <div class="bg-gray-800 p-4 mb-4 rounded-lg shadow-lg border-b-2 border-blue-500">
+                                <a href="product.html?id=${item.id}">
+                                    <img src="${item.image}" alt="${item.title}" class="w-full h-32 object-cover rounded-lg mb-2">
+                                    <h4 class="text-sm font-bold">${item.title}</h4>
+                                </a>
+                            </div>
+                        `;
+                    });
+                }
             } catch (error) {
                 document.getElementById("product").innerHTML = "<p>Error loading product data.</p>";
             }
