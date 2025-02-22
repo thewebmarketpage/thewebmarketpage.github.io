@@ -9,6 +9,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" href="style.css"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        let linksContainer = document.getElementById('links-container');
+        for (let i = 0; i < 200; i++) {
+          let linkElement = document.createElement('p');
+          let link = document.createElement('a');
+          link.href = 'page' + i + '.html';
+          link.textContent = 'Page ' + i;
+          linkElement.appendChild(link);
+          linksContainer.appendChild(linkElement);
+        }
+      });
+    </script>
   </head>
   <body>
     <div class="global_container_">
@@ -30,16 +43,7 @@
             <img class="text" src="images/back_to_shop.png" alt="BACK TO SHOP" width="167" height="18" title="BACK TO SHOP">
           </div>
         </div>
-        <div class="contener-for-links">
-          <script>
-            $(document).ready(function() {
-              let linksContainer = $('.contener-for-links');
-              for (let i = 0; i < 200; i++) {
-                linksContainer.append('<p><a href="page' + i + '.html">Page ' + i + '</a></p>');
-              }
-            });
-          </script>
-        </div>
+        <div class="contener-for-links" id="links-container"></div>
       </div>
     </div>
   </body>
