@@ -1,53 +1,61 @@
 <!doctype html>
 <html>
   <head>
-    <title>199 Links Page</title>
+    <title>Gint Web Market - Site Map</title>
     <meta charset="UTF-8">
-    <meta name="description" content="199 dynamically loaded links">
+    <meta name="description" content="Your site's description should be here">
+    <meta name="keywords" content="Your site's keywords should be here">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" href="style.css"> 
+    <!--[if IE 6]>
+	<style type="text/css">
+		* html .group {
+			height: 1%;
+		}
+	</style>
+  <![endif]--> 
+    <!--[if IE 7]>
+	<style type="text/css">
+		*:first-child+html .group {
+			min-height: 1px;
+		}
+	</style>
+  <![endif]--> 
+    <!--[if lt IE 9]> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script> 
+  <![endif]--> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/match-height.js"></script> 
+    <script>
+		$(function () {
+			$('.match-height-bootstrap-row > * > *').matchHeight();
+			$('.match-height > *').matchHeight();
+		})
+	</script>
   </head>
   <body>
     <div class="global_container_">
       <div class="l-constrained">
         <header class="header group">
-          <img class="website-link" src="images/website_link.png" alt="GintWebMarket" width="369" height="38">
-          <div class="about-button-borders-holder">
-            <img class="about-button-borders-link" src="images/about_button_borders_link.png" alt="About" width="88" height="24">
+          <img class="website-link" src="images/website_link.png" alt="GintWebMarket" width="369" height="38" title="GintWebMarket">
+          <div class="shape-1-copy-3-holder">
+            <img class="about" src="images/about.png" alt="ABOUT" width="86" height="20" title="ABOUT">
           </div>
-          <div class="home-button-borders-holder">
-            <img class="home-button-borders-link" src="images/home_button_borders_link.png" alt="Home" width="85" height="23">
+          <div class="shape-1-copy-2-holder">
+            <img class="home" src="images/home.png" alt="HOME" width="71" height="20" title="HOME">
           </div>
         </header>
-        <div class="col group" id="linksContainer">
-          <!-- 199 Links will be inserted here -->
+        <div class="row match-height group">
+          <div class="shape-1-copy-holder">
+            <img class="sitemap" src="images/sitemap.png" alt="SITEMAP" width="104" height="20" title="SITEMAP">
+          </div>
+          <div class="shape-1-holder">
+            <img class="text" src="images/back_to_shop.png" alt="BACK TO SHOP" width="167" height="18" title="BACK TO SHOP">
+          </div>
         </div>
+        <div class="contener-for-links"></div>
       </div>
     </div>
-    
-    <script>
-        async function fetchData() {
-            const response = await fetch('data.json');
-            return response.json();
-        }
-
-        function renderLinks(data) {
-            const linksContainer = document.getElementById('linksContainer');
-            linksContainer.innerHTML = '';
-
-            for (let i = 1; i <= 199; i++) {
-                const link = document.createElement('a');
-                link.href = `#link${i}`;
-                link.textContent = `Link ${i}`;
-                link.className = "block text-blue-500 hover:underline mb-2";
-                linksContainer.appendChild(link);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await fetchData();
-            renderLinks();
-        });
-    </script>
   </body>
 </html>
