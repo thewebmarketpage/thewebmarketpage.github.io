@@ -29,16 +29,22 @@
       fetch('data.json')
         .then(response => response.json())
         .then(data => {
+          if (!data || Object.keys(data).length === 0) {
+            throw new Error('No data found');
+          }
           const container = document.getElementById('product-container');
           container.innerHTML = `
-            <img class="product-image-1" src="${data.image}" alt="${data.title}" width="268" height="251">
-            <h2>${data.title}</h2>
-            <p><strong>Category:</strong> ${data.category}</p>
-            <p>${data.description}</p>
-            <a href="${data.url}" target="_blank">View Product</a>
+            <img class="product-image-1" src="${data.image || ''}" alt="${data.title || 'No Title'}" width="268" height="251">
+            <h2>${data.title || 'No Title'}</h2>
+            <p><strong>Category:</strong> ${data.category || 'Unknown'}</p>
+            <p>${data.description || 'No description available'}</p>
+            <a href="${data.url || '#'}" target="_blank">View Product</a>
           `;
         })
-        .catch(error => console.error('Error loading data:', error));
+        .catch(error => {
+          console.error('Error loading data:', error);
+          document.getElementById('product-container').innerHTML = '<p>Error loading product data. Please try again later.</p>';
+        });
     </script>
   </body>
 </html>
