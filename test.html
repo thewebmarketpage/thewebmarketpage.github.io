@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Product Page</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Product details dynamically loaded from data.json">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="style.css"> 
+  </head>
+  <body>
+    <div class="global_container_">
+      <div class="l-constrained">
+        <header class="header group">
+          <img class="website-link" src="images/website_link.png" alt="GintWebMarket" width="369" height="38">
+          <div class="about-button-borders-holder">
+            <img class="about-button-borders-link" src="images/about_button_borders_link.png" alt="About" width="88" height="24">
+          </div>
+          <div class="home-button-borders-holder">
+            <img class="home-button-borders-link" src="images/home_button_borders_link.png" alt="Home" width="85" height="23">
+          </div>
+        </header>
+        <div class="col group" id="product-container">
+          <!-- Product details will be inserted here -->
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById('product-container');
+          container.innerHTML = `
+            <img class="product-image-1" src="${data.image}" alt="${data.title}" width="268" height="251">
+            <h2>${data.title}</h2>
+            <p><strong>Category:</strong> ${data.category}</p>
+            <p>${data.description}</p>
+            <a href="${data.url}" target="_blank">View Product</a>
+          `;
+        })
+        .catch(error => console.error('Error loading data:', error));
+    </script>
+  </body>
+</html>
