@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title>199 Links Page</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="199 dynamically loaded links">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="style.css"> 
+  </head>
+  <body>
+    <div class="global_container_">
+      <div class="l-constrained">
+        <header class="header group">
+          <img class="website-link" src="images/website_link.png" alt="GintWebMarket" width="369" height="38">
+          <div class="about-button-borders-holder">
+            <img class="about-button-borders-link" src="images/about_button_borders_link.png" alt="About" width="88" height="24">
+          </div>
+          <div class="home-button-borders-holder">
+            <img class="home-button-borders-link" src="images/home_button_borders_link.png" alt="Home" width="85" height="23">
+          </div>
+        </header>
+        <div class="col group" id="linksContainer">
+          <!-- 199 Links will be inserted here -->
+        </div>
+      </div>
+    </div>
+    
+    <script>
+        async function fetchData() {
+            const response = await fetch('data.json');
+            return response.json();
+        }
+
+        function renderLinks(data) {
+            const linksContainer = document.getElementById('linksContainer');
+            linksContainer.innerHTML = '';
+
+            for (let i = 1; i <= 199; i++) {
+                const link = document.createElement('a');
+                link.href = `#link${i}`;
+                link.textContent = `Link ${i}`;
+                link.className = "block text-blue-500 hover:underline mb-2";
+                linksContainer.appendChild(link);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchData();
+            renderLinks();
+        });
+    </script>
+  </body>
+</html>
