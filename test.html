@@ -19,31 +19,62 @@
             <img class="home-button-borders-link" src="images/home_button_borders_link.png" alt="Home" width="85" height="23">
           </div>
         </header>
-        <div class="col group" id="product-container">
-          <!-- Product details will be inserted here -->
+        <input type="text" id="searchBox" placeholder="Search products..." class="search-input">
+        <div class="col group" id="cardsContainer">
+          <!-- Product cards will be inserted here -->
         </div>
       </div>
     </div>
     
     <script>
-      fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-          if (!data || Object.keys(data).length === 0) {
-            throw new Error('No data found');
-          }
-          const container = document.getElementById('product-container');
-          container.innerHTML = `
-            <img class="product-image-1" src="${data.image || ''}" alt="${data.title || 'No Title'}" width="268" height="251">
-            <h2>${data.title || 'No Title'}</h2>
-            <p><strong>Category:</strong> ${data.category || 'Unknown'}</p>
-            <p>${data.description || 'No description available'}</p>
-            <a href="${data.url || '#'}" target="_blank">View Product</a>
-          `;
-        })
-        .catch(error => {
-          console.error('Error loading data:', error);
-          document.getElementById('product-container').innerHTML = '<p>Error loading product data. Please try again later.</p>';
+        async function fetchData() {
+            const response = await fetch('data.json');
+            return response.json();
+        }
+
+        function renderCards(data, searchQuery = '') {
+            const cardsContainer = document.getElementById('cardsContainer');
+            cardsContainer.innerHTML = '';
+
+            data.forEach(item => {
+                if (
+                    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    item.description.toLowerCase().includes(searchQuery.toLowerCase())
+                ) {
+                    const card = `
+                        <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                            <div class="zoom-effect overflow-hidden">
+                                <a href="product.html?id=${item.id}">
+                                    <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover">
+                                </a>
+                            </div>
+                            <div class="p-6">
+                                <div class="flex space-x-2 mb-4">
+                                    <a href="category.html?category=${encodeURIComponent(item.category)}" class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full hover:bg-blue-600">
+                                        ${item.category}
+                                    </a>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">
+                                    <a href="product.html?id=${item.id}" class="hover:text-blue-400">${item.title}</a>
+                                </h3>
+                                <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
+                                <a href="product.html?id=${item.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
+                            </div>
+                        </div>
+                    `;
+                    cardsContainer.innerHTML += card;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const data = await fetchData();
+            renderCards(data);
+
+            document.getElementById('searchBox').addEventListener('input', (e) => {
+                renderCards(data, e.target.value);
+            });
         });
     </script>
   </body>
