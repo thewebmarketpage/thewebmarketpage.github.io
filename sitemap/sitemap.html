@@ -40,6 +40,10 @@
             width: 200px;
             text-align: center;
         }
+        #visitedTitles {
+            margin-top: 20px;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -56,24 +60,38 @@
         <a href="#" class="button">Support</a>
     </footer>
     <p>Website Name</p>
+
+    <div id="visitedTitles">
+        <h2>Visited Page Titles</h2>
+        <ul id="titlesList"></ul>
+    </div>
+
     <script>
         const sitemap = document.getElementById("sitemap");
+        const titlesList = document.getElementById("titlesList");
+
+        // Simulate visiting each link from 0 to 199
         for (let i = 0; i < 200; i++) {
             let title = `Page ${i}`;
             let link = document.createElement("a");
-            link.href = `https://giantwebmarket.com/product.html?id=${i}`;
+            link.href = `product.html?id=${i}`;
             link.textContent = title;
             link.style.color = "white";
-            
+
             let titleElement = document.createElement("p");
             titleElement.textContent = title;
-            
+
             let box = document.createElement("div");
             box.classList.add("box");
             box.appendChild(titleElement);
             box.appendChild(link);
-            
+
             sitemap.appendChild(box);
+
+            // Simulate visiting the link and adding its title to the list
+            let visitedTitle = document.createElement("li");
+            visitedTitle.textContent = title;
+            titlesList.appendChild(visitedTitle);
         }
     </script>
 </body>
