@@ -70,28 +70,37 @@
         const sitemap = document.getElementById("sitemap");
         const titlesList = document.getElementById("titlesList");
 
-        // Simulate visiting each link from 0 to 199
+        async function fetchPageTitle(url, index) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, "text/html");
+                const title = doc.querySelector("title")?.innerText || `Page ${index} (No Title)`;
+                
+                // Add title to the visited list
+                let visitedTitle = document.createElement("li");
+                visitedTitle.textContent = `${index}: ${title}`;
+                titlesList.appendChild(visitedTitle);
+            } catch (error) {
+                console.error(`Failed to fetch ${url}:`, error);
+            }
+        }
+
         for (let i = 0; i < 200; i++) {
-            let title = `Page ${i}`;
             let link = document.createElement("a");
             link.href = `product.html?id=${i}`;
-            link.textContent = title;
+            link.textContent = `Page ${i}`;
             link.style.color = "white";
-
-            let titleElement = document.createElement("p");
-            titleElement.textContent = title;
 
             let box = document.createElement("div");
             box.classList.add("box");
-            box.appendChild(titleElement);
             box.appendChild(link);
-
+            
             sitemap.appendChild(box);
 
-            // Simulate visiting the link and adding its title to the list
-            let visitedTitle = document.createElement("li");
-            visitedTitle.textContent = title;
-            titlesList.appendChild(visitedTitle);
+            // Visit the link and fetch its title
+            fetchPageTitle(`product.html?id=${i}`, i);
         }
     </script>
 </body>
