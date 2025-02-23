@@ -40,10 +40,6 @@
             width: 200px;
             text-align: center;
         }
-        #visitedTitles {
-            margin-top: 20px;
-            padding: 20px;
-        }
     </style>
 </head>
 <body>
@@ -61,46 +57,45 @@
     </footer>
     <p>Website Name</p>
 
-    <div id="visitedTitles">
-        <h2>Visited Page Titles</h2>
-        <ul id="titlesList"></ul>
-    </div>
-
     <script>
         const sitemap = document.getElementById("sitemap");
-        const titlesList = document.getElementById("titlesList");
 
-        async function fetchPageTitle(url, index) {
+        async function fetchPageTitle(url, box, index) {
             try {
                 const response = await fetch(url);
                 const text = await response.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, "text/html");
                 const title = doc.querySelector("title")?.innerText || `Page ${index} (No Title)`;
-                
-                // Add title to the visited list
-                let visitedTitle = document.createElement("li");
-                visitedTitle.textContent = `${index}: ${title}`;
-                titlesList.appendChild(visitedTitle);
+
+                // Update the box with the actual title
+                box.querySelector(".title").textContent = title;
             } catch (error) {
                 console.error(`Failed to fetch ${url}:`, error);
             }
         }
 
         for (let i = 0; i < 200; i++) {
-            let link = document.createElement("a");
-            link.href = `product.html?id=${i}`;
-            link.textContent = `Page ${i}`;
-            link.style.color = "white";
+            let pageUrl = `product.html?id=${i}`;
 
             let box = document.createElement("div");
             box.classList.add("box");
+
+            let titleElement = document.createElement("p");
+            titleElement.classList.add("title");
+            titleElement.textContent = `Fetching...`;
+
+            let link = document.createElement("a");
+            link.href = pageUrl;
+            link.textContent = `Visit Page ${i}`;
+            link.style.color = "white";
+
+            box.appendChild(titleElement);
             box.appendChild(link);
-            
             sitemap.appendChild(box);
 
-            // Visit the link and fetch its title
-            fetchPageTitle(`product.html?id=${i}`, i);
+            // Fetch title and update the box
+            fetchPageTitle(pageUrl, box, i);
         }
     </script>
 </body>
