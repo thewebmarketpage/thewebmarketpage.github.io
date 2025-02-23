@@ -109,6 +109,15 @@
 
         loadCategory();
     </script>
-    
+
+
+
+<script type="text/javascript" src="https://js.getlasso.co/lasso-performance.min.js" defer></script>
+<script type="text/javascript" defer>
+    document.addEventListener("lassoTrackingEventLoaded", function(e) {
+        e.detail.init();
+    });
+</script>
+
 </body>
 </html>
