@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading Sitemap...</title>
+    <title>Loading...</title>
     <style>
         body {
             background: black;
@@ -29,18 +29,22 @@
             font-weight: bold;
         }
         .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 10px;
             padding: 20px;
+            max-width: 1200px;
+            margin: auto;
         }
         .box {
-            border: 2px solid white;
-            padding: 10px;
-            width: 250px;
-            text-align: center;
             background: #222;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .box img {
+            width: 100%;
+            height: auto;
             border-radius: 5px;
         }
         .box a {
@@ -48,11 +52,6 @@
             text-decoration: none;
             display: block;
             margin-top: 5px;
-        }
-        .box img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -68,7 +67,7 @@
     <h1 id="pageTitle">Loading Sitemap...</h1>
 
     <!-- Sitemap Content -->
-    <div class="container" id="sitemap">Loading products...</div>
+    <div class="container" id="sitemap"></div>
 
     <!-- Footer -->
     <footer>
@@ -80,56 +79,40 @@
     <p>&copy; 2024 Giant Web Market</p>
 
     <script>
-        async function loadSitemap() {
+        async function loadProducts() {
             try {
                 const response = await fetch("data.json");
-                if (!response.ok) throw new Error("Failed to load data.json");
+                if (!response.ok) throw new Error("Failed to fetch data.json");
 
-                const data = await response.json();
-                const sitemapContainer = document.getElementById("sitemap");
+                const products = await response.json();
+                const sitemap = document.getElementById("sitemap");
 
-                // If no products are found, display a message
-                if (data.length === 0) {
-                    sitemapContainer.innerHTML = "<p>No products available.</p>";
+                // If no products, show a message
+                if (products.length === 0) {
+                    sitemap.innerHTML = "<p>No products available.</p>";
                     return;
                 }
 
-                // Set the page title using the first product's title
-                document.title = `Sitemap - ${data[0].title}`;
-                document.getElementById("pageTitle").innerText = `Sitemap - ${data[0].title}`;
+                // Update page title
+                document.title = `Sitemap - ${products[0].title}`;
+                document.getElementById("pageTitle").innerText = `Sitemap - ${products[0].title}`;
 
-                // Clear loading text
-                sitemapContainer.innerHTML = "";
-
-                // Generate product links
-                data.forEach(product => {
-                    let box = document.createElement("div");
-                    box.classList.add("box");
-
-                    let image = document.createElement("img");
-                    image.src = product.image;
-                    image.alt = product.title;
-
-                    let titleElement = document.createElement("p");
-                    titleElement.textContent = product.title;
-
-                    let link = document.createElement("a");
-                    link.href = `product.html?id=${product.id}`;
-                    link.textContent = "View Product";
-
-                    box.appendChild(image);
-                    box.appendChild(titleElement);
-                    box.appendChild(link);
-                    sitemapContainer.appendChild(box);
-                });
+                // Generate product boxes
+                sitemap.innerHTML = products.map(product => `
+                    <div class="box">
+                        <img src="${product.image}" alt="${product.title}">
+                        <p>${product.title}</p>
+                        <a href="product.html?id=${product.id}">View Product</a>
+                    </div>
+                `).join("");
 
             } catch (error) {
-                console.error("Error loading sitemap:", error);
+                console.error("Error loading products:", error);
                 document.getElementById("sitemap").innerHTML = "<p>Failed to load products.</p>";
             }
         }
 
-        loadSitemap();
+        loadProducts();
     </script>
 
 </body>
