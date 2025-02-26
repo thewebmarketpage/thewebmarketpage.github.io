@@ -44,59 +44,61 @@
 </head>
 <body>
     <nav>
-        <a href="#" class="button">Home</a>
-        <a href="#" class="button">About</a>
-        <a href="#" class="button">Contact</a>
+        <a href="index.html" class="button">Home</a>
+        <a href="about.html" class="button">About</a>
+        <a href="contact.html" class="button">Contact</a>
     </nav>
-    <h1>Website Sitemap</h1>
+    
+    <h1 id="pageTitle">Website Sitemap</h1>
+
     <div class="container" id="sitemap"></div>
+
     <footer>
-        <a href="#" class="button">Privacy</a>
-        <a href="#" class="button">Terms</a>
-        <a href="#" class="button">Support</a>
+        <a href="privacy.html" class="button">Privacy</a>
+        <a href="terms.html" class="button">Terms</a>
+        <a href="support.html" class="button">Support</a>
     </footer>
+
     <p>Website Name</p>
 
     <script>
-        const sitemap = document.getElementById("sitemap");
-
-        async function fetchPageTitle(url, box, index) {
+        async function loadSitemap() {
             try {
-                const response = await fetch(url);
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, "text/html");
-                const title = doc.querySelector("title")?.innerText || `Page ${index} (No Title)`;
+                const response = await fetch("data.json");
+                if (!response.ok) throw new Error("Failed to load data.json");
 
-                // Update the box with the actual title
-                box.querySelector(".title").textContent = title;
+                const data = await response.json();
+                const sitemapContainer = document.getElementById("sitemap");
+
+                // Set the page title to the first product title (optional)
+                if (data.length > 0) {
+                    document.title = `${data[0].title} - Sitemap`;
+                    document.getElementById("pageTitle").innerText = `Sitemap - ${data[0].title}`;
+                }
+
+                data.forEach(product => {
+                    let box = document.createElement("div");
+                    box.classList.add("box");
+
+                    let titleElement = document.createElement("p");
+                    titleElement.textContent = product.title;
+
+                    let link = document.createElement("a");
+                    link.href = `product.html?id=${product.id}`;
+                    link.textContent = "View Product";
+                    link.style.color = "white";
+
+                    box.appendChild(titleElement);
+                    box.appendChild(link);
+                    sitemapContainer.appendChild(box);
+                });
+
             } catch (error) {
-                console.error(`Failed to fetch ${url}:`, error);
+                console.error("Error loading sitemap:", error);
             }
         }
 
-        for (let i = 0; i < 200; i++) {
-            let pageUrl = `https://giantwebmarket.com/product.html?id=${i}`;
-
-            let box = document.createElement("div");
-            box.classList.add("box");
-
-            let titleElement = document.createElement("p");
-            titleElement.classList.add("title");
-            titleElement.textContent = `Fetching...`;
-
-            let link = document.createElement("a");
-            link.href = pageUrl;
-            link.textContent = `Visit Page ${i}`;
-            link.style.color = "white";
-
-            box.appendChild(titleElement);
-            box.appendChild(link);
-            sitemap.appendChild(box);
-
-            // Fetch title and update the box
-            fetchPageTitle(pageUrl, box, i);
-        }
+        loadSitemap();
     </script>
 </body>
 </html>
