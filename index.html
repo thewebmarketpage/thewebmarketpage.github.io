@@ -1,150 +1,135 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore our wide range of electronics, including smart home devices, mini PCs, gaming consoles, LED lights, power inverters, and more. Upgrade your tech today!">
-    <title>Giant Web Market</title>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+async function fetchData() {
+    const response = await fetch('data.json');
+    return response.json();
+}
 
-  gtag('config', 'G-5FB2YTV3KP');
-</script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Image Zoom Effect */
-        .zoom-effect { transition: transform 0.3s ease; }
-        .zoom-effect:hover { transform: scale(1.05); }
-    </style>
-</head>
-<body class="bg-gray-900 text-gray-100">
+// Global variable to store all data
+let allProducts = [];
+// Number of items to load initially and each time more are loaded
+const itemsPerLoad = 9;
+// Track how many items are currently displayed
+let currentlyLoaded = 0;
 
-    <!-- Navbar -->
-    <nav class="bg-gray-800 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="index.html" class="text-xl font-bold text-white">Giant Web Market</a>
+function lazyLoadCards(data, searchQuery = '') {
+    const cardsContainer = document.getElementById('cardsContainer');
+    
+    // Filter data based on search query
+    const filteredData = data.filter(item => 
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
+    // Clear container on new search
+    if (searchQuery !== '' || currentlyLoaded === 0) {
+        cardsContainer.innerHTML = '';
+        currentlyLoaded = 0;
+    }
+    
+    // Calculate end index for current batch
+    const endIndex = Math.min(currentlyLoaded + itemsPerLoad, filteredData.length);
+    
+    // Get the current batch of items to display
+    const itemsToShow = filteredData.slice(currentlyLoaded, endIndex);
+    
+    // Create and append cards for each item in the current batch
+    itemsToShow.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl";
+        card.innerHTML = `
+            <div class="zoom-effect overflow-hidden">
+                <a href="product.html?id=${item.id}">
+                    <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy">
+                </a>
+            </div>
+            <div class="p-6">
+                <div class="flex space-x-2 mb-4">
+                    <a href="category.html?category=${encodeURIComponent(item.category)}" class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full hover:bg-blue-600">
+                        ${item.category}
+                    </a>
                 </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="index.html" class="text-gray-300 hover:text-white">Home</a>
-                    <a href="about.html" class="text-gray-300 hover:text-white">About</a>
-                </div>
+                <h3 class="text-xl font-bold mb-2">
+                    <a href="product.html?id=${item.id}" class="hover:text-blue-400">${item.title}</a>
+                </h3>
+                <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
+                <a href="product.html?id=${item.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="bg-gray-800 py-20 text-center">
-        <h1 class="text-5xl font-bold mb-6">Welcome to Giant Web Market</h1>
-        <h3>The Largest Products Directory</h3>
-        <p class="text-xl mb-8">Find the best products at unbeatable prices.</p>
-        <center>
-            <a href="/categories.html" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Categories</a>
-        </center>
-    </section>
-
-    <!-- Products Directory -->
-    <section class="py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center mb-12">Our Products</h2>
-
-            <!-- Search Box -->
-            <div class="mb-8">
-                <input
-                    type="text"
-                    id="searchBox"
-                    placeholder="Search products..."
-                    class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-
-            <!-- Cards Container -->
-            <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Products will be dynamically inserted here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 py-10 text-center">
-        <a href="/about.html" class="text-gray-300 hover:text-white">About</a>
-        <a href="/index.html" class="text-gray-300 hover:text-white">Home</a>
-        <a href="/categories.html" class="text-gray-300 hover:text-white">Categories</a>
-        <a href="/new-products.html" class="text-gray-300 hover:text-white">New Products</a>
-       <center>
-         <a href="/index.html" target="_blank" rel="noopener nofollow">
-    <img src="/logo-giantwebmarket.com-website.png" alt="Giant Web Market" width="200">
-        </a>
-       </center>
-
-        <p class="text-gray-400">&copy; 2024 Giant Web Market. All rights reserved.</p>
-    </footer>
-
-    <!-- Script to Load Data and Render Cards -->
-    <script>
-        async function fetchData() {
-            const response = await fetch('data.json');
-            return response.json();
-        }
-
-        function renderCards(data, searchQuery = '') {
-            const cardsContainer = document.getElementById('cardsContainer');
-            cardsContainer.innerHTML = '';
-
-            data.forEach(item => {
-                if (
-                    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    item.description.toLowerCase().includes(searchQuery.toLowerCase())
-                ) {
-                    const card = `
-                        <div class="bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl">
-                            <div class="zoom-effect overflow-hidden">
-                                <a href="product.html?id=${item.id}">
-                                    <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover">
-                                </a>
-                            </div>
-                            <div class="p-6">
-                                <div class="flex space-x-2 mb-4">
-                                    <a href="category.html?category=${encodeURIComponent(item.category)}" class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full hover:bg-blue-600">
-                                        ${item.category}
-                                    </a>
-                                </div>
-                                <h3 class="text-xl font-bold mb-2">
-                                    <a href="product.html?id=${item.id}" class="hover:text-blue-400">${item.title}</a>
-                                </h3>
-                                <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
-                                <a href="product.html?id=${item.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View Product</a>
-                            </div>
-                        </div>
-                    `;
-                    cardsContainer.innerHTML += card;
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const data = await fetchData();
-            renderCards(data);
-
-            document.getElementById('searchBox').addEventListener('input', (e) => {
-                renderCards(data, e.target.value);
-            });
-        });
-    </script>
-
-<script type="text/javascript" src="https://js.getlasso.co/lasso-performance.min.js" defer></script>
-<script type="text/javascript" defer>
-    document.addEventListener("lassoTrackingEventLoaded", function(e) {
-        e.detail.init();
+        `;
+        cardsContainer.appendChild(card);
     });
-</script>
+    
+    // Update the count of loaded items
+    currentlyLoaded = endIndex;
+    
+    // Show or hide the load more button based on whether there are more items
+    updateLoadMoreButton(currentlyLoaded < filteredData.length);
+}
 
+function updateLoadMoreButton(show) {
+    let loadMoreButton = document.getElementById('loadMoreButton');
+    
+    if (!loadMoreButton && show) {
+        // Create the button if it doesn't exist and needs to be shown
+        loadMoreButton = document.createElement('button');
+        loadMoreButton.id = 'loadMoreButton';
+        loadMoreButton.className = 'mt-8 mx-auto block bg-blue-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-blue-600 transition duration-300';
+        loadMoreButton.textContent = 'Load More Products';
+        loadMoreButton.addEventListener('click', () => lazyLoadCards(allProducts, document.getElementById('searchBox').value));
+        
+        const container = document.querySelector('.max-w-7xl');
+        container.appendChild(loadMoreButton);
+    } else if (loadMoreButton) {
+        // Update existing button visibility
+        loadMoreButton.style.display = show ? 'block' : 'none';
+    }
+}
 
-</body>
-</html>
+// Intersection Observer to detect when user scrolls near the bottom
+function setupIntersectionObserver() {
+    const options = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Load more cards when the sentinel is visible
+                lazyLoadCards(allProducts, document.getElementById('searchBox').value);
+            }
+        });
+    }, options);
+    
+    // Create and observe a sentinel element at the bottom of the cards container
+    const sentinel = document.createElement('div');
+    sentinel.id = 'sentinel';
+    sentinel.style.height = '10px';
+    document.getElementById('cardsContainer').after(sentinel);
+    observer.observe(sentinel);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Add loading indicator
+        const cardsContainer = document.getElementById('cardsContainer');
+        cardsContainer.innerHTML = '<div class="col-span-3 text-center py-10"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div><p class="mt-3">Loading products...</p></div>';
+        
+        // Fetch data
+        allProducts = await fetchData();
+        
+        // Initial load of cards
+        lazyLoadCards(allProducts);
+        
+        // Setup search functionality
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            lazyLoadCards(allProducts, e.target.value);
+        });
+        
+        // Setup intersection observer for automatic loading
+        setupIntersectionObserver();
+    } catch (error) {
+        console.error('Error loading products:', error);
+        document.getElementById('cardsContainer').innerHTML = '<div class="col-span-3 text-center py-10 text-red-500">Error loading products. Please try again later.</div>';
+    }
+});
