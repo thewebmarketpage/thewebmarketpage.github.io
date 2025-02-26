@@ -63,6 +63,10 @@
             margin: 20px auto;
             max-width: 600px;
         }
+        .loading {
+            margin: 20px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +82,7 @@
     <div id="errorMessage"></div>
 
     <!-- Products Content -->
+    <div id="loadingMessage" class="loading">Loading products...</div>
     <div class="container" id="productContainer"></div>
 
     <!-- Footer -->
@@ -90,20 +95,33 @@
     <p>&copy; 2024 Giant Web Market</p>
 
     <script>
-        // Fallback product data to use if data.json can't be loaded
-        const fallbackProducts = [
-            {
-                "title": "New Lightweight Children's Backpack Shopping Children's Cute Sunflower Pendant with Colorful Small School Bag",
+        // Generate sample products with different IDs
+        function generateSampleProducts() {
+            const sampleProductBase = {
+                "title": "New Lightweight Children's Backpack Shopping Children's Cute Sunflower Pendant",
                 "category": "General",
                 "description": "New Lightweight Children's Backpack Shopping Children's Cute Sunflower Pendant with Colorful Small School Bag",
                 "url": "https://s.click.aliexpress.com/e/_omA1bOu",
-                "image": "https://ae-pic-a1.aliexpress-media.com/kf/S778179324eff4e3b9684eb721ad16fffK.jpg",
-                "id": 276
+                "image": "https://ae-pic-a1.aliexpress-media.com/kf/S778179324eff4e3b9684eb721ad16fffK.jpg"
+            };
+            
+            // Create multiple sample products with different IDs and slight variations
+            const products = [];
+            for (let i = 1; i <= 8; i++) {
+                products.push({
+                    ...sampleProductBase,
+                    id: 275 + i,
+                    title: `${sampleProductBase.title} - Style ${i}`,
+                    category: i % 2 === 0 ? "School Supplies" : "Kids Accessories"
+                });
             }
-        ];
+            
+            return products;
+        }
 
         function displayProducts(products) {
             const productContainer = document.getElementById("productContainer");
+            document.getElementById("loadingMessage").style.display = "none";
             
             if (products.length === 0) {
                 productContainer.innerHTML = "<p>No products available.</p>";
@@ -112,7 +130,7 @@
             
             // Create product boxes
             productContainer.innerHTML = products.map(product => `
-                <div class="box">
+                <div class="box" data-id="${product.id || 'unknown'}">
                     <img src="${product.image}" alt="${product.title}" onerror="this.src='/api/placeholder/250/200';this.onerror='';">
                     <h3>${product.title}</h3>
                     <p>${product.category || 'Uncategorized'}</p>
@@ -131,8 +149,25 @@
                 }
                 
                 // Parse JSON data
-                let data = await response.json();
-                let products = Array.isArray(data) ? data : [data];
+                let rawData = await response.json();
+                let products = [];
+                
+                // Handle different possible JSON structures
+                if (Array.isArray(rawData)) {
+                    // If it's already an array, use it directly
+                    products = rawData;
+                } else if (typeof rawData === 'object') {
+                    if (rawData.products && Array.isArray(rawData.products)) {
+                        // If it has a products array property
+                        products = rawData.products;
+                    } else if (rawData.id !== undefined) {
+                        // If it's a single product object
+                        products = [rawData];
+                    } else {
+                        // If it's an object with product IDs as keys
+                        products = Object.values(rawData);
+                    }
+                }
                 
                 // Display the products
                 displayProducts(products);
@@ -144,13 +179,14 @@
                 const errorElem = document.getElementById("errorMessage");
                 errorElem.innerHTML = `
                     <div class="error-message">
-                        <p>Could not load products from server. Showing sample product instead.</p>
+                        <p>Could not load products from server. Showing sample products instead.</p>
                         <p><small>Technical details: ${error.message}</small></p>
                     </div>
                 `;
                 
-                // Use fallback products
-                displayProducts(fallbackProducts);
+                // Use generated sample products
+                const sampleProducts = generateSampleProducts();
+                displayProducts(sampleProducts);
             }
         }
         
