@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
+    <title>Giant Web Market</title>
     <style>
         body {
             background: black;
@@ -57,15 +57,19 @@
 </head>
 <body>
 
+    <!-- Navigation Bar -->
     <nav>
         <a href="index.html" class="button">Home</a>
         <a href="about.html" class="button">About</a>
         <a href="contact.html" class="button">Contact</a>
     </nav>
 
-    <h1 id="pageTitle">Loading Sitemap...</h1>
-    <div class="container" id="sitemap"></div>
+    <h1 id="pageTitle">Loading Products...</h1>
 
+    <!-- Products Content -->
+    <div class="container" id="productContainer"></div>
+
+    <!-- Footer -->
     <footer>
         <a href="privacy.html" class="button">Privacy</a>
         <a href="terms.html" class="button">Terms</a>
@@ -77,35 +81,52 @@
     <script>
         async function loadProducts() {
             try {
+                // Fetch the data.json file
                 const response = await fetch("data.json");
                 if (!response.ok) throw new Error("Failed to fetch data.json");
-
-                const products = await response.json();
-                const sitemap = document.getElementById("sitemap");
-
+                
+                // Parse JSON data
+                // Assuming data.json contains an array of products
+                // If it's a single object as shown in your example, we'll convert it to an array
+                let data = await response.json();
+                let products = Array.isArray(data) ? data : [data];
+                
+                // Get main site title from the first product if available
+                if (products.length > 0) {
+                    // Update the page title and header with the main product title
+                    const mainTitle = "Giant Web Market - Product Catalog";
+                    document.title = mainTitle;
+                    document.getElementById("pageTitle").innerText = mainTitle;
+                }
+                
+                // Generate HTML for each product
+                const productContainer = document.getElementById("productContainer");
+                
                 if (products.length === 0) {
-                    sitemap.innerHTML = "<p>No products available.</p>";
+                    productContainer.innerHTML = "<p>No products available.</p>";
                     return;
                 }
-
-                document.title = products[0].title;
-                document.getElementById("pageTitle").innerText = products[0].title;
-
-                sitemap.innerHTML = products.map(product => `
+                
+                // Create product boxes
+                productContainer.innerHTML = products.map(product => `
                     <div class="box">
                         <img src="${product.image}" alt="${product.title}">
-                        <p>${product.title}</p>
-                        <a href="product.html?id=${product.id}">View Product</a>
+                        <h3>${product.title}</h3>
+                        <p>${product.category}</p>
+                        <a href="${product.url}" target="_blank">View Product</a>
                     </div>
                 `).join("");
-
+                
             } catch (error) {
                 console.error("Error loading products:", error);
-                document.getElementById("sitemap").innerHTML = "<p>Failed to load products.</p>";
+                document.getElementById("productContainer").innerHTML = 
+                    `<p>Failed to load products: ${error.message}</p>`;
+                document.getElementById("pageTitle").innerText = "Error Loading Products";
             }
         }
-
-        loadProducts();
+        
+        // Load products when the page loads
+        document.addEventListener("DOMContentLoaded", loadProducts);
     </script>
 
 </body>
