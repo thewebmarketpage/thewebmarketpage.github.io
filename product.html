@@ -64,30 +64,31 @@
 
         <p class="text-gray-400">&copy; 2024 Giant Web Market. All rights reserved.</p>
     </footer>
-    
     <script>
         async function loadProduct() {
             const params = new URLSearchParams(window.location.search);
-            const productId = parseInt(params.get("id"));
-
-            if (isNaN(productId)) {
+            const productId = Number(params.get("id"));
+    
+            if (!productId) {
                 document.getElementById("product").innerHTML = "<p>Invalid product ID.</p>";
                 return;
             }
-
+    
             try {
                 const response = await fetch("data.json");
+                if (!response.ok) throw new Error("Failed to load product data.");
+    
                 const data = await response.json();
-
                 const product = data.find(p => p.id === productId);
+    
                 if (!product) {
                     document.getElementById("product").innerHTML = "<p>Product not found.</p>";
                     return;
                 }
-
-                // Update the title dynamically
+    
+                // Update page title immediately
                 document.title = `${product.title} - Giant Web Market`;
-
+    
                 document.getElementById("product").innerHTML = `
                     <h2 class="text-3xl font-bold mb-4">${product.title}</h2>
                     <img src="${product.image}" alt="${product.title}" class="w-full max-w-md mx-auto rounded-lg zoom-effect">
@@ -99,11 +100,11 @@
                     <p class="mt-2">${product.description}</p>
                     <a href="${product.url}" target="_blank" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">Buy Now</a>
                 `;
-
+    
                 // Display similar products
                 const similarProductsContainer = document.getElementById("similarProducts");
                 const similarProducts = data.filter(p => p.category === product.category && p.id !== productId);
-                
+    
                 if (similarProducts.length > 0) {
                     similarProductsContainer.innerHTML = '<h3 class="text-xl font-bold mb-4">Similar Products</h3>';
                     similarProducts.forEach(item => {
@@ -118,20 +119,14 @@
                     });
                 }
             } catch (error) {
+                console.error("Error:", error);
                 document.getElementById("product").innerHTML = "<p>Error loading product data.</p>";
             }
         }
-
+    
         loadProduct();
     </script>
-
-
-<script type="text/javascript" src="https://js.getlasso.co/lasso-performance.min.js" defer></script>
-<script type="text/javascript" defer>
-    document.addEventListener("lassoTrackingEventLoaded", function(e) {
-        e.detail.init();
-    });
-</script>
+    
 
 </body>
 </html>
