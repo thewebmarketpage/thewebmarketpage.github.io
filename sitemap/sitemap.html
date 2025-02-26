@@ -57,7 +57,6 @@
 </head>
 <body>
 
-    <!-- Navigation Bar -->
     <nav>
         <a href="index.html" class="button">Home</a>
         <a href="about.html" class="button">About</a>
@@ -65,11 +64,8 @@
     </nav>
 
     <h1 id="pageTitle">Loading Sitemap...</h1>
-
-    <!-- Sitemap Content -->
     <div class="container" id="sitemap"></div>
 
-    <!-- Footer -->
     <footer>
         <a href="privacy.html" class="button">Privacy</a>
         <a href="terms.html" class="button">Terms</a>
@@ -87,17 +83,14 @@
                 const products = await response.json();
                 const sitemap = document.getElementById("sitemap");
 
-                // If no products, show a message
                 if (products.length === 0) {
                     sitemap.innerHTML = "<p>No products available.</p>";
                     return;
                 }
 
-                // Update page title
-                document.title = `Sitemap - ${products[0].title}`;
-                document.getElementById("pageTitle").innerText = `Sitemap - ${products[0].title}`;
+                document.title = products[0].title;
+                document.getElementById("pageTitle").innerText = products[0].title;
 
-                // Generate product boxes
                 sitemap.innerHTML = products.map(product => `
                     <div class="box">
                         <img src="${product.image}" alt="${product.title}">
