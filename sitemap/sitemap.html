@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sitemap</title>
+    <title>Loading Sitemap...</title>
     <style>
         body {
             background: black;
@@ -25,7 +25,8 @@
             display: inline-block;
             border: none;
             cursor: pointer;
-            border-radius: 0;
+            border-radius: 5px;
+            font-weight: bold;
         }
         .container {
             display: flex;
@@ -37,29 +38,41 @@
         .box {
             border: 2px solid white;
             padding: 10px;
-            width: 200px;
+            width: 250px;
             text-align: center;
+            background: #222;
+            border-radius: 5px;
+        }
+        .box a {
+            color: cyan;
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
+
+    <!-- Navigation Bar -->
     <nav>
         <a href="index.html" class="button">Home</a>
         <a href="about.html" class="button">About</a>
         <a href="contact.html" class="button">Contact</a>
     </nav>
-    
-    <h1 id="pageTitle">Website Sitemap</h1>
 
-    <div class="container" id="sitemap"></div>
+    <h1 id="pageTitle">Loading Sitemap...</h1>
 
+    <!-- Sitemap Content -->
+    <div class="container" id="sitemap">Loading products...</div>
+
+    <!-- Footer -->
     <footer>
         <a href="privacy.html" class="button">Privacy</a>
         <a href="terms.html" class="button">Terms</a>
         <a href="support.html" class="button">Support</a>
     </footer>
 
-    <p>Website Name</p>
+    <p>&copy; 2024 Giant Web Market</p>
 
     <script>
         async function loadSitemap() {
@@ -70,12 +83,20 @@
                 const data = await response.json();
                 const sitemapContainer = document.getElementById("sitemap");
 
-                // Set the page title to the first product title (optional)
-                if (data.length > 0) {
-                    document.title = `${data[0].title} - Sitemap`;
-                    document.getElementById("pageTitle").innerText = `Sitemap - ${data[0].title}`;
+                // If no products are found, display a message
+                if (data.length === 0) {
+                    sitemapContainer.innerHTML = "<p>No products available.</p>";
+                    return;
                 }
 
+                // Set the page title using the first product's title
+                document.title = `Sitemap - ${data[0].title}`;
+                document.getElementById("pageTitle").innerText = `Sitemap - ${data[0].title}`;
+
+                // Clear loading text
+                sitemapContainer.innerHTML = "";
+
+                // Generate product links
                 data.forEach(product => {
                     let box = document.createElement("div");
                     box.classList.add("box");
@@ -86,7 +107,6 @@
                     let link = document.createElement("a");
                     link.href = `product.html?id=${product.id}`;
                     link.textContent = "View Product";
-                    link.style.color = "white";
 
                     box.appendChild(titleElement);
                     box.appendChild(link);
@@ -95,10 +115,12 @@
 
             } catch (error) {
                 console.error("Error loading sitemap:", error);
+                document.getElementById("sitemap").innerHTML = "<p>Failed to load products.</p>";
             }
         }
 
         loadSitemap();
     </script>
+
 </body>
 </html>
