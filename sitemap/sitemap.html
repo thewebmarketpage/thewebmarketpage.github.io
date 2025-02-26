@@ -46,12 +46,22 @@
             width: 100%;
             height: auto;
             border-radius: 5px;
+            max-height: 200px;
+            object-fit: cover;
         }
         .box a {
             color: cyan;
             text-decoration: none;
             display: block;
             margin-top: 5px;
+        }
+        .error-message {
+            color: #ff6b6b;
+            background: #2c2c2c;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px auto;
+            max-width: 600px;
         }
     </style>
 </head>
@@ -64,7 +74,8 @@
         <a href="contact.html" class="button">Contact</a>
     </nav>
 
-    <h1 id="pageTitle">Loading Products...</h1>
+    <h1 id="pageTitle">Giant Web Market - Products</h1>
+    <div id="errorMessage"></div>
 
     <!-- Products Content -->
     <div class="container" id="productContainer"></div>
@@ -79,49 +90,67 @@
     <p>&copy; 2024 Giant Web Market</p>
 
     <script>
+        // Fallback product data to use if data.json can't be loaded
+        const fallbackProducts = [
+            {
+                "title": "New Lightweight Children's Backpack Shopping Children's Cute Sunflower Pendant with Colorful Small School Bag",
+                "category": "General",
+                "description": "New Lightweight Children's Backpack Shopping Children's Cute Sunflower Pendant with Colorful Small School Bag",
+                "url": "https://s.click.aliexpress.com/e/_omA1bOu",
+                "image": "https://ae-pic-a1.aliexpress-media.com/kf/S778179324eff4e3b9684eb721ad16fffK.jpg",
+                "id": 276
+            }
+        ];
+
+        function displayProducts(products) {
+            const productContainer = document.getElementById("productContainer");
+            
+            if (products.length === 0) {
+                productContainer.innerHTML = "<p>No products available.</p>";
+                return;
+            }
+            
+            // Create product boxes
+            productContainer.innerHTML = products.map(product => `
+                <div class="box">
+                    <img src="${product.image}" alt="${product.title}" onerror="this.src='/api/placeholder/250/200';this.onerror='';">
+                    <h3>${product.title}</h3>
+                    <p>${product.category || 'Uncategorized'}</p>
+                    <a href="${product.url}" target="_blank">View Product</a>
+                </div>
+            `).join("");
+        }
+
         async function loadProducts() {
             try {
-                // Fetch the data.json file
+                // Attempt to fetch the data.json file
                 const response = await fetch("data.json");
-                if (!response.ok) throw new Error("Failed to fetch data.json");
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data.json (${response.status}: ${response.statusText})`);
+                }
                 
                 // Parse JSON data
-                // Assuming data.json contains an array of products
-                // If it's a single object as shown in your example, we'll convert it to an array
                 let data = await response.json();
                 let products = Array.isArray(data) ? data : [data];
                 
-                // Get main site title from the first product if available
-                if (products.length > 0) {
-                    // Update the page title and header with the main product title
-                    const mainTitle = "Giant Web Market - Product Catalog";
-                    document.title = mainTitle;
-                    document.getElementById("pageTitle").innerText = mainTitle;
-                }
-                
-                // Generate HTML for each product
-                const productContainer = document.getElementById("productContainer");
-                
-                if (products.length === 0) {
-                    productContainer.innerHTML = "<p>No products available.</p>";
-                    return;
-                }
-                
-                // Create product boxes
-                productContainer.innerHTML = products.map(product => `
-                    <div class="box">
-                        <img src="${product.image}" alt="${product.title}">
-                        <h3>${product.title}</h3>
-                        <p>${product.category}</p>
-                        <a href="${product.url}" target="_blank">View Product</a>
-                    </div>
-                `).join("");
+                // Display the products
+                displayProducts(products);
                 
             } catch (error) {
                 console.error("Error loading products:", error);
-                document.getElementById("productContainer").innerHTML = 
-                    `<p>Failed to load products: ${error.message}</p>`;
-                document.getElementById("pageTitle").innerText = "Error Loading Products";
+                
+                // Show error message
+                const errorElem = document.getElementById("errorMessage");
+                errorElem.innerHTML = `
+                    <div class="error-message">
+                        <p>Could not load products from server. Showing sample product instead.</p>
+                        <p><small>Technical details: ${error.message}</small></p>
+                    </div>
+                `;
+                
+                // Use fallback products
+                displayProducts(fallbackProducts);
             }
         }
         
