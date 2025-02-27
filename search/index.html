@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-container {
+            margin-bottom: 30px;
+        }
+        
+        #search-input {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+        
+        #search-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        #search-button:hover {
+            background-color: #3367d6;
+        }
+        
+        .result-item {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            color: #1a0dab;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        
+        .result-title a {
+            text-decoration: none;
+        }
+        
+        .result-title a:hover {
+            text-decoration: underline;
+        }
+        
+        .result-url {
+            color: #006621;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .result-description {
+            color: #545454;
+        }
+        
+        .result-time {
+            color: #777;
+            font-size: 13px;
+        }
+        
+        .search-engine {
+            display: inline-block;
+            background-color: #eee;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        #results-count {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        #status-message {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .highlight {
+            background-color: #ffff99;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>JSON Search</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Enter search term...">
+        <button id="search-button">Search</button>
+    </div>
+    
+    <div id="status-message">Loading data...</div>
+    <div id="results-count"></div>
+    <div id="search-results"></div>
+    
+    <script>
+        // Global variable to store the JSON data
+        let searchData = [];
+        
+        // Function to load data from data.json
+        async function loadData() {
+            const statusMessage = document.getElementById('status-message');
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                searchData = await response.json();
+                statusMessage.textContent = 'Data loaded successfully. Ready to search.';
+                statusMessage.style.color = '#007700';
+                setTimeout(() => {
+                    statusMessage.textContent = '';
+                }, 3000);
+                return true;
+            } catch (error) {
+                console.error('Error loading data:', error);
+                statusMessage.textContent = 'Error loading data.json. Please make sure the file exists and is valid JSON.';
+                statusMessage.style.color = '#cc0000';
+                return false;
+            }
+        }
+        
+        // Function to highlight search terms in text
+        function highlightText(text, searchTerm) {
+            if (!text) return '';
+            
+            const regex = new RegExp(searchTerm, 'gi');
+            return text.replace(regex, match => `<span class="highlight">${match}</span>`);
+        }
+        
+        // Function to perform search in real-time
+        function performSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            const resultsCountContainer = document.getElementById('results-count');
+            
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+            
+            if (searchTerm.trim() === '') {
+                resultsCountContainer.textContent = '';
+                return;
+            }
+            
+            // Filter data based on search term
+            const results = searchData.filter(item => {
+                return (
+                    (item.title && item.title.toLowerCase().includes(searchTerm)) ||
+                    (item.description && item.description.toLowerCase().includes(searchTerm)) ||
+                    (item.search_engine && item.search_engine.toLowerCase().includes(searchTerm)) ||
+                    (item.link && item.link.toLowerCase().includes(searchTerm))
+                );
+            });
+            
+            // Display results count
+            resultsCountContainer.textContent = `${results.length} results found`;
+            
+            // Display results
+            if (results.length > 0) {
+                results.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    
+                    const highlightedTitle = highlightText(result.title, searchTerm);
+                    const highlightedDescription = highlightText(result.description, searchTerm);
+                    const highlightedEngine = highlightText(result.search_engine, searchTerm);
+                    
+                    resultItem.innerHTML = `
+                        <h2 class="result-title"><a href="${result.link}" target="_blank">${highlightedTitle}</a></h2>
+                        <div class="result-url">${result.link}</div>
+                        <div class="result-description">${highlightedDescription}</div>
+                        <div class="result-time">
+                            <span class="search-engine">${highlightedEngine}</span>
+                            ${result.time}
+                        </div>
+                    `;
+                    
+                    resultsContainer.appendChild(resultItem);
+                });
+            } else {
+                resultsContainer.innerHTML = '<div class="no-results">No results found</div>';
+            }
+        }
+        
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load data first
+            const dataLoaded = await loadData();
+            
+            if (dataLoaded) {
+                // Add event listeners for searching
+                document.getElementById('search-button').addEventListener('click', performSearch);
+                
+                // Real-time search as user types
+                document.getElementById('search-input').addEventListener('input', () => {
+                    // Debounce the search to avoid excessive processing
+                    clearTimeout(window.searchTimeout);
+                    window.searchTimeout = setTimeout(performSearch, 300);
+                });
+                
+                // Search on Enter key
+                document.getElementById('search-input').addEventListener('keyup', event => {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
