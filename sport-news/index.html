@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post a Link</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mui/5.11.0/material.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.17.12/babel.min.js"></script>
@@ -25,10 +24,7 @@
         });
 
         function PostPage() {
-            const [posts, setPosts] = useState([
-                { link: "https://mui.com/", image: "https://source.unsplash.com/400x300/?tech", description: "Material UI Official Website" },
-                { link: "https://reactjs.org/", image: "https://source.unsplash.com/400x300/?react", description: "React Official Website" }
-            ]);
+            const [posts, setPosts] = useState([]);
             const [link, setLink] = useState("");
             const [image, setImage] = useState("");
             const [description, setDescription] = useState("");
@@ -50,32 +46,40 @@
                             <Typography variant="h6">Post a Link</Typography>
                         </Toolbar>
                     </AppBar>
-                    <Container maxWidth="md" style={{ marginTop: 20 }}>
-                        <Paper elevation={3} style={{ padding: 20 }}>
+                    <Box sx={{ bgcolor: "primary.light", color: "white", textAlign: "center", py: 4, mb: 4 }}>
+                        <Typography variant="h4">Share Your Favorite Links</Typography>
+                        <Typography variant="subtitle1">Post links with images and descriptions</Typography>
+                    </Box>
+                    <Container maxWidth="md">
+                        <Paper elevation={3} sx={{ padding: 4, mb: 4 }}>
                             <Typography variant="h5" gutterBottom>Share a Link</Typography>
                             <TextField fullWidth label="Link" variant="outlined" value={link} onChange={(e) => setLink(e.target.value)} margin="normal" />
                             <TextField fullWidth label="Image URL" variant="outlined" value={image} onChange={(e) => setImage(e.target.value)} margin="normal" />
                             <TextField fullWidth label="Description" variant="outlined" multiline rows={3} value={description} onChange={(e) => setDescription(e.target.value)} margin="normal" />
-                            <Button variant="contained" color="primary" onClick={handleSubmit} style={{ marginTop: 10 }}>
+                            <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
                                 Post
                             </Button>
                         </Paper>
-                        <Grid container spacing={3} style={{ marginTop: 20 }}>
-                            {posts.map((post, index) => (
-                                <Grid item xs={12} sm={6} key={index}>
-                                    <Card>
-                                        <CardMedia component="img" height="200" image={post.image} alt="Post Image" />
-                                        <CardContent>
-                                            <Typography variant="h6" component="div">
-                                                <a href={post.link} target="_blank" rel="noopener noreferrer">{post.link}</a>
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary">
-                                                {post.description}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            ))}
+                        <Grid container spacing={3}>
+                            {posts.length === 0 ? (
+                                <Typography variant="body1" sx={{ textAlign: "center", width: "100%", mt: 4 }}>No posts yet. Add one above.</Typography>
+                            ) : (
+                                posts.map((post, index) => (
+                                    <Grid item xs={12} sm={6} key={index}>
+                                        <Card>
+                                            <CardMedia component="img" height="200" image={post.image} alt="Post Image" />
+                                            <CardContent>
+                                                <Typography variant="h6" component="div">
+                                                    <a href={post.link} target="_blank" rel="noopener noreferrer">{post.link}</a>
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary">
+                                                    {post.description}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                ))
+                            )}
                         </Grid>
                     </Container>
                     <Box component="footer" sx={{ bgcolor: "primary.main", color: "white", textAlign: "center", py: 2, mt: 4 }}>
