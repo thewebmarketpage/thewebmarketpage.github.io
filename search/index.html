@@ -4,60 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SearchPro</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; text-align: center; }
-        .navbar { display: flex; justify-content: space-around; padding: 10px; background: #1e1e1e; }
-        .search-container { margin-top: 20px; }
-        input, select, button { padding: 10px; margin: 5px; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; }
-        .results { margin-top: 20px; text-align: left; }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="navbar">
-        <span>SearchPro</span>
-        <span>Home</span>
-        <span>About</span>
-        <span>Theme</span>
-    </div>
-    
-    <div class="search-container">
-        <input type="text" id="search" placeholder="Enter your search term">
-        <select id="source">
-            <option>Source:</option>
-            <option value="any">Any</option>
-        </select>
-        <select id="date">
-            <option>Date:</option>
-            <option value="any">Any</option>
-        </select>
-        <select id="sort">
-            <option>Sort:</option>
-            <option value="relevance">Relevance</option>
-        </select>
-        <label><input type="checkbox" id="exactMatch"> Exact Match</label>
-        <label><input type="checkbox" id="includeSimilar"> Include Similar</label>
-        <button onclick="searchData()">Search</button>
-    </div>
-    
-    <div class="results" id="results"></div>
-    
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
+    <header class="w-full max-w-4xl flex justify-between p-4 bg-gray-800 rounded-lg shadow-lg">
+        <nav class="flex space-x-6">
+            <a href="#" class="hover:text-blue-400">Home</a>
+            <a href="#" class="hover:text-blue-400">About</a>
+            <a href="#" class="hover:text-blue-400">Theme</a>
+        </nav>
+    </header>
+
+    <main class="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg mt-6">
+        <h1 class="text-2xl font-bold text-center mb-4">SearchPro</h1>
+        <input id="search" type="text" placeholder="Enter your search term" class="w-full p-3 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-400">
+        <button onclick="performSearch()" class="mt-4 w-full bg-blue-500 hover:bg-blue-600 p-3 rounded-lg text-white font-semibold">Search</button>
+
+        <div class="mt-4 flex space-x-4">
+            <label class="flex items-center space-x-2">
+                <span>Source:</span>
+                <select id="source" class="p-2 bg-gray-700 text-white rounded-lg">
+                    <option value="any">Any</option>
+                </select>
+            </label>
+            <label class="flex items-center space-x-2">
+                <span>Date:</span>
+                <select id="date" class="p-2 bg-gray-700 text-white rounded-lg">
+                    <option value="any">Any</option>
+                </select>
+            </label>
+            <label class="flex items-center space-x-2">
+                <span>Sort:</span>
+                <select id="sort" class="p-2 bg-gray-700 text-white rounded-lg">
+                    <option value="relevance">Relevance</option>
+                </select>
+            </label>
+        </div>
+        <div class="mt-4 flex space-x-4">
+            <label class="flex items-center space-x-2">
+                <input type="checkbox" id="exactMatch" class="form-checkbox text-blue-500">
+                <span>Exact Match</span>
+            </label>
+            <label class="flex items-center space-x-2">
+                <input type="checkbox" id="includeSimilar" class="form-checkbox text-blue-500">
+                <span>Include Similar</span>
+            </label>
+        </div>
+
+        <div id="results" class="mt-6 space-y-4"></div>
+    </main>
+
     <script>
-        async function searchData() {
-            let searchTerm = document.getElementById('search').value.toLowerCase();
-            let exactMatch = document.getElementById('exactMatch').checked;
-            let includeSimilar = document.getElementById('includeSimilar').checked;
-            let response = await fetch('data.json');
-            let data = await response.json();
-            let results = data.filter(item => 
-                exactMatch ? item.title.toLowerCase() === searchTerm : item.title.toLowerCase().includes(searchTerm)
-            );
+        function performSearch() {
+            let query = document.getElementById("search").value.trim();
+            let resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = "";
+            if (!query) return;
             
-            if (includeSimilar) {
-                results = [...results, ...data.filter(item => item.description.toLowerCase().includes(searchTerm))];
-            }
-            
-            document.getElementById('results').innerHTML = results.map(item => `<p>${item.title}</p>`).join('');
+            let results = ["Result 1", "Result 2", "Result 3"]; // Replace with actual search logic
+            results.forEach(result => {
+                let div = document.createElement("div");
+                div.className = "p-4 bg-gray-700 rounded-lg";
+                div.textContent = result;
+                resultsContainer.appendChild(div);
+            });
         }
     </script>
 </body>
