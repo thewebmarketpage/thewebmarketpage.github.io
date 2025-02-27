@@ -3,40 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Search with Pagination</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Modern JSON Search with Pagination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Root Variables */
         :root {
             --primary-bg: #ffffff;
-            --primary-text: #333333;
-            --highlight-bg: #ffcc00;
-            --button-bg: #0066cc;
-            --button-bg-hover: #005bb5;
-            --border-radius: 8px;
-            --input-bg: #f0f0f0;
-            --input-border: #ddd;
-            --input-focus: #0066cc;
-            --card-bg-light: #f9f9f9;
-            --card-bg-dark: #333;
-            --card-shadow-light: rgba(0, 0, 0, 0.1);
-            --card-shadow-dark: rgba(255, 255, 255, 0.2);
+            --primary-text: #1a1a1a;
+            --secondary-text: #666;
+            --highlight-bg: #ffeb3b;
+            --button-bg: #6200ee;
+            --button-bg-hover: #3700b3;
+            --border-radius: 12px;
+            --input-bg: #f5f5f5;
+            --input-border: #e0e0e0;
+            --input-focus: #6200ee;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition-speed: 0.3s;
         }
 
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --primary-bg: #121212;
+            --primary-text: #e0e0e0;
+            --secondary-text: #b0b0b0;
+            --highlight-bg: #ffeb3b;
+            --button-bg: #bb86fc;
+            --button-bg-hover: #3700b3;
+            --input-bg: #333333;
+            --input-border: #444;
+            --input-focus: #bb86fc;
+            --card-bg: #1e1e1e;
+            --card-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Base Styles */
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--primary-bg);
             color: var(--primary-text);
             margin: 0;
             padding: 0;
             transition: background-color var(--transition-speed), color var(--transition-speed);
-            box-sizing: border-box;
         }
 
-        /* General Container */
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
@@ -44,22 +56,17 @@
 
         h1 {
             text-align: center;
-            font-size: 2rem;
-            margin-top: 50px;
-        }
-
-        /* Dark mode */
-        body.dark-mode {
-            background-color: #121212;
-            color: #eaeaea;
+            font-size: 2.5rem;
+            margin-top: 40px;
+            color: var(--primary-text);
         }
 
         /* Search Box */
         .search-box {
             display: flex;
             justify-content: center;
-            margin-top: 30px;
             gap: 10px;
+            margin-top: 30px;
         }
 
         #search-input {
@@ -100,14 +107,9 @@
             margin: 15px 0;
             padding: 20px;
             border-radius: var(--border-radius);
-            background-color: var(--card-bg-light);
-            box-shadow: var(--card-shadow-light);
+            background-color: var(--card-bg);
+            box-shadow: var(--card-shadow);
             transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
-        }
-
-        .result-item.dark-mode {
-            background-color: var(--card-bg-dark);
-            box-shadow: var(--card-shadow-dark);
         }
 
         .result-item img {
@@ -119,8 +121,8 @@
 
         .result-item h2 {
             margin: 0;
-            font-size: 1.1rem;
-            color: var(--highlight-bg);
+            font-size: 1.2rem;
+            color: var(--primary-text);
         }
 
         .result-item a {
@@ -129,13 +131,13 @@
         }
 
         .result-url {
-            color: #006621;
+            color: var(--secondary-text);
             font-size: 0.875rem;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .result-description {
-            color: #777;
+            color: var(--secondary-text);
             font-size: 0.9rem;
             margin-top: 12px;
         }
@@ -143,7 +145,7 @@
         /* No Results */
         .no-results {
             text-align: center;
-            color: var(--primary-text);
+            color: var(--secondary-text);
             font-size: 1rem;
             margin-top: 50px;
         }
@@ -167,36 +169,16 @@
             background-color: var(--button-bg-hover);
         }
 
-        /* Loading & Results Count */
-        #status-message {
-            text-align: center;
-            font-size: 1rem;
-            color: #007700;
-            margin-top: 20px;
-        }
-
-        #results-count {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1rem;
-            color: var(--primary-text);
-        }
-
-        /* Search Highlight */
-        .highlight {
-            background-color: #ffff99;
-            font-weight: bold;
-        }
-
         /* Pagination */
         .pagination {
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
             margin-top: 20px;
         }
 
         .pagination button {
             padding: 10px 15px;
-            margin: 0 5px;
             border: none;
             background-color: var(--button-bg);
             color: white;
@@ -212,17 +194,30 @@
 
         .pagination .active {
             background-color: var(--highlight-bg);
+            color: var(--primary-text);
         }
 
+        /* Status Message */
+        #status-message {
+            text-align: center;
+            font-size: 1rem;
+            color: #007700;
+            margin-top: 20px;
+        }
+
+        /* Highlight */
+        .highlight {
+            background-color: var(--highlight-bg);
+            font-weight: bold;
+        }
     </style>
 </head>
-<body>
-
+<body data-theme="light">
     <!-- Theme Toggle Button -->
     <button class="theme-toggle-btn" id="theme-toggle">🌙</button>
 
     <div class="container">
-        <h1>JSON Search with Pagination</h1>
+        <h1>Modern JSON Search</h1>
 
         <!-- Search Box -->
         <div class="search-box">
@@ -240,9 +235,7 @@
         <div id="search-results"></div>
 
         <!-- Pagination -->
-        <div class="pagination" id="pagination-buttons">
-            <!-- Buttons for pages 1 to 10 will be inserted here -->
-        </div>
+        <div class="pagination" id="pagination-buttons"></div>
     </div>
 
     <script>
@@ -250,77 +243,69 @@
         let currentPage = 1;
         const resultsPerPage = 10;
         let totalResults = 0;
-        let isDarkMode = false;
 
-        // Function to toggle dark mode
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            isDarkMode = !isDarkMode;
-            document.body.classList.toggle('dark-mode', isDarkMode);
-            document.querySelectorAll('.result-item').forEach(item => {
-                item.classList.toggle('dark-mode', isDarkMode);
-            });
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            const body = document.body;
+            const theme = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', theme === 'light' ? 'dark' : 'light');
+            themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
         });
 
-        // Function to load data from data.json
+        // Load Data
         async function loadData() {
             const statusMessage = document.getElementById('status-message');
             try {
                 const response = await fetch('data.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 searchData = await response.json();
                 totalResults = searchData.length;
                 statusMessage.textContent = 'Data loaded successfully. Ready to search.';
-                setTimeout(() => {
-                    statusMessage.textContent = '';
-                }, 3000);
+                setTimeout(() => statusMessage.textContent = '', 3000);
                 renderPagination();
             } catch (error) {
                 console.error('Error loading data:', error);
-                statusMessage.textContent = 'Error loading data.json. Please make sure the file exists and is valid JSON.';
+                statusMessage.textContent = 'Error loading data.json. Please check the file.';
             }
         }
 
-        // Function to get favicon dynamically
+        // Get Favicon
         function getFavicon(url) {
             const domain = new URL(url).hostname;
             return `https://www.google.com/s2/favicons?domain=${domain}`;
         }
 
-        // Function to highlight search terms in text
+        // Highlight Text
         function highlightText(text, searchTerm) {
             if (!text) return '';
             const regex = new RegExp(searchTerm, 'gi');
             return text.replace(regex, match => `<span class="highlight">${match}</span>`);
         }
 
-        // Function to perform search
+        // Perform Search
         function performSearch() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const resultsContainer = document.getElementById('search-results');
             const resultsCountContainer = document.getElementById('results-count');
 
             resultsContainer.innerHTML = '';
-            if (searchTerm.trim() === '') {
+            if (!searchTerm.trim()) {
                 resultsCountContainer.textContent = '';
                 return;
             }
 
-            const results = searchData.filter(item => {
-                return (
-                    (item.title && item.title.toLowerCase().includes(searchTerm)) ||
-                    (item.description && item.description.toLowerCase().includes(searchTerm)) ||
-                    (item.link && item.link.toLowerCase().includes(searchTerm))
-                );
-            });
+            const results = searchData.filter(item => 
+                (item.title && item.title.toLowerCase().includes(searchTerm)) ||
+                (item.description && item.description.toLowerCase().includes(searchTerm)) ||
+                (item.link && item.link.toLowerCase().includes(searchTerm))
+            );
 
             resultsCountContainer.textContent = `${results.length} results found`;
-
             renderResults(results, currentPage);
         }
 
-        // Function to render search results based on page
+        // Render Results
         function renderResults(results, page) {
             const resultsContainer = document.getElementById('search-results');
             const startIndex = (page - 1) * resultsPerPage;
@@ -346,7 +331,7 @@
             });
         }
 
-        // Function to render pagination buttons
+        // Render Pagination
         function renderPagination() {
             const paginationContainer = document.getElementById('pagination-buttons');
             const totalPages = Math.ceil(totalResults / resultsPerPage);
@@ -365,13 +350,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadData();
-            document.getElementById('search-button').addEventListener('click', performSearch);
-            document.getElementById('search-input').addEventListener('input', debounce(performSearch, 300));
-        });
-
-        // Debounce function to limit the number of searches while typing
+        // Debounce Function
         function debounce(func, delay) {
             let timeout;
             return function () {
@@ -379,6 +358,13 @@
                 timeout = setTimeout(func, delay);
             };
         }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadData();
+            document.getElementById('search-button').addEventListener('click', performSearch);
+            document.getElementById('search-input').addEventListener('input', debounce(performSearch, 300));
+        });
     </script>
 </body>
 </html>
