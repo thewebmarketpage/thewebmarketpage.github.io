@@ -6,6 +6,212 @@
     <title>Modern JSON Search with Pagination</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="styles.css" rel="stylesheet"> <!-- Link to external CSS file -->
+    <style>
+        /* Root Variables */
+:root {
+    --primary-bg: #ffffff;
+    --primary-text: #1a1a1a;
+    --secondary-text: #666;
+    --highlight-bg: #ffeb3b;
+    --button-bg: #6200ee;
+    --button-bg-hover: #3700b3;
+    --border-radius: 12px;
+    --input-bg: #f5f5f5;
+    --input-border: #e0e0e0;
+    --input-focus: #6200ee;
+    --card-bg: #ffffff;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+    --primary-bg: #121212;
+    --primary-text: #e0e0e0;
+    --secondary-text: #b0b0b0;
+    --highlight-bg: #ffeb3b;
+    --button-bg: #bb86fc;
+    --button-bg-hover: #3700b3;
+    --input-bg: #333333;
+    --input-border: #444;
+    --input-focus: #bb86fc;
+    --card-bg: #1e1e1e;
+    --card-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* Base Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    margin: 0;
+    padding: 0;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-top: 40px;
+    color: var(--primary-text);
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+#search-input {
+    padding: 12px 18px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    font-size: 16px;
+    width: 100%;
+    max-width: 500px;
+    transition: border-color var(--transition-speed);
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--input-focus);
+}
+
+#search-button {
+    padding: 12px 20px;
+    background-color: var(--button-bg);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+#search-button:hover {
+    background-color: var(--button-bg-hover);
+}
+
+/* Search Results */
+.result-item {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.result-item img {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.result-item h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--primary-text);
+}
+
+.result-item a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.result-url {
+    color: var(--secondary-text);
+    font-size: 0.875rem;
+    margin-top: 8px;
+}
+
+.result-description {
+    color: var(--secondary-text);
+    font-size: 0.9rem;
+    margin-top: 12px;
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    color: var(--secondary-text);
+    font-size: 1rem;
+    margin-top: 50px;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    background-color: var(--button-bg);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    font-size: 20px;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--button-bg-hover);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 15px;
+    border: none;
+    background-color: var(--button-bg);
+    color: white;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color var(--transition-speed);
+}
+
+.pagination button:hover {
+    background-color: var(--button-bg-hover);
+}
+
+.pagination .active {
+    background-color: var(--highlight-bg);
+    color: var(--primary-text);
+}
+
+/* Status Message */
+#status-message {
+    text-align: center;
+    font-size: 1rem;
+    color: #007700;
+    margin-top: 20px;
+}
+
+/* Highlight */
+.highlight {
+    background-color: var(--highlight-bg);
+    font-weight: bold;
+}
+    </style>
 </head>
 <body data-theme="light">
     <!-- Theme Toggle Button -->
