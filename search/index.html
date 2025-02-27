@@ -6,58 +6,75 @@
     <title>JSON Search</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Global Variables for Themes */
+        /* Root Variables */
         :root {
-            --light-bg: #ffffff;
-            --dark-bg: #121212;
-            --light-text: #333;
-            --dark-text: #f9f9f9;
-            --highlight-bg: #f5a623;
-            --button-bg: #4285f4;
-            --button-hover: #3367d6;
-            --input-bg: #f3f3f3;
-            --input-border: #ccc;
-            --input-focus: #4285f4;
+            --primary-bg: #ffffff;
+            --primary-text: #333333;
+            --highlight-bg: #ffcc00;
+            --button-bg: #0066cc;
+            --button-bg-hover: #005bb5;
             --border-radius: 8px;
+            --input-bg: #f0f0f0;
+            --input-border: #ddd;
+            --input-focus: #0066cc;
+            --card-bg-light: #f9f9f9;
+            --card-bg-dark: #333;
+            --card-shadow-light: rgba(0, 0, 0, 0.1);
+            --card-shadow-dark: rgba(255, 255, 255, 0.2);
+            --transition-speed: 0.3s;
         }
 
-        /* Body Styles */
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--light-text);
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            box-sizing: border-box;
+        }
+
+        /* General Container */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         h1 {
             text-align: center;
-            margin-top: 20px;
-            color: var(--light-text);
+            font-size: 2rem;
+            margin-top: 50px;
         }
 
-        /* Search Container */
-        .search-container {
+        /* Dark mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: #eaeaea;
+        }
+
+        /* Search Box */
+        .search-box {
             display: flex;
             justify-content: center;
             margin-top: 30px;
-            padding: 0 15px;
+            gap: 10px;
         }
 
         #search-input {
-            width: 100%;
-            max-width: 600px;
-            padding: 12px 20px;
+            padding: 12px 18px;
             border: 1px solid var(--input-border);
             border-radius: var(--border-radius);
             background-color: var(--input-bg);
             font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s ease;
+            width: 100%;
+            max-width: 500px;
+            transition: border-color var(--transition-speed);
         }
 
         #search-input:focus {
+            outline: none;
             border-color: var(--input-focus);
         }
 
@@ -67,99 +84,102 @@
             color: white;
             border: none;
             border-radius: var(--border-radius);
-            cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
         }
 
         #search-button:hover {
-            background-color: var(--button-hover);
+            background-color: var(--button-bg-hover);
         }
 
-        /* Results Section */
+        /* Search Results */
         .result-item {
             display: flex;
             align-items: center;
-            border-radius: var(--border-radius);
+            margin: 15px 0;
             padding: 20px;
-            margin-bottom: 20px;
-            background-color: var(--light-bg);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border-radius: var(--border-radius);
+            background-color: var(--card-bg-light);
+            box-shadow: var(--card-shadow-light);
+            transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
         }
 
-        .result-item.dark {
-            background-color: #333;
-            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+        .result-item.dark-mode {
+            background-color: var(--card-bg-dark);
+            box-shadow: var(--card-shadow-dark);
         }
 
-        .result-item .icon {
+        .result-item img {
             width: 40px;
             height: 40px;
             margin-right: 20px;
             border-radius: 50%;
         }
 
-        .result-title {
-            font-size: 18px;
-            color: var(--highlight-bg);
+        .result-item h2 {
             margin: 0;
+            font-size: 1.1rem;
+            color: var(--highlight-bg);
         }
 
-        .result-title a {
+        .result-item a {
             text-decoration: none;
             color: inherit;
         }
 
         .result-url {
             color: #006621;
-            font-size: 14px;
-            margin-top: 8px;
+            font-size: 0.875rem;
+            margin-top: 10px;
         }
 
         .result-description {
-            color: #555;
-            font-size: 14px;
+            color: #777;
+            font-size: 0.9rem;
             margin-top: 12px;
         }
 
-        /* Dark Mode Styles */
-        .dark-mode {
-            background-color: var(--dark-bg);
-            color: var(--dark-text);
+        /* No Results */
+        .no-results {
+            text-align: center;
+            color: var(--primary-text);
+            font-size: 1rem;
+            margin-top: 50px;
         }
 
         /* Theme Toggle Button */
-        .toggle-btn {
-            position: absolute;
+        .theme-toggle-btn {
+            position: fixed;
             top: 20px;
             right: 20px;
-            background-color: var(--light-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 50%;
             padding: 10px;
+            background-color: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 50%;
             cursor: pointer;
+            transition: background-color var(--transition-speed);
             font-size: 20px;
-            transition: background-color 0.3s ease;
         }
 
-        .toggle-btn:hover {
-            background-color: var(--input-focus);
+        .theme-toggle-btn:hover {
+            background-color: var(--button-bg-hover);
         }
 
-        /* Results Count and No Results */
+        /* Loading & Results Count */
+        #status-message {
+            text-align: center;
+            font-size: 1rem;
+            color: #007700;
+            margin-top: 20px;
+        }
+
         #results-count {
             text-align: center;
             margin-top: 20px;
-            font-size: 16px;
-            color: var(--light-text);
-        }
-
-        .no-results {
-            text-align: center;
-            color: var(--light-text);
-            font-size: 16px;
-            padding: 40px 0;
+            font-size: 1rem;
+            color: var(--primary-text);
         }
 
         /* Search Highlight */
@@ -171,29 +191,30 @@
     </style>
 </head>
 <body>
+
     <!-- Theme Toggle Button -->
-    <button class="toggle-btn" id="theme-toggle">🌙</button>
+    <button class="theme-toggle-btn" id="theme-toggle">🌙</button>
 
-    <!-- Main Title -->
-    <h1>JSON Search</h1>
+    <div class="container">
+        <h1>JSON Search</h1>
 
-    <!-- Search Input and Button -->
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Enter search term...">
-        <button id="search-button">Search</button>
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Enter search term...">
+            <button id="search-button">Search</button>
+        </div>
+
+        <!-- Loading Status -->
+        <div id="status-message">Loading data...</div>
+
+        <!-- Results Count -->
+        <div id="results-count"></div>
+
+        <!-- Search Results -->
+        <div id="search-results"></div>
     </div>
 
-    <!-- Status Message -->
-    <div id="status-message">Loading data...</div>
-
-    <!-- Results Count -->
-    <div id="results-count"></div>
-
-    <!-- Search Results -->
-    <div id="search-results"></div>
-
     <script>
-        // Global variable to store the JSON data
         let searchData = [];
         let isDarkMode = false;
 
@@ -202,7 +223,7 @@
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark-mode', isDarkMode);
             document.querySelectorAll('.result-item').forEach(item => {
-                item.classList.toggle('dark', isDarkMode);
+                item.classList.toggle('dark-mode', isDarkMode);
             });
         });
 
@@ -216,16 +237,12 @@
                 }
                 searchData = await response.json();
                 statusMessage.textContent = 'Data loaded successfully. Ready to search.';
-                statusMessage.style.color = '#007700';
                 setTimeout(() => {
                     statusMessage.textContent = '';
                 }, 3000);
-                return true;
             } catch (error) {
                 console.error('Error loading data:', error);
                 statusMessage.textContent = 'Error loading data.json. Please make sure the file exists and is valid JSON.';
-                statusMessage.style.color = '#cc0000';
-                return false;
             }
         }
 
@@ -242,7 +259,7 @@
             return text.replace(regex, match => `<span class="highlight">${match}</span>`);
         }
 
-        // Function to perform search in real-time
+        // Function to perform search
         function performSearch() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const resultsContainer = document.getElementById('search-results');
@@ -275,7 +292,7 @@
                     resultItem.innerHTML = `
                         <img class="icon" src="${getFavicon(result.link)}" alt="icon">
                         <div>
-                            <h2 class="result-title"><a href="${result.link}" target="_blank">${highlightedTitle}</a></h2>
+                            <h2><a href="${result.link}" target="_blank">${highlightedTitle}</a></h2>
                             <div class="result-url">${result.link}</div>
                             <div class="result-description">${highlightedDescription}</div>
                         </div>
@@ -288,19 +305,15 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const dataLoaded = await loadData();
-
-            if (dataLoaded) {
-                document.getElementById('search-button').addEventListener('click', performSearch);
-
-                document.getElementById('search-input').addEventListener('input', debounce(performSearch, 300));
-            }
+            await loadData();
+            document.getElementById('search-button').addEventListener('click', performSearch);
+            document.getElementById('search-input').addEventListener('input', debounce(performSearch, 300));
         });
 
         // Debounce function to limit the number of searches while typing
         function debounce(func, delay) {
             let timeout;
-            return function() {
+            return function () {
                 clearTimeout(timeout);
                 timeout = setTimeout(func, delay);
             };
