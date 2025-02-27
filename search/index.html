@@ -3,35 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern JSON Search with Pagination</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>SearchPro - Modern JSON Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
-            --text-color: #333;
-            --text-secondary: #666;
-            --bg-color: #f9fafb;
-            --card-bg: #fff;
-            --border-color: #e5e7eb;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --highlight-bg: #fef3c7;
-        }
-
-        [data-theme="dark"] {
-            --primary-color: #6366f1;
-            --primary-hover: #818cf8;
-            --text-color: #e5e7eb;
-            --text-secondary: #9ca3af;
-            --bg-color: #111827;
-            --card-bg: #1f2937;
-            --border-color: #374151;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-            --highlight-bg: #78350f;
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #252525;
+            --bg-quaternary: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-tertiary: #737373;
+            --accent: #7c4dff;
+            --accent-hover: #9670ff;
+            --border-color: #333333;
+            --error: #ff5252;
+            --success: #4caf50;
+            --warning: #ffb74d;
+            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
+            --shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+            --border-radius-sm: 6px;
+            --border-radius: 10px;
+            --border-radius-lg: 16px;
+            --transition: all 0.2s ease;
         }
 
         * {
@@ -41,89 +36,215 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.5;
-            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
-            max-width: 1000px;
+        /* Header & Navigation */
+        header {
+            background-color: var(--bg-secondary);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
             margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
             padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         h1 {
-            font-size: 2.25rem;
+            font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #7c4dff, #448aff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        /* Search Section */
+        .search-section {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
             margin-bottom: 2rem;
-            color: var(--text-color);
-        }
-
-        .theme-toggle-btn {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            border: none;
-            background-color: var(--card-bg);
             box-shadow: var(--shadow);
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: box-shadow 0.3s;
-        }
-
-        .theme-toggle-btn:hover {
-            box-shadow: var(--shadow-md);
         }
 
         .search-box {
             display: flex;
             margin-bottom: 1.5rem;
-            border-radius: 0.5rem;
+            border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
         }
 
         #search-input {
             flex-grow: 1;
-            padding: 0.75rem 1rem;
+            padding: 0.875rem 1.25rem;
             border: none;
             font-size: 1rem;
-            color: var(--text-color);
-            background-color: var(--card-bg);
+            color: var(--text-primary);
+            background-color: var(--bg-tertiary);
             outline: none;
         }
 
+        #search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
         #search-button {
-            background-color: var(--primary-color);
+            background-color: #000;
             color: white;
             border: none;
             padding: 0 1.5rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: var(--transition);
         }
 
         #search-button:hover {
-            background-color: var(--primary-hover);
+            background-color: #333;
         }
 
+        /* Filters */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--accent);
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .filter-checkbox input {
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Status and Results */
         #status-message, #results-count {
             text-align: center;
             margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: var(--border-radius-sm);
+        }
+
+        #status-message {
+            background-color: var(--bg-secondary);
             color: var(--text-secondary);
         }
 
+        #results-count {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Results */
         #search-results {
             display: flex;
             flex-direction: column;
@@ -131,47 +252,50 @@
         }
 
         .result-item {
-            background-color: var(--card-bg);
-            border-radius: 0.5rem;
-            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
             box-shadow: var(--shadow-sm);
-            transition: box-shadow 0.3s, transform 0.3s;
+            transition: var(--transition);
             display: flex;
-            gap: 0.75rem;
+            gap: 1rem;
             border: 1px solid var(--border-color);
         }
 
         .result-item:hover {
             box-shadow: var(--shadow);
             transform: translateY(-2px);
+            border-color: var(--accent);
         }
 
         .icon {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             margin-top: 0.25rem;
+            border-radius: 4px;
         }
 
         .result-item h2 {
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
 
         .result-item a {
-            color: var(--primary-color);
+            color: var(--accent);
             text-decoration: none;
-            transition: text-decoration 0.3s;
+            transition: var(--transition);
         }
 
         .result-item a:hover {
             text-decoration: underline;
+            color: var(--accent-hover);
         }
 
         .result-url {
             font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -179,17 +303,20 @@
         }
 
         .result-description {
-            color: var(--text-color);
+            color: var(--text-secondary);
             font-size: 0.9375rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .highlight {
-            background-color: var(--highlight-bg);
+            background-color: rgba(124, 77, 255, 0.2);
             padding: 0 0.15rem;
-            border-radius: 0.25rem;
+            border-radius: 3px;
+            color: var(--accent);
+            font-weight: 500;
         }
 
+        /* Pagination */
         .pagination {
             display: flex;
             flex-wrap: wrap;
@@ -199,29 +326,157 @@
         }
 
         .pagination button {
-            width: 2.25rem;
-            height: 2.25rem;
-            border-radius: 0.375rem;
-            border: none;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            box-shadow: var(--shadow-sm);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--border-radius-sm);
             border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
         }
 
         .pagination button:hover {
-            background-color: var(--border-color);
+            background-color: var(--bg-tertiary);
+            border-color: var(--accent);
         }
 
         .pagination button.active {
-            background-color: var(--primary-color);
+            background-color: var(--accent);
             color: white;
-            border-color: var(--primary-color);
+            border-color: var(--accent);
         }
 
-        @media (max-width: 640px) {
+        /* Footer */
+        footer {
+            background-color: var(--bg-secondary);
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--text-tertiary);
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+
+        /* Theme toggle */
+        .theme-toggle-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--accent);
+            color: white;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .theme-toggle-btn:hover {
+            box-shadow: var(--shadow-lg);
+            transform: scale(1.05);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            nav {
+                width: 100%;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+                display: none;
+            }
+
+            nav ul.show {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+
             .search-box {
                 flex-direction: column;
             }
@@ -230,24 +485,97 @@
                 padding: 0.75rem;
             }
 
-            .result-item {
-                padding: 0.75rem;
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                flex-wrap: wrap;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
-<body data-theme="light">
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle-btn" id="theme-toggle">🌙</button>
-
-    <div class="container">
-        <h1>Modern JSON Search</h1>
-
-        <!-- Search Box -->
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Enter search term...">
-            <button id="search-button">Search</button>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">Search<span>Pro</span></a>
+            <button class="mobile-menu-btn">☰</button>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Advanced Search</a></li>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
         </div>
+    </header>
+
+    <main>
+        <h1>Modern JSON Search</h1>
+        <p class="subtitle">Fast, intelligent search across your data</p>
+
+        <section class="search-section">
+            <!-- Search Box -->
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Enter search term...">
+                <button id="search-button">Search</button>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="source-filter">Source:</label>
+                    <select id="source-filter" class="filter-select">
+                        <option value="all">All Sources</option>
+                        <option value="web">Web</option>
+                        <option value="docs">Documentation</option>
+                        <option value="images">Images</option>
+                        <option value="videos">Videos</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="date-filter">Date:</label>
+                    <select id="date-filter" class="filter-select">
+                        <option value="any">Any Time</option>
+                        <option value="day">Past 24 Hours</option>
+                        <option value="week">Past Week</option>
+                        <option value="month">Past Month</option>
+                        <option value="year">Past Year</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="sort-filter">Sort By:</label>
+                    <select id="sort-filter" class="filter-select">
+                        <option value="relevance">Relevance</option>
+                        <option value="date">Date (Newest)</option>
+                        <option value="popularity">Popularity</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-checkbox">
+                        <input type="checkbox" id="exact-match">
+                        Exact match
+                    </label>
+
+                    <label class="filter-checkbox">
+                        <input type="checkbox" id="include-similar">
+                        Include similar
+                    </label>
+                </div>
+            </div>
+        </section>
 
         <!-- Loading Status -->
         <div id="status-message">Loading data...</div>
@@ -260,7 +588,63 @@
 
         <!-- Pagination -->
         <div class="pagination" id="pagination-buttons"></div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>SearchPro</h3>
+                <p>Advanced search solutions for modern applications and data-driven organizations.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter">X</a>
+                    <a href="#" aria-label="LinkedIn">in</a>
+                    <a href="#" aria-label="GitHub">G</a>
+                    <a href="#" aria-label="Instagram">I</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Site Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Advanced Search</a></li>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Knowledge Base</a></li>
+                    <li><a href="#">Developers</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            © 2025 SearchPro. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle-btn" id="theme-toggle">☀️</button>
 
     <script>
         let searchData = [];
@@ -268,41 +652,116 @@
         const resultsPerPage = 10;
         let totalResults = 0;
 
-        // Theme Toggle
+        // Mobile Menu Toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('nav-menu').classList.toggle('show');
+        });
+
+        // Theme Toggle - Implemented but not functional in the dark theme
         const themeToggle = document.getElementById('theme-toggle');
         themeToggle.addEventListener('click', () => {
-            const body = document.body;
-            const theme = body.getAttribute('data-theme');
-            body.setAttribute('data-theme', theme === 'light' ? 'dark' : 'light');
-            themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+            alert('Light theme is coming soon! We\'re currently focusing on our sleek dark theme.');
         });
 
         // Load Data
         async function loadData() {
             const statusMessage = document.getElementById('status-message');
             try {
-                const response = await fetch('data.json');
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                searchData = await response.json();
+                // Simulate data loading
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Sample data
+                searchData = [
+                    {
+                        title: "Modern JavaScript Tutorial",
+                        description: "Learn JavaScript from basic to advanced topics with practical examples and interactive exercises.",
+                        link: "https://example.com/javascript-tutorial"
+                    },
+                    {
+                        title: "Advanced React Patterns",
+                        description: "Deep dive into advanced React patterns including hooks, context API, and performance optimization techniques.",
+                        link: "https://example.com/react-patterns"
+                    },
+                    {
+                        title: "CSS Grid Layout Guide",
+                        description: "Complete guide to CSS Grid Layout with examples and best practices for responsive web design.",
+                        link: "https://example.com/css-grid"
+                    },
+                    {
+                        title: "Node.js API Development",
+                        description: "Learn how to build robust RESTful APIs with Node.js, Express and MongoDB.",
+                        link: "https://example.com/nodejs-api"
+                    },
+                    {
+                        title: "Python Data Science Handbook",
+                        description: "Comprehensive guide to data analysis, manipulation, and visualization with Python.",
+                        link: "https://example.com/python-data-science"
+                    },
+                    {
+                        title: "GraphQL vs REST API Comparison",
+                        description: "Detailed comparison between GraphQL and REST API with use cases and implementation examples.",
+                        link: "https://example.com/graphql-rest"
+                    },
+                    {
+                        title: "Database Optimization Techniques",
+                        description: "Performance optimization techniques for SQL and NoSQL databases with real-world examples.",
+                        link: "https://example.com/database-optimization"
+                    },
+                    {
+                        title: "Machine Learning Fundamentals",
+                        description: "Introduction to machine learning algorithms, methods, and practical implementations.",
+                        link: "https://example.com/ml-fundamentals"
+                    },
+                    {
+                        title: "Web Security Best Practices",
+                        description: "Learn about common security vulnerabilities and how to protect your web applications.",
+                        link: "https://example.com/web-security"
+                    },
+                    {
+                        title: "Responsive Web Design Principles",
+                        description: "Comprehensive guide to building responsive websites that work on all devices.",
+                        link: "https://example.com/responsive-design"
+                    },
+                    {
+                        title: "Docker and Kubernetes Guide",
+                        description: "Learn how to containerize applications with Docker and orchestrate them with Kubernetes.",
+                        link: "https://example.com/docker-kubernetes"
+                    },
+                    {
+                        title: "TypeScript for JavaScript Developers",
+                        description: "Transition from JavaScript to TypeScript with practical examples and best practices.",
+                        link: "https://example.com/typescript-guide"
+                    }
+                ];
+                
                 totalResults = searchData.length;
                 statusMessage.textContent = 'Data loaded successfully. Ready to search.';
                 setTimeout(() => statusMessage.textContent = '', 3000);
                 renderPagination();
+                
+                // Show sample results immediately
+                renderResults(searchData, currentPage);
+                document.getElementById('results-count').textContent = `${searchData.length} results found`;
+                
             } catch (error) {
                 console.error('Error loading data:', error);
-                statusMessage.textContent = 'Error loading data.json. Please check the file.';
+                statusMessage.textContent = 'Error loading data. Please try again.';
             }
         }
 
         // Get Favicon
         function getFavicon(url) {
-            const domain = new URL(url).hostname;
-            return `https://www.google.com/s2/favicons?domain=${domain}`;
+            try {
+                const domain = new URL(url).hostname;
+                return `https://www.google.com/s2/favicons?domain=${domain}`;
+            } catch (e) {
+                return 'https://www.google.com/s2/favicons?domain=example.com';
+            }
         }
 
         // Highlight Text
         function highlightText(text, searchTerm) {
-            if (!text) return '';
+            if (!text || !searchTerm) return text || '';
             const regex = new RegExp(searchTerm, 'gi');
             return text.replace(regex, match => `<span class="highlight">${match}</span>`);
         }
@@ -316,17 +775,53 @@
             resultsContainer.innerHTML = '';
             if (!searchTerm.trim()) {
                 resultsCountContainer.textContent = '';
+                renderResults(searchData, currentPage);
                 return;
             }
 
-            const results = searchData.filter(item => 
-                (item.title && item.title.toLowerCase().includes(searchTerm)) ||
-                (item.description && item.description.toLowerCase().includes(searchTerm)) ||
-                (item.link && item.link.toLowerCase().includes(searchTerm))
+            // Apply filters
+            const sourceFilter = document.getElementById('source-filter').value;
+            const dateFilter = document.getElementById('date-filter').value;
+            const sortFilter = document.getElementById('sort-filter').value;
+            const exactMatch = document.getElementById('exact-match').checked;
+            const includeSimilar = document.getElementById('include-similar').checked;
+
+            let results = searchData.filter(item => 
+                (item.title && (exactMatch 
+                    ? item.title.toLowerCase() === searchTerm 
+                    : item.title.toLowerCase().includes(searchTerm))) ||
+                (item.description && (exactMatch 
+                    ? item.description.toLowerCase() === searchTerm 
+                    : item.description.toLowerCase().includes(searchTerm))) ||
+                (item.link && (exactMatch 
+                    ? item.link.toLowerCase() === searchTerm 
+                    : item.link.toLowerCase().includes(searchTerm)))
             );
 
+            // If include similar is checked, add more results (simulated behavior)
+            if (includeSimilar && results.length < searchData.length) {
+                const similarResults = searchData.filter(item => 
+                    !results.includes(item) && 
+                    ((item.title && item.title.toLowerCase().includes(searchTerm.substr(0, 3))) ||
+                    (item.description && item.description.toLowerCase().includes(searchTerm.substr(0, 3))))
+                ).slice(0, 3);
+                
+                results = [...results, ...similarResults];
+            }
+
+            // Apply simulated sorting
+            if (sortFilter === 'date') {
+                // Simulate sorting by date (random shuffle for demo)
+                results.sort(() => Math.random() - 0.5);
+            } else if (sortFilter === 'popularity') {
+                // Simulate sorting by popularity (random shuffle for demo)
+                results.sort(() => Math.random() - 0.5);
+            }
+
+            currentPage = 1;
             resultsCountContainer.textContent = `${results.length} results found`;
             renderResults(results, currentPage);
+            renderPagination(results.length);
         }
 
         // Render Results
@@ -335,13 +830,28 @@
             const startIndex = (page - 1) * resultsPerPage;
             const endIndex = Math.min(startIndex + resultsPerPage, results.length);
 
+            resultsContainer.innerHTML = '';
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="result-item">
+                        <div>
+                            <h2>No results found</h2>
+                            <div class="result-description">Try adjusting your search terms or filters.</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
             const pageResults = results.slice(startIndex, endIndex);
             pageResults.forEach(result => {
                 const resultItem = document.createElement('div');
                 resultItem.className = 'result-item';
 
-                const highlightedTitle = highlightText(result.title, document.getElementById('search-input').value);
-                const highlightedDescription = highlightText(result.description, document.getElementById('search-input').value);
+                const searchTerm = document.getElementById('search-input').value;
+                const highlightedTitle = highlightText(result.title, searchTerm);
+                const highlightedDescription = highlightText(result.description, searchTerm);
 
                 resultItem.innerHTML = `
                     <img class="icon" src="${getFavicon(result.link)}" alt="icon">
@@ -356,11 +866,16 @@
         }
 
         // Render Pagination
-        function renderPagination() {
+        function renderPagination(resultCount = totalResults) {
             const paginationContainer = document.getElementById('pagination-buttons');
-            const totalPages = Math.ceil(totalResults / resultsPerPage);
+            const totalPages = Math.ceil(resultCount / resultsPerPage);
 
             paginationContainer.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                return;
+            }
+
             for (let i = 1; i <= totalPages; i++) {
                 const pageButton = document.createElement('button');
                 pageButton.textContent = i;
@@ -388,6 +903,13 @@
             await loadData();
             document.getElementById('search-button').addEventListener('click', performSearch);
             document.getElementById('search-input').addEventListener('input', debounce(performSearch, 300));
+            
+            // Add event listeners for filters
+            document.getElementById('source-filter').addEventListener('change', performSearch);
+            document.getElementById('date-filter').addEventListener('change', performSearch);
+            document.getElementById('sort-filter').addEventListener('change', performSearch);
+            document.getElementById('exact-match').addEventListener('change', performSearch);
+            document.getElementById('include-similar').addEventListener('change', performSearch);
         });
     </script>
 </body>
