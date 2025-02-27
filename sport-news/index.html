@@ -3,68 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Link</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.17.12/babel.min.js"></script>
+    <title>UnoCSS Single Page</title>
     <script src="https://unpkg.com/@unocss/runtime"></script>
-    <style>
-        body { font-family: sans-serif; }
-    </style>
 </head>
-<body>
-    <div id="root"></div>
-    <script type="text/babel">
-        const { useState } = React;
-
-        function PostPage() {
-            const [posts, setPosts] = useState([]);
-            const [link, setLink] = useState("");
-            const [image, setImage] = useState("");
-            const [description, setDescription] = useState("");
-
-            const handleSubmit = () => {
-                if (link && image && description) {
-                    setPosts([...posts, { link, image, description }]);
-                    setLink("");
-                    setImage("");
-                    setDescription("");
-                }
-            };
-
-            return (
-                <div className="flex flex-col min-h-screen items-center bg-gray-100 p-4">
-                    <nav className="w-full bg-blue-500 text-white p-4 text-center text-xl">Post a Link</nav>
-                    <header className="w-full bg-blue-400 text-white text-center py-6">
-                        <h1 className="text-2xl">Share Your Favorite Links</h1>
-                        <p className="text-lg">Post links with images and descriptions</p>
-                    </header>
-                    <div className="max-w-xl w-full bg-white shadow-md p-6 mt-6 rounded-md">
-                        <h2 className="text-lg font-bold mb-4">Share a Link</h2>
-                        <input className="w-full border p-2 mb-2" type="text" placeholder="Link" value={link} onChange={(e) => setLink(e.target.value)} />
-                        <input className="w-full border p-2 mb-2" type="text" placeholder="Image URL" value={image} onChange={(e) => setImage(e.target.value)} />
-                        <textarea className="w-full border p-2 mb-2" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleSubmit}>Post</button>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 w-full max-w-2xl">
-                        {posts.length === 0 ? (
-                            <p className="text-center w-full">No posts yet. Add one above.</p>
-                        ) : (
-                            posts.map((post, index) => (
-                                <div key={index} className="bg-white shadow-md rounded-md p-4">
-                                    <img className="w-full h-40 object-cover rounded-md" src={post.image} alt="Post" />
-                                    <h3 className="mt-2 font-bold"><a href={post.link} target="_blank" className="text-blue-500">{post.link}</a></h3>
-                                    <p className="text-gray-700">{post.description}</p>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                    <footer className="w-full bg-blue-500 text-white text-center p-4 mt-6">© 2025 Post a Link. All rights reserved.</footer>
-                </div>
-            );
-        }
-
-        ReactDOM.render(<PostPage />, document.getElementById("root"));
-    </script>
+<body class="bg-gray-900 text-white p-4">
+    
+    <!-- Navigation -->
+    <nav class="flex justify-between items-center py-4 border-b border-gray-700">
+        <h1 class="text-2xl font-bold">My UnoCSS Site</h1>
+        <ul class="flex gap-4">
+            <li><a href="#" class="text-blue-400 hover:text-blue-300">Home</a></li>
+            <li><a href="#" class="text-blue-400 hover:text-blue-300">About</a></li>
+            <li><a href="#" class="text-blue-400 hover:text-blue-300">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="text-center py-20">
+        <h2 class="text-4xl font-bold">Welcome to My UnoCSS Website</h2>
+        <p class="text-gray-400 mt-4">A simple website styled with UnoCSS.</p>
+        <button class="mt-6 px-6 py-2 bg-blue-500 hover:bg-blue-400 text-white rounded-lg">Get Started</button>
+    </section>
+    
+    <!-- Content Section -->
+    <section class="max-w-2xl mx-auto text-center py-10">
+        <h3 class="text-3xl font-semibold">Why Use UnoCSS?</h3>
+        <p class="text-gray-400 mt-4">UnoCSS is a highly customizable and fast utility-first CSS framework.</p>
+    </section>
+    
 </body>
 </html>
