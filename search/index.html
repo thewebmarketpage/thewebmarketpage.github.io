@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Search</title>
+    <title>JSON Search with Pagination</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Root Variables */
@@ -188,6 +188,32 @@
             font-weight: bold;
         }
 
+        /* Pagination */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: none;
+            background-color: var(--button-bg);
+            color: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .pagination button:hover {
+            background-color: var(--button-bg-hover);
+        }
+
+        .pagination .active {
+            background-color: var(--highlight-bg);
+        }
+
     </style>
 </head>
 <body>
@@ -196,7 +222,7 @@
     <button class="theme-toggle-btn" id="theme-toggle">🌙</button>
 
     <div class="container">
-        <h1>JSON Search</h1>
+        <h1>JSON Search with Pagination</h1>
 
         <!-- Search Box -->
         <div class="search-box">
@@ -212,10 +238,18 @@
 
         <!-- Search Results -->
         <div id="search-results"></div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination-buttons">
+            <!-- Buttons for pages 1 to 10 will be inserted here -->
+        </div>
     </div>
 
     <script>
         let searchData = [];
+        let currentPage = 1;
+        const resultsPerPage = 10;
+        let totalResults = 0;
         let isDarkMode = false;
 
         // Function to toggle dark mode
@@ -236,17 +270,19 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 searchData = await response.json();
+                totalResults = searchData.length;
                 statusMessage.textContent = 'Data loaded successfully. Ready to search.';
                 setTimeout(() => {
                     statusMessage.textContent = '';
                 }, 3000);
+                renderPagination();
             } catch (error) {
                 console.error('Error loading data:', error);
                 statusMessage.textContent = 'Error loading data.json. Please make sure the file exists and is valid JSON.';
             }
         }
 
-        // Fetch favicon dynamically
+        // Function to get favicon dynamically
         function getFavicon(url) {
             const domain = new URL(url).hostname;
             return `https://www.google.com/s2/favicons?domain=${domain}`;
@@ -281,26 +317,51 @@
 
             resultsCountContainer.textContent = `${results.length} results found`;
 
-            if (results.length > 0) {
-                results.forEach(result => {
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'result-item';
+            renderResults(results, currentPage);
+        }
 
-                    const highlightedTitle = highlightText(result.title, searchTerm);
-                    const highlightedDescription = highlightText(result.description, searchTerm);
+        // Function to render search results based on page
+        function renderResults(results, page) {
+            const resultsContainer = document.getElementById('search-results');
+            const startIndex = (page - 1) * resultsPerPage;
+            const endIndex = Math.min(startIndex + resultsPerPage, results.length);
 
-                    resultItem.innerHTML = `
-                        <img class="icon" src="${getFavicon(result.link)}" alt="icon">
-                        <div>
-                            <h2><a href="${result.link}" target="_blank">${highlightedTitle}</a></h2>
-                            <div class="result-url">${result.link}</div>
-                            <div class="result-description">${highlightedDescription}</div>
-                        </div>
-                    `;
-                    resultsContainer.appendChild(resultItem);
+            const pageResults = results.slice(startIndex, endIndex);
+            pageResults.forEach(result => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+
+                const highlightedTitle = highlightText(result.title, document.getElementById('search-input').value);
+                const highlightedDescription = highlightText(result.description, document.getElementById('search-input').value);
+
+                resultItem.innerHTML = `
+                    <img class="icon" src="${getFavicon(result.link)}" alt="icon">
+                    <div>
+                        <h2><a href="${result.link}" target="_blank">${highlightedTitle}</a></h2>
+                        <div class="result-url">${result.link}</div>
+                        <div class="result-description">${highlightedDescription}</div>
+                    </div>
+                `;
+                resultsContainer.appendChild(resultItem);
+            });
+        }
+
+        // Function to render pagination buttons
+        function renderPagination() {
+            const paginationContainer = document.getElementById('pagination-buttons');
+            const totalPages = Math.ceil(totalResults / resultsPerPage);
+
+            paginationContainer.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.className = i === currentPage ? 'active' : '';
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    renderResults(searchData, currentPage);
+                    renderPagination();
                 });
-            } else {
-                resultsContainer.innerHTML = '<div class="no-results">No results found</div>';
+                paginationContainer.appendChild(pageButton);
             }
         }
 
