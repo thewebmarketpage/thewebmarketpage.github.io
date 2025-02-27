@@ -35,9 +35,10 @@
                     const resultDiv = document.createElement('div');
                     resultDiv.className = 'p-4 mt-2 bg-gray-700 rounded-lg';
                     resultDiv.innerHTML = `
-                        <h2 class="text-xl font-bold">${item.title}</h2>
+                        <h2 class="text-xl font-bold">
+                            <a href="${item.link}" target="_blank" class="text-blue-400 hover:underline">${item.title}</a>
+                        </h2>
                         <p>${item.description}</p>
-                        <a href="${item.link}" target="_blank" class="text-blue-400 hover:underline">${item.link}</a>
                     `;
                     resultsContainer.appendChild(resultDiv);
                 });
