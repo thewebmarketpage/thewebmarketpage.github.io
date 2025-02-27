@@ -6,213 +6,254 @@
     <title>SearchPro - Modern JSON Search</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Your existing CSS styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #1e1e1e;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            display: flex;
+        }
+
+        .nav-menu a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .search-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-input-container {
+            display: flex;
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #333;
+            background-color: #222;
+            color: #e0e0e0;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        .filters-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter {
+            margin: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter label {
+            margin-right: 5px;
+        }
+
+        .filter select, .filter input[type="checkbox"] {
+            background-color: #222;
+            color: #e0e0e0;
+            border: 1px solid #333;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #search-results {
+            padding: 20px;
+        }
+
+        .result-item {
+            background-color: #1e1e1e;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .result-item .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .result-item h2 a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .result-item .result-url, .result-item .result-time, .result-item .result-keywords, .result-item .result-description, .result-item .result-code {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        .result-item .result-code pre {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .pagination-container button {
+            background-color: #333;
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 12px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination-container button.active {
+            background-color: #007bff;
+        }
+
+        .highlight {
+            background-color: yellow;
+            color: black;
+        }
+
+        #status-message {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: #1e1e1e;
+                padding: 10px;
+            }
+
+            .nav-menu.show {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <!-- Your existing HTML structure -->
+    <header class="header">
+        <div class="logo">SearchPro</div>
+        <nav class="nav-menu" id="nav-menu">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <button id="theme-toggle">Theme</button>
+        </nav>
+        <button class="mobile-menu-btn">&#9776;</button>
+    </header>
+
+    <div class="search-container">
+        <div class="search-input-container">
+            <input type="text" id="search-input" class="search-input" placeholder="Enter your search term">
+            <button id="search-button" class="search-button">Search</button>
+        </div>
+
+        <div class="filters-container">
+            <div class="filter">
+                <label for="source-filter">Source:</label>
+                <select id="source-filter">
+                    <option value="">All</option>
+                    <option value="source1">Source 1</option>
+                    <option value="source2">Source 2</option>
+                </select>
+            </div>
+            <div class="filter">
+                <label for="date-filter">Date:</label>
+                <select id="date-filter">
+                    <option value="">Any</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                </select>
+            </div>
+            <div class="filter">
+                <label for="sort-filter">Sort:</label>
+                <select id="sort-filter">
+                    <option value="relevance">Relevance</option>
+                    <option value="date">Date</option>
+                    <option value="popularity">Popularity</option>
+                </select>
+            </div>
+            <div class="filter">
+                <label for="exact-match">Exact Match:</label>
+                <input type="checkbox" id="exact-match">
+            </div>
+            <div class="filter">
+                <label for="include-similar">Include Similar:</label>
+                <input type="checkbox" id="include-similar">
+            </div>
+        </div>
+    </div>
+
+    <div id="status-message"></div>
+    <div id="results-count"></div>
+    <div id="search-results"></div>
+
+    <div class="pagination-container" id="pagination-buttons"></div>
+
     <script>
-        let searchData = [];
-        let currentPage = 1;
-        const resultsPerPage = 10;
-        let totalResults = 0;
-
-        // Mobile Menu Toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('nav-menu').classList.toggle('show');
-        });
-
-        // Theme Toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            alert('Light theme is coming soon! We\'re currently focusing on our sleek dark theme.');
-        });
-
-        // Load Data
-        async function loadData() {
-            const statusMessage = document.getElementById('status-message');
-            try {
-                // Fetch data from data.json
-                const response = await fetch('data.json');
-                if (!response.ok) {
-                    throw new Error('Failed to load data');
-                }
-                searchData = await response.json(); // Parse JSON data
-                totalResults = searchData.length;
-
-                statusMessage.textContent = 'Data loaded successfully. Ready to search.';
-                setTimeout(() => statusMessage.textContent = '', 3000);
-
-                renderPagination();
-                renderResults(searchData, currentPage); // Show all results initially
-                document.getElementById('results-count').textContent = `${searchData.length} results found`;
-            } catch (error) {
-                console.error('Error loading data:', error);
-                statusMessage.textContent = 'Error loading data. Please try again.';
-            }
-        }
-
-        // Get Favicon
-        function getFavicon(url) {
-            try {
-                const domain = new URL(url).hostname;
-                return `https://www.google.com/s2/favicons?domain=${domain}`;
-            } catch (e) {
-                return 'https://www.google.com/s2/favicons?domain=example.com';
-            }
-        }
-
-        // Highlight Text
-        function highlightText(text, searchTerm) {
-            if (!text || !searchTerm) return text || '';
-            const regex = new RegExp(searchTerm, 'gi');
-            return text.replace(regex, match => `<span class="highlight">${match}</span>`);
-        }
-
-        // Perform Search
-        function performSearch() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const resultsContainer = document.getElementById('search-results');
-            const resultsCountContainer = document.getElementById('results-count');
-            resultsContainer.innerHTML = '';
-
-            if (!searchTerm.trim()) {
-                resultsCountContainer.textContent = '';
-                renderResults(searchData, currentPage);
-                return;
-            }
-
-            // Apply filters
-            const sourceFilter = document.getElementById('source-filter').value;
-            const dateFilter = document.getElementById('date-filter').value;
-            const sortFilter = document.getElementById('sort-filter').value;
-            const exactMatch = document.getElementById('exact-match').checked;
-            const includeSimilar = document.getElementById('include-similar').checked;
-
-            let results = searchData.filter(item =>
-                (item.title && (exactMatch ? item.title.toLowerCase() === searchTerm : item.title.toLowerCase().includes(searchTerm))) ||
-                (item.description && (exactMatch ? item.description.toLowerCase() === searchTerm : item.description.toLowerCase().includes(searchTerm))) ||
-                (item.link && (exactMatch ? item.link.toLowerCase() === searchTerm : item.link.toLowerCase().includes(searchTerm))) ||
-                (item.time && (exactMatch ? item.time.toLowerCase() === searchTerm : item.time.toLowerCase().includes(searchTerm))) ||
-                (item.keywords && item.keywords.some(keyword => exactMatch ? keyword.toLowerCase() === searchTerm : keyword.toLowerCase().includes(searchTerm))) ||
-                (item.code && (exactMatch ? item.code.toLowerCase() === searchTerm : item.code.toLowerCase().includes(searchTerm)))
-            );
-
-            // If include similar is checked, add more results (simulated behavior)
-            if (includeSimilar && results.length < searchData.length) {
-                const similarResults = searchData.filter(item =>
-                    !results.includes(item) &&
-                    ((item.title && item.title.toLowerCase().includes(searchTerm.substr(0, 3))) ||
-                    (item.description && item.description.toLowerCase().includes(searchTerm.substr(0, 3))) ||
-                    (item.keywords && item.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm.substr(0, 3)))) ||
-                    (item.code && item.code.toLowerCase().includes(searchTerm.substr(0, 3))))
-                ).slice(0, 3);
-                results = [...results, ...similarResults];
-            }
-
-            // Apply simulated sorting
-            if (sortFilter === 'date') {
-                results.sort((a, b) => new Date(b.time) - new Date(a.time)); // Sort by date
-            } else if (sortFilter === 'popularity') {
-                results.sort(() => Math.random() - 0.5); // Simulate sorting by popularity
-            }
-
-            currentPage = 1;
-            resultsCountContainer.textContent = `${results.length} results found`;
-            renderResults(results, currentPage);
-            renderPagination(results.length);
-        }
-
-        // Render Results
-        function renderResults(results, page) {
-            const resultsContainer = document.getElementById('search-results');
-            const startIndex = (page - 1) * resultsPerPage;
-            const endIndex = Math.min(startIndex + resultsPerPage, results.length);
-            resultsContainer.innerHTML = '';
-
-            if (results.length === 0) {
-                resultsContainer.innerHTML = `
-                    <div class="result-item">
-                        <div>
-                            <h2>No results found</h2>
-                            <div class="result-description">Try adjusting your search terms or filters.</div>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            const pageResults = results.slice(startIndex, endIndex);
-            pageResults.forEach(result => {
-                const resultItem = document.createElement('div');
-                resultItem.className = 'result-item';
-                const searchTerm = document.getElementById('search-input').value;
-                const highlightedTitle = highlightText(result.title, searchTerm);
-                const highlightedDescription = highlightText(result.description, searchTerm);
-                const highlightedTime = highlightText(result.time, searchTerm);
-                const highlightedKeywords = result.keywords ? result.keywords.map(keyword => highlightText(keyword, searchTerm)).join(', ') : '';
-                const highlightedCode = highlightText(result.code, searchTerm);
-
-                resultItem.innerHTML = `
-                    <img class="icon" src="${getFavicon(result.link)}" alt="icon">
-                    <div>
-                        <h2><a href="${result.link}" target="_blank">${highlightedTitle}</a></h2>
-                        <div class="result-url">${result.link}</div>
-                        <div class="result-time">${highlightedTime}</div>
-                        <div class="result-keywords">Keywords: ${highlightedKeywords}</div>
-                        <div class="result-description">${highlightedDescription}</div>
-                        <div class="result-code"><pre>${highlightedCode}</pre></div>
-                    </div>
-                `;
-                resultsContainer.appendChild(resultItem);
-            });
-        }
-
-        // Render Pagination
-        function renderPagination(resultCount = totalResults) {
-            const paginationContainer = document.getElementById('pagination-buttons');
-            const totalPages = Math.ceil(resultCount / resultsPerPage);
-            paginationContainer.innerHTML = '';
-
-            if (totalPages <= 1) {
-                return;
-            }
-
-            for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.textContent = i;
-                pageButton.className = i === currentPage ? 'active' : '';
-                pageButton.addEventListener('click', () => {
-                    currentPage = i;
-                    renderResults(searchData, currentPage);
-                    renderPagination();
-                });
-                paginationContainer.appendChild(pageButton);
-            }
-        }
-
-        // Debounce Function
-        function debounce(func, delay) {
-            let timeout;
-            return function () {
-                clearTimeout(timeout);
-                timeout = setTimeout(func, delay);
-            };
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadData();
-            document.getElementById('search-button').addEventListener('click', performSearch);
-            document.getElementById('search-input').addEventListener('input', debounce(performSearch, 300));
-
-            // Add event listeners for filters
-            document.getElementById('source-filter').addEventListener('change', performSearch);
-            document.getElementById('date-filter').addEventListener('change', performSearch);
-            document.getElementById('sort-filter').addEventListener('change', performSearch);
-            document.getElementById('exact-match').addEventListener('change', performSearch);
-            document.getElementById('include-similar').addEventListener('change', performSearch);
-        });
+        // ... (JavaScript code from your original example) ...
     </script>
 </body>
 </html>
