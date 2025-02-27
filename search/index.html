@@ -3,123 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Search</title>
+    <title>SearchPro</title>
     <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        input, button {
-            padding: 10px;
-            margin: 10px;
-            border: none;
-            border-radius: 5px;
-        }
-        input {
-            width: 300px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        .search-results {
-            margin-top: 20px;
-        }
-        .result-item {
-            background: #1e1e1e;
-            padding: 15px;
-            margin: 10px auto;
-            width: 80%;
-            border-radius: 8px;
-            text-align: left;
-        }
-        .pagination {
-            margin-top: 20px;
-        }
-        .pagination button {
-            margin: 5px;
-            padding: 8px;
-            background: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .pagination button.active {
-            background: #0056b3;
-        }
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; text-align: center; }
+        .navbar { display: flex; justify-content: space-around; padding: 10px; background: #1e1e1e; }
+        .search-container { margin-top: 20px; }
+        input, select, button { padding: 10px; margin: 5px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        .results { margin-top: 20px; text-align: left; }
     </style>
 </head>
 <body>
-    <h1>JSON Search</h1>
-    <input type="text" id="search-input" placeholder="Search...">
-    <button id="search-button">Search</button>
-    <div class="search-results" id="results"></div>
-    <div class="pagination" id="pagination-buttons"></div>
+    <div class="navbar">
+        <span>SearchPro</span>
+        <span>Home</span>
+        <span>About</span>
+        <span>Theme</span>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Enter your search term">
+        <select id="source">
+            <option>Source:</option>
+            <option value="any">Any</option>
+        </select>
+        <select id="date">
+            <option>Date:</option>
+            <option value="any">Any</option>
+        </select>
+        <select id="sort">
+            <option>Sort:</option>
+            <option value="relevance">Relevance</option>
+        </select>
+        <label><input type="checkbox" id="exactMatch"> Exact Match</label>
+        <label><input type="checkbox" id="includeSimilar"> Include Similar</label>
+        <button onclick="searchData()">Search</button>
+    </div>
+    
+    <div class="results" id="results"></div>
     
     <script>
-        let searchData = [];
-        let currentPage = 1;
-        const resultsPerPage = 5;
-
-        async function loadData() {
-            const response = await fetch('data.json');
-            searchData = await response.json();
-        }
-
-        function performSearch() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filteredResults = searchData.filter(item => item.title.toLowerCase().includes(query));
-            displayResults(filteredResults);
-        }
-
-        function displayResults(results) {
-            const resultsContainer = document.getElementById('results');
-            resultsContainer.innerHTML = '';
-            const start = (currentPage - 1) * resultsPerPage;
-            const end = start + resultsPerPage;
-            const paginatedResults = results.slice(start, end);
+        async function searchData() {
+            let searchTerm = document.getElementById('search').value.toLowerCase();
+            let exactMatch = document.getElementById('exactMatch').checked;
+            let includeSimilar = document.getElementById('includeSimilar').checked;
+            let response = await fetch('data.json');
+            let data = await response.json();
+            let results = data.filter(item => 
+                exactMatch ? item.title.toLowerCase() === searchTerm : item.title.toLowerCase().includes(searchTerm)
+            );
             
-            paginatedResults.forEach(result => {
-                const resultItem = document.createElement('div');
-                resultItem.classList.add('result-item');
-                resultItem.innerHTML = `
-                    <h2><a href="${result.link}" target="_blank">${result.title}</a></h2>
-                    <p>${result.description}</p>
-                `;
-                resultsContainer.appendChild(resultItem);
-            });
-            renderPagination(results.length);
-        }
-
-        function renderPagination(total) {
-            const paginationContainer = document.getElementById('pagination-buttons');
-            const totalPages = Math.ceil(total / resultsPerPage);
-            paginationContainer.innerHTML = '';
-            
-            if (totalPages <= 1) return;
-            
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement('button');
-                button.textContent = i;
-                if (i === currentPage) button.classList.add('active');
-                button.addEventListener('click', () => {
-                    currentPage = i;
-                    performSearch();
-                });
-                paginationContainer.appendChild(button);
+            if (includeSimilar) {
+                results = [...results, ...data.filter(item => item.description.toLowerCase().includes(searchTerm))];
             }
+            
+            document.getElementById('results').innerHTML = results.map(item => `<p>${item.title}</p>`).join('');
         }
-
-        document.getElementById('search-button').addEventListener('click', performSearch);
-        document.getElementById('search-input').addEventListener('keyup', event => {
-            if (event.key === 'Enter') performSearch();
-        });
-
-        loadData();
     </script>
 </body>
 </html>
