@@ -59,6 +59,16 @@
             }
         }
 
+        // Function to check if an image URL is valid (i.e., it doesn't return a 404 or fail to load)
+        function isValidImage(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+
         async function fetchSportsNews() {
             const newsContainer = document.getElementById("news-container");
             const trendingTextsContainer = document.getElementById("trending-texts");
@@ -67,16 +77,26 @@
                 if (newsCount >= 12) break; // Fetching only 12 posts, 6 for feed, 6 for trending
                 const data = await fetchRSSFeed(feed);
                 if (data && data.items) {
-                    data.items.slice(0, 2).forEach(article => {
+                    data.items.slice(0, 2).forEach(async article => {
                         if (newsCount >= 12) return;
 
-                        const newsItem = document.createElement("div");
-                        newsItem.className = "card";
                         const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
-                        const isImageBroken = imgUrl === 'https://via.placeholder.com/600x300';
+                        const isImageValid = await isValidImage(imgUrl);
 
-                        if (isImageBroken) {
-                            // Add to Trending Topics if image is broken
+                        if (isImageValid) {
+                            // Only add posts with valid images
+                            const newsItem = document.createElement("div");
+                            newsItem.className = "card";
+                            newsItem.innerHTML = `
+                                <img src="${imgUrl}" alt="News Image">
+                                <p class="title">${article.title}</p>
+                                <p class="text-gray-400 text-sm">${data.feed.title}</p>
+                                <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
+                            `;
+                            newsContainer.appendChild(newsItem);
+                            newsCount++;
+                        } else {
+                            // Skip posts with broken images
                             const trendingText = document.createElement("div");
                             trendingText.className = "trending-text";
                             trendingText.innerHTML = `
@@ -85,18 +105,7 @@
                                 <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
                             `;
                             trendingTextsContainer.appendChild(trendingText);
-                        } else {
-                            // Add to feed if image is valid
-                            newsItem.innerHTML = `
-                                <img src="${imgUrl}" alt="News Image">
-                                <p class="title">${article.title}</p>
-                                <p class="text-gray-400 text-sm">${data.feed.title}</p>
-                                <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
-                            `;
-                            newsContainer.appendChild(newsItem);
                         }
-
-                        newsCount++;
                     });
                 }
             }
