@@ -203,7 +203,7 @@
         </div>
 
         <div class="trending">
-            <h2 class="text-xl font-bold mb-4">Trending Topics <span id="trending-count">(0/20)</span></h2>
+            <h2 class="text-xl font-bold mb-4">Trending Topics <span id="trending-count">(0/30)</span></h2>
             <div id="trending-texts">
                 <!-- Trending posts will be loaded here -->
             </div>
@@ -241,8 +241,8 @@
 
         // Update the counters
         function updateCounters(feedCount, trendingCount) {
-            document.getElementById('feed-count').textContent = `(${feedCount}/10)`;
-            document.getElementById('trending-count').textContent = `(${trendingCount}/20)`;
+            document.getElementById('feed-count').textContent = `(${feedCount}/20)`;
+            document.getElementById('trending-count').textContent = `(${trendingCount}/30)`;
         }
 
         async function fetchSportsNews() {
