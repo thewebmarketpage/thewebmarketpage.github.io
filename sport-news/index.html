@@ -11,13 +11,14 @@
         body { background: #15202b; color: #ffffff; font-family: Arial, sans-serif; }
         .container { max-width: 1200px; margin: auto; display: flex; }
         .sidebar { width: 250px; padding: 20px; }
-        .feed { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+        .feed { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
         .trending { width: 300px; padding: 20px; }
         .card { background: #192734; border-radius: 12px; padding: 15px; }
-        .card img { border-radius: 12px; width: 100%; height: 150px; object-fit: cover; }
+        .card img { border-radius: 12px; width: 100%; height: 200px; object-fit: cover; }
         .card .title { font-weight: bold; font-size: 18px; margin-top: 10px; }
         .card p { font-size: 14px; }
         .nav-item { padding: 10px; font-size: 18px; }
+        .trending-text { background: #192734; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -35,9 +36,7 @@
 
         <div class="trending">
             <h2 class="text-xl font-bold mb-4">Trending Topics</h2>
-            <div class="card">#Sports</div>
-            <div class="card">#Football</div>
-            <div class="card">#NBA</div>
+            <div id="trending-texts"></div>
         </div>
     </div>
 
@@ -62,22 +61,41 @@
 
         async function fetchSportsNews() {
             const newsContainer = document.getElementById("news-container");
+            const trendingTextsContainer = document.getElementById("trending-texts");
             let newsCount = 0;
             for (const feed of rssFeeds) {
-                if (newsCount >= 10) break;
+                if (newsCount >= 12) break; // Fetching only 12 posts, 6 for feed, 6 for trending
                 const data = await fetchRSSFeed(feed);
                 if (data && data.items) {
                     data.items.slice(0, 2).forEach(article => {
-                        if (newsCount >= 10) return;
+                        if (newsCount >= 12) return;
+
                         const newsItem = document.createElement("div");
                         newsItem.className = "card";
-                        newsItem.innerHTML = `
-                            <img src="${article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300'}" alt="News Image">
-                            <p class="title">${article.title}</p>
-                            <p class="text-gray-400 text-sm">${data.feed.title}</p>
-                            <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
-                        `;
-                        newsContainer.appendChild(newsItem);
+                        const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
+                        const isImageBroken = imgUrl === 'https://via.placeholder.com/600x300';
+
+                        if (isImageBroken) {
+                            // Add to Trending Topics if image is broken
+                            const trendingText = document.createElement("div");
+                            trendingText.className = "trending-text";
+                            trendingText.innerHTML = `
+                                <p class="title">${article.title}</p>
+                                <p class="text-gray-400 text-sm">${data.feed.title}</p>
+                                <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
+                            `;
+                            trendingTextsContainer.appendChild(trendingText);
+                        } else {
+                            // Add to feed if image is valid
+                            newsItem.innerHTML = `
+                                <img src="${imgUrl}" alt="News Image">
+                                <p class="title">${article.title}</p>
+                                <p class="text-gray-400 text-sm">${data.feed.title}</p>
+                                <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
+                            `;
+                            newsContainer.appendChild(newsItem);
+                        }
+
                         newsCount++;
                     });
                 }
