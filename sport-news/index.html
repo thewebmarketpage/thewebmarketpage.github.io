@@ -3,54 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports News</title>
+    <title>Sports News - X Style</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        body { background: #15202b; color: #ffffff; font-family: Arial, sans-serif; }
+        .container { max-width: 1200px; margin: auto; display: flex; }
+        .sidebar { width: 250px; padding: 20px; }
+        .feed { flex: 1; padding: 20px; }
+        .trending { width: 300px; padding: 20px; }
+        .card { background: #192734; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .card img { border-radius: 12px; }
+        .card .title { font-weight: bold; font-size: 18px; }
+        .nav-item { padding: 10px; font-size: 18px; }
+    </style>
 </head>
 <body>
-    <nav class="navbar is-dark">
-        <div class="container">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="#">Sports News</a>
-            </div>
+    <div class="container">
+        <div class="sidebar">
+            <h1 class="text-2xl font-bold mb-4">Sports News</h1>
+            <nav>
+                <div class="nav-item"><i class="fas fa-home"></i> Home</div>
+                <div class="nav-item"><i class="fas fa-fire"></i> Trending</div>
+                <div class="nav-item"><i class="fas fa-user"></i> Profile</div>
+            </nav>
         </div>
-    </nav>
-    
-    <section class="hero is-large is-primary">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">Top Sports Stories</h1>
-                <h2 class="subtitle">Stay updated with the latest sports news</h2>
-            </div>
+
+        <div class="feed" id="news-container"></div>
+
+        <div class="trending">
+            <h2 class="text-xl font-bold mb-4">Trending Topics</h2>
+            <div class="card">#Sports</div>
+            <div class="card">#Football</div>
+            <div class="card">#NBA</div>
         </div>
-    </section>
-    
-    <div class="container mt-5">
-        <div class="columns is-multiline" id="news-container"></div>
     </div>
-    
-    <footer class="footer">
-        <div class="content has-text-centered">
-            <p><strong>Sports News</strong> - Powered by free RSS feeds</p>
-            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact</a></p>
-        </div>
-    </footer>
-    
+
     <script>
         const rssFeeds = [
             "https://www.espn.com/espn/rss/news",
             "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml",
             "https://feeds.bbci.co.uk/sport/rss.xml",
             "https://www.cbssports.com/rss/headlines/",
-            "https://sports.yahoo.com/rss/",
-            "https://www.si.com/rss/si_topstories.rss",
-            "https://www.sportingnews.com/us/rss",
-            "https://www.theguardian.com/uk/sport/rss",
-            "https://www.skysports.com/rss/12040",
-            "https://feeds.feedburner.com/ndtvnews-sports"
+            "https://sports.yahoo.com/rss/"
         ];
-        
+
         async function fetchRSSFeed(url) {
             try {
                 const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
@@ -64,30 +62,19 @@
         async function fetchSportsNews() {
             const newsContainer = document.getElementById("news-container");
             let newsCount = 0;
-
             for (const feed of rssFeeds) {
                 if (newsCount >= 10) break;
                 const data = await fetchRSSFeed(feed);
-                
                 if (data && data.items) {
-                    data.items.slice(0, 1).forEach(article => {
+                    data.items.slice(0, 2).forEach(article => {
                         if (newsCount >= 10) return;
                         const newsItem = document.createElement("div");
-                        newsItem.className = "column is-one-third";
+                        newsItem.className = "card";
                         newsItem.innerHTML = `
-                            <div class="card">
-                                <div class="card-image">
-                                    <figure class="image is-4by3">
-                                        <img src="${article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300'}" alt="News Image">
-                                    </figure>
-                                </div>
-                                <div class="card-content">
-                                    <p class="title is-5">${article.title}</p>
-                                    <p class="subtitle is-6">${data.feed.title}</p>
-                                    <div class="content">${article.description}</div>
-                                    <a href="${article.link}" target="_blank" class="button is-link">Read more</a>
-                                </div>
-                            </div>
+                            <img src="${article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300'}" alt="News Image" class="w-full">
+                            <p class="title mt-2">${article.title}</p>
+                            <p class="text-gray-400 text-sm">${data.feed.title}</p>
+                            <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
                         `;
                         newsContainer.appendChild(newsItem);
                         newsCount++;
