@@ -15,7 +15,7 @@
             flex: 1; 
             padding: 20px; 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
             gap: 15px; 
         }
         .trending { width: 300px; padding: 20px; }
@@ -23,11 +23,12 @@
             background: #192734; 
             border-radius: 12px; 
             padding: 15px; 
-            height: 300px; /* Fixed height */
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
             overflow: hidden; 
+            height: 320px; /* Fixed height */
+            min-width: 250px; /* Minimum width to prevent shrinking */
         }
         .card img { 
             border-radius: 12px; 
