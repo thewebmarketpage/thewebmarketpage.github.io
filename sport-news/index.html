@@ -265,7 +265,7 @@
                     const article = data.items[i];
                     
                     // Skip if we've reached our limits
-                    if (feedCount >= 10 && trendingCount >= 20) break;
+                    if (feedCount >= 20 && trendingCount >= 30) break;
                     
                     const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
                     const isImageValid = await isValidImage(imgUrl);
@@ -285,7 +285,7 @@
                         updateCounters(feedCount, trendingCount);
                     } 
                     // For trending posts
-                    else if (trendingCount < 20) {
+                    else if (trendingCount < 30) {
                         const trendingText = document.createElement("div");
                         trendingText.className = "trending-text";
                         trendingText.innerHTML = `
