@@ -253,7 +253,7 @@
             
             // Fetch and process all feeds
             for (let feedIndex = 0; feedIndex < rssFeeds.length; feedIndex++) {
-                if (feedCount >= 10 && trendingCount >= 20) break; // Exit if we have all needed posts
+                if (feedCount >= 20 && trendingCount >= 30) break; // Exit if we have all needed posts
                 
                 const feed = rssFeeds[feedIndex];
                 const data = await fetchRSSFeed(feed);
@@ -271,7 +271,7 @@
                     const isImageValid = await isValidImage(imgUrl);
                     
                     // For feed posts (with valid images)
-                    if (isImageValid && feedCount < 10) {
+                    if (isImageValid && feedCount < 20) {
                         const newsItem = document.createElement("div");
                         newsItem.className = "card";
                         newsItem.innerHTML = `
