@@ -6,16 +6,37 @@
     <title>Sports News</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 class="headline">Latest Sports News</h1>
-            <h3 class="ticker">Breaking: <span>Top stories updated live</span></h3>
-        </header>
-        <div class="news-container" id="news-container"></div>
+    <nav class="navbar is-dark">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="#">Sports News</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero is-large is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Top Sports Stories</h1>
+                <h2 class="subtitle">Stay updated with the latest sports news</h2>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container mt-5">
+        <div class="columns is-multiline" id="news-container"></div>
     </div>
+    
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p><strong>Sports News</strong> - Powered by free RSS feeds</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact</a></p>
+        </div>
+    </footer>
+    
     <script>
         const rssFeeds = [
             "https://www.espn.com/espn/rss/news",
@@ -27,17 +48,7 @@
             "https://www.sportingnews.com/us/rss",
             "https://www.theguardian.com/uk/sport/rss",
             "https://www.skysports.com/rss/12040",
-            "https://feeds.feedburner.com/ndtvnews-sports",
-            "https://www.reddit.com/r/sports/.rss",
-            "https://www.washingtonpost.com/sports/rss.xml",
-            "https://www.latimes.com/sports/rss2.0.xml",
-            "https://www.npr.org/rss/rss.php?id=1055",
-            "https://www.foxsports.com/feedout/syndicatedContent/soccer/rss",
-            "https://www.goal.com/feeds/en/news",
-            "https://www.dailymail.co.uk/sport/index.rss",
-            "https://www.independent.co.uk/sport/rss",
-            "https://www.bleacherreport.com/articles/feed?tag_id=19",
-            "https://www.eurosport.com/rss.xml"
+            "https://feeds.feedburner.com/ndtvnews-sports"
         ];
         
         async function fetchRSSFeed(url) {
@@ -55,21 +66,27 @@
             let newsCount = 0;
 
             for (const feed of rssFeeds) {
-                if (newsCount >= 50) break;
+                if (newsCount >= 10) break;
                 const data = await fetchRSSFeed(feed);
                 
                 if (data && data.items) {
                     data.items.slice(0, 1).forEach(article => {
-                        if (newsCount >= 50) return;
+                        if (newsCount >= 10) return;
                         const newsItem = document.createElement("div");
-                        newsItem.className = "news-item";
+                        newsItem.className = "column is-one-third";
                         newsItem.innerHTML = `
-                            <img src="${article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300'}" alt="News Image">
-                            <div class="news-content">
-                                <h2 class="news-title">${article.title}</h2>
-                                <p class="news-source">${data.feed.title}</p>
-                                <p class="byline">${article.description}</p>
-                                <a href="${article.link}" target="_blank" class="btn btn-primary">Read more</a>
+                            <div class="card">
+                                <div class="card-image">
+                                    <figure class="image is-4by3">
+                                        <img src="${article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300'}" alt="News Image">
+                                    </figure>
+                                </div>
+                                <div class="card-content">
+                                    <p class="title is-5">${article.title}</p>
+                                    <p class="subtitle is-6">${data.feed.title}</p>
+                                    <div class="content">${article.description}</div>
+                                    <a href="${article.link}" target="_blank" class="button is-link">Read more</a>
+                                </div>
                             </div>
                         `;
                         newsContainer.appendChild(newsItem);
