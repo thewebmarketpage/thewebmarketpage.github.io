@@ -316,7 +316,7 @@
             </div>
             
             <div class="trending">
-                <h3 class="feed-title">Trending Now <span id="trending-count">(0/10)</span></h3>
+                <h3 class="feed-title">Trending Now <span id="trending-count">(0/20)</span></h3>
                 <div class="trending-grid" id="trending-grid">
                     <!-- Trending cards will be loaded here -->
                 </div>
@@ -408,8 +408,8 @@
         // Update the counters
         function updateCounters(topCount, trendingCount, sidebarCount) {
             document.getElementById('top-count').textContent = `(${topCount}/5)`;
-            document.getElementById('trending-count').textContent = `(${trendingCount}/10)`;
-            document.getElementById('sidebar-count').textContent = `(${sidebarCount}/10)`;
+            document.getElementById('trending-count').textContent = `(${trendingCount}/20)`;
+            document.getElementById('sidebar-count').textContent = `(${sidebarCount}/20)`;
         }
 
         async function fetchTrendingSports() {
@@ -457,7 +457,7 @@
             
             // Fetch and process trending feeds
             for (let feedIndex = 0; feedIndex < trendingFeeds.length; feedIndex++) {
-                if (trendingCount >= 10) break;
+                if (trendingCount >= 20) break;
                 
                 const feed = trendingFeeds[feedIndex];
                 const data = await fetchRSSFeed(feed);
@@ -465,7 +465,7 @@
                 
                 if (!data || !data.items) continue;
                 
-                for (let i = 0; i < data.items.length && trendingCount < 10; i++) {
+                for (let i = 0; i < data.items.length && trendingCount < 20; i++) {
                     const article = data.items[i];
                     const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
                     const isImageValid = await isValidImage(imgUrl);
@@ -492,14 +492,14 @@
             
             // Fetch and process sidebar feeds
             for (let feedIndex = 0; feedIndex < sidebarFeeds.length; feedIndex++) {
-                if (sidebarCount >= 10) break;
+                if (sidebarCount >= 20) break;
                 
                 const feed = sidebarFeeds[feedIndex];
                 const data = await fetchRSSFeed(feed);
                 
                 if (!data || !data.items) continue;
                 
-                for (let i = 0; i < data.items.length && sidebarCount < 10; i++) {
+                for (let i = 0; i < data.items.length && sidebarCount < 20; i++) {
                     const article = data.items[i];
                     
                     const sidebarItem = document.createElement("div");
