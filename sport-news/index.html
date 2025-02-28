@@ -3,60 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tailwind Components</title>
+    <title>Interactive Single Page</title>
     <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>
     <script src="https://cdn.jsdelivr.net/npm/twind/shim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/shadcn-ui@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide-react@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body class="bg-gradient-to-br from-gray-800 via-indigo-700 to-purple-800 text-gray-200 p-10 font-sans">
-    <div class="container mx-auto space-y-10">
-        <button class="bg-gradient-to-r from-teal-400 to-blue-500 hover:from-teal-500 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition hover:scale-105">Click Me</button>
-        
-        <div class="border border-gray-500 rounded-xl p-8 bg-gray-700 shadow-xl hover:shadow-indigo-900 transition-all duration-300">
-            <h2 class="text-2xl font-bold">Elegant Card</h2>
-            <p class="text-gray-300">This card has smooth transitions and a unique design.</p>
-        </div>
-
-        <input type="text" class="w-full p-4 rounded-xl border border-gray-600 bg-gray-700 text-white focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-lg" placeholder="Enter text..." />
-
-        <select class="w-full p-4 rounded-xl border border-gray-600 bg-gray-700 text-white cursor-pointer focus:ring-2 focus:ring-green-400">
-            <option>Choice A</option>
-            <option>Choice B</option>
-        </select>
-
-        <textarea class="w-full p-4 rounded-xl border border-gray-600 bg-gray-700 text-white focus:ring-2 focus:ring-purple-400" placeholder="Type your message..."></textarea>
-
-        <label class="flex items-center space-x-4 cursor-pointer">
-            <input type="checkbox" class="form-checkbox text-yellow-400 w-6 h-6" />
-            <span class="text-lg">Enable feature</span>
-        </label>
-
-        <label class="flex items-center space-x-4 cursor-pointer">
-            <input type="radio" name="option" class="form-radio text-green-400 w-6 h-6" />
-            <span class="text-lg">Select Option</span>
-        </label>
-
-        <div class="bg-gray-800 p-8 rounded-xl shadow-xl hover:shadow-indigo-900 transition-all">
-            <h3 class="text-2xl font-semibold">Interactive Modal</h3>
-            <p class="text-gray-300">A stylish modal with enhanced hover effects.</p>
-        </div>
-
-        <div class="bg-gray-800 p-8 rounded-xl shadow-xl hover:shadow-indigo-900 transition-all">
-            <h3 class="text-2xl font-semibold">Dropdown Menu</h3>
-            <ul class="space-y-4">
-                <li class="hover:bg-gray-600 p-4 rounded-lg transition-all">Menu Item 1</li>
-                <li class="hover:bg-gray-600 p-4 rounded-lg transition-all">Menu Item 2</li>
+<body class="bg-gray-900 text-white font-sans">
+    <header class="fixed top-0 left-0 w-full bg-gray-800 shadow-lg z-50">
+        <nav class="container mx-auto flex justify-between items-center py-4 px-6">
+            <h1 class="text-2xl font-bold">My Website</h1>
+            <ul class="flex space-x-6">
+                <li><a href="#home" class="hover:text-blue-400">Home</a></li>
+                <li><a href="#about" class="hover:text-blue-400">About</a></li>
+                <li><a href="#services" class="hover:text-blue-400">Services</a></li>
+                <li><a href="#contact" class="hover:text-blue-400">Contact</a></li>
             </ul>
+        </nav>
+    </header>
+    
+    <section id="home" class="h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700 text-center">
+        <div>
+            <h2 class="text-4xl font-extrabold">Welcome to My Website</h2>
+            <p class="text-lg text-gray-300 mt-4">Scroll down to explore</p>
         </div>
-
-        <div class="w-full h-72 bg-gray-800 rounded-xl flex items-center justify-center shadow-xl hover:shadow-indigo-900 transition">
-            <p class="text-gray-300 text-lg">Image Placeholder</p>
+    </section>
+    
+    <section id="about" class="h-screen flex items-center justify-center bg-gray-800">
+        <div class="text-center">
+            <h2 class="text-3xl font-semibold">About Us</h2>
+            <p class="text-gray-300 mt-4">We provide modern web solutions with Tailwind CSS.</p>
         </div>
-
-        <progress class="w-full h-4 rounded-xl overflow-hidden bg-gray-600" value="50" max="100"></progress>
-    </div>
+    </section>
+    
+    <section id="services" class="h-screen flex items-center justify-center bg-gray-700">
+        <div class="text-center">
+            <h2 class="text-3xl font-semibold">Our Services</h2>
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition">
+                    <h3 class="text-xl font-bold">Web Design</h3>
+                    <p class="text-gray-300 mt-2">We craft modern UI experiences.</p>
+                </div>
+                <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition">
+                    <h3 class="text-xl font-bold">Development</h3>
+                    <p class="text-gray-300 mt-2">We build high-performance websites.</p>
+                </div>
+                <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition">
+                    <h3 class="text-xl font-bold">SEO Optimization</h3>
+                    <p class="text-gray-300 mt-2">We help your site rank higher.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="h-screen flex items-center justify-center bg-gray-900">
+        <div class="text-center">
+            <h2 class="text-3xl font-semibold">Get in Touch</h2>
+            <form class="mt-6 space-y-4">
+                <input type="text" placeholder="Your Name" class="w-80 p-4 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-400">
+                <input type="email" placeholder="Your Email" class="w-80 p-4 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-400">
+                <textarea placeholder="Your Message" class="w-80 p-4 rounded bg-gray-700 text-white focus:ring-2 focus:ring-blue-400"></textarea>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg">Send Message</button>
+            </form>
+        </div>
+    </section>
+    
+    <footer class="text-center py-4 bg-gray-800">
+        <p class="text-gray-400">&copy; 2025 My Website. All rights reserved.</p>
+    </footer>
 </body>
 </html>
