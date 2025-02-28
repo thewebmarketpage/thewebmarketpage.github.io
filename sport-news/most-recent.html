@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trending Sports News - X Style</title>
+    <title>Most Recent Sports News - X Style</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <style>
         body { 
-            background: #0a0e14; /* Darker background */
+            background: #1e242d; /* Darker background */
             color: #ffffff; 
             font-family: Arial, sans-serif;
             margin: 0;
@@ -19,7 +19,7 @@
             max-width: 1200px; 
             margin: 0 auto; 
             display: flex;
-            padding: 10px; 
+            padding: 20px; 
         }
         .sidebar { 
             width: 250px; 
@@ -34,23 +34,14 @@
         }
         .feed-title {
             margin-bottom: 20px;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
-            color: #e6e6e6; /* Slightly off-white for better contrast */
+            color: #ffffff; /* Bright white text */
         }
-        .top-news {
-            margin-bottom: 30px;
-        }
-        .top-news-grid {
+        .top-news-grid, .recent-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
-            width: 100%;
-        }
-        .trending-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 16px;
             width: 100%;
         }
         .sidebar-content { 
@@ -62,112 +53,69 @@
             overflow-y: auto;
         }
         
-        /* Top news cards - horizontal layout */
-        .top-card {
-            background: #192734; 
-            border-radius: 12px; 
-            display: flex;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            height: 140px;
-        }
-        .top-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.2);
-            border-color: rgba(29, 161, 242, 0.3);
-            background: #1e3246;
-        }
-        .top-card img {
-            width: 140px;
-            height: 140px;
-            object-fit: cover;
-            transition: all 0.3s ease;
-        }
-        .top-card:hover img {
-            filter: brightness(1.1);
-        }
-        .top-card-content {
-            padding: 12px;
+        /* Recent posts cards - Vertical layout */
+        .recent-card {
+            background: #273143; 
+            border-radius: 16px; 
+            padding: 0;
             display: flex;
             flex-direction: column;
-            flex: 1;
-        }
-        .top-card .title {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 8px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            color: #ffffff;
-        }
-        
-        /* Trending cards - rounded with highlight */
-        .trending-card { 
-            background: #192734; 
-            border-radius: 16px; 
-            padding: 0; 
-            display: flex; 
-            flex-direction: column; 
-            height: 300px; 
+            height: 320px; 
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.05);
             overflow: hidden;
             position: relative;
         }
-        .trending-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.2);
-            border-color: rgba(29, 161, 242, 0.3);
+        .recent-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.3);
+            border-color: rgba(29, 161, 242, 0.5);
         }
-        .trending-card img { 
+        .recent-card img { 
             width: 100%; 
-            height: 160px;
-            object-fit: cover; 
+            height: 180px;
+            object-fit: cover;
             transition: all 0.3s ease;
         }
-        .trending-card:hover img {
-            filter: brightness(1.1);
+        .recent-card:hover img {
+            filter: brightness(1.15);
         }
-        .trending-card-content {
+        .recent-card-content {
             padding: 15px;
             display: flex;
             flex-direction: column;
             flex: 1;
-            background: linear-gradient(to bottom, rgba(25, 39, 52, 0.8) 0%, #192734 100%);
+            background: linear-gradient(to bottom, rgba(25, 39, 52, 0.8) 0%, #273143 100%);
         }
-        .trending-card .title { 
+        .recent-card .title { 
             font-weight: bold; 
-            font-size: 16px; 
-            margin-bottom: 8px; 
+            font-size: 18px; 
+            margin-bottom: 10px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             color: #ffffff;
         }
-        .trending-card .category {
+
+        .recent-card .category {
             position: absolute;
             top: 10px;
             right: 10px;
             background-color: rgba(29, 161, 242, 0.9);
             color: white;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             z-index: 10;
         }
         
         /* Common styles */
         p { 
-            font-size: 14px; 
+            font-size: 15px; 
             color: #a0a0a0;
             margin: 5px 0;
             overflow: hidden;
@@ -177,7 +125,7 @@
             -webkit-box-orient: vertical;
         }
         a { 
-            font-size: 14px; 
+            font-size: 15px; 
             color: #1da1f2; 
             text-decoration: none;
             margin-top: auto;
@@ -188,34 +136,9 @@
             color: #56c3ff;
             text-decoration: underline;
         }
-        .nav-item { 
-            padding: 12px 15px; 
-            font-size: 18px;
-            border-radius: 30px;
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
-            color: #e6e6e6;
-        }
-        .nav-item:hover {
-            background-color: #1e3246;
-            cursor: pointer;
-            color: #1da1f2;
-            transform: translateX(5px);
-        }
-        .nav-item i {
-            margin-right: 10px;
-            transition: transform 0.2s;
-        }
-        .nav-item:hover i {
-            transform: scale(1.2);
-            color: #1da1f2;
-        }
-        .nav-item.active {
-            background-color: rgba(29, 161, 242, 0.2);
-            color: #1da1f2;
-        }
+
         .sidebar-list { 
-            background: #192734; 
+            background: #1e3246; 
             border-radius: 12px; 
             padding: 15px; 
             margin-bottom: 15px; 
@@ -225,9 +148,9 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .sidebar-list:hover {
-            background: #1e3246;
-            box-shadow: 0 6px 16px rgba(29, 161, 242, 0.2);
-            border-color: rgba(29, 161, 242, 0.3);
+            background: #273143;
+            box-shadow: 0 6px 16px rgba(29, 161, 242, 0.3);
+            border-color: rgba(29, 161, 242, 0.5);
         }
         .sidebar-list .title {
             font-weight: bold; 
@@ -240,132 +163,185 @@
             -webkit-box-orient: vertical;
             color: #ffffff;
         }
-        h1, h2, h3 {
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-        .text-source {
+        .timestamp {
             font-size: 13px;
             color: #8899a6;
-            margin: 5px 0;
+            margin-top: auto;
+            display: flex;
+            align-items: center;
         }
-        #top-count, #trending-count, #sidebar-count {
-            font-size: 12px;
-            color: #8899a6;
-            margin-left: 5px;
+        .timestamp i {
+            margin-right: 4px;
+            font-size: 10px;
         }
-        .timestamp {
-            font-size: 12px;
-            color: #8899a6;
-            margin-top: 10px;
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .load-more-btn {
-            padding: 12px 20px;
-            background-color: #1da1f2;
-            border: none;
-            border-radius: 30px;
-            color: white;
-            cursor: pointer;
-            margin-top: 20px;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+        ::-webkit-scrollbar-track {
+            background: #1e242d;
         }
-        .load-more-btn:hover {
-            background-color: #56c3ff;
+        ::-webkit-scrollbar-thumb {
+            background: #273143;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1da1f2;
+        }
+
+        /* Media queries for responsive grid */
+        @media (max-width: 1024px) {
+            .top-news-grid, .recent-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar, .sidebar-content {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+        }
+        @media (max-width: 480px) {
+            .top-news-grid, .recent-grid {
+                grid-template-columns: 1fr;
+            }
+            .recent-card {
+                flex-direction: column;
+                height: auto;
+            }
+            .recent-card img {
+                width: 100%;
+                height: 180px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
-            <h2 class="feed-title">Trending Sports News</h2>
-            <div class="sidebar-list">
-                <div id="sidebarFeeds"></div>
-            </div>
+            <h1 class="text-2xl font-bold mb-6">Sports News</h1>
+            <nav>
+                <div class="nav-item"><a href="https://giantwebmarket.com/sport-news/index.html"><i class="fas fa-home"></i> Home</a></div>
+                <div class="nav-item"><a href="https://giantwebmarket.com/sport-news/trending.html"><i class="fas fa-fire"></i> Trending</a></div>
+                <div class="nav-item"><a href="https://giantwebmarket.com/sport-news/most-recent.html"><i class="fas fa-newspaper"></i> Most Recent</a></div>
+            </nav>
         </div>
+
         <div class="feed-container">
             <div class="top-news">
-                <h2 class="feed-title">Top Sports News</h2>
-                <div id="topFeeds" class="top-news-grid"></div>
+                <h3 class="feed-title">Recent Stories <span id="recent-count">(0/5)</span></h3>
+                <div class="recent-grid" id="recent-grid">
+                    <!-- Recent news cards will be loaded here -->
+                </div>
             </div>
-            <div class="trending-news">
-                <h2 class="feed-title">Trending Sports News</h2>
-                <div id="trendingFeeds" class="trending-grid"></div>
+        </div>
+
+        <div class="sidebar-content">
+            <h2 class="text-xl font-bold mb-4">Popular Topics <span id="sidebar-count">(0/10)</span></h2>
+            <div id="sidebar-content">
+                <!-- Sidebar content will be loaded here -->
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.9.0/dist/rss-parser.min.js"></script>
     <script>
-        const topFeeds = [
-            'https://rss.espn.com/espn/topheadlines.rss',
-            'https://feeds.bbci.co.uk/sport/rss.xml',
-            'https://www.si.com/rss/si_topstories.rss',
-            'https://www.marca.com/rss/eng.rss',
-            'https://www.skysports.com/rss/12040', 
-            'https://www.theguardian.com/football/rss',
-            'https://www.sportingnews.com/feeds/all.rss',
-            'https://www.cbc.ca/cmlink/rss-sports',
-            'https://www.sbnation.com/rss/index.xml',
-            'https://www.npr.org/sections/sports/feed/'
+        // Different RSS feeds for the most recent page
+        const recentFeeds = [
+            "https://www.skysports.com/rss/12040",  // Sky Sports Football
+            "https://www.skysports.com/rss/11095"   // Sky Sports Cricket
         ];
-
-        const trendingFeeds = [
-            'https://feeds.bbci.co.uk/sport/football/rss.xml',
-            'https://www.nfl.com/rss/feeds/nfl.xml',
-            'https://www.espn.com/espn/rss/football/news',
-            'https://www.foxsports.com/feedout/top-headlines.xml',
-            'https://www.mlb.com/news/rss',
-            'https://www.sbnation.com/rss/index.xml',
-            'https://www.nba.com/rss/nba_news.xml',
-            'https://www.nhl.com/rss.xml',
-            'https://www.theguardian.com/football/rss',
-            'https://www.cbssports.com/rss/feeds/cbssports_topheadlines.xml'
-        ];
-
+        
         const sidebarFeeds = [
-            'https://www.abc.net.au/news/feed/2/rss.xml',
-            'https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml',
-            'https://www.independent.co.uk/sport/rss',
-            'https://www.rte.ie/sport/rss.xml',
-            'https://www.dailystar.co.uk/sport/rss.xml'
+            "https://www.skysports.com/rss/12039",  // Sky Sports Rugby
+            "https://www.skysports.com/rss/11099"   // Sky Sports Tennis
         ];
 
-        // Parse and display the RSS feeds
-        const parser = new RSSParser();
+        // Fetch and display recent sports news
+        function loadNews(feedUrls, containerId, countId) {
+            const container = document.getElementById(containerId);
+            const countElem = document.getElementById(countId);
+            
+            Promise.all(feedUrls.map(url => fetch(url).then(res => res.text())))
+                .then(results => {
+                    const parser = new DOMParser();
+                    let count = 0;
 
-        async function fetchRSS(feedUrls, elementId) {
-            const container = document.getElementById(elementId);
-            container.innerHTML = ''; // Clear previous content
-
-            for (const url of feedUrls) {
-                try {
-                    const feed = await parser.parseURL(url);
-                    feed.items.forEach(item => {
-                        const card = document.createElement('div');
-                        card.classList.add('trending-card');
-                        card.innerHTML = `
-                            <div class="trending-card-content">
-                                <div class="category">${item.categories[0] || 'General'}</div>
-                                <img src="${item.enclosure ? item.enclosure.url : 'https://via.placeholder.com/300x160'}" alt="${item.title}">
-                                <div class="title">${item.title}</div>
-                                <p>${item.contentSnippet}</p>
-                                <a href="${item.link}" target="_blank">Read more</a>
-                            </div>
-                        `;
-                        container.appendChild(card);
+                    results.forEach(result => {
+                        const xmlDoc = parser.parseFromString(result, "application/xml");
+                        const items = xmlDoc.getElementsByTagName("item");
+                        Array.from(items).forEach((item, index) => {
+                            if (count < 5) {
+                                const title = item.getElementsByTagName("title")[0].textContent;
+                                const link = item.getElementsByTagName("link")[0].textContent;
+                                const pubDate = item.getElementsByTagName("pubDate")[0].textContent;
+                                const description = item.getElementsByTagName("description")[0].textContent;
+                                
+                                const card = document.createElement("div");
+                                card.classList.add("recent-card");
+                                card.innerHTML = `
+                                    <div class="recent-card-content">
+                                        <div class="title">${title}</div>
+                                        <p>${description}</p>
+                                        <a href="${link}" target="_blank">Read more</a>
+                                        <div class="timestamp"><i class="fas fa-clock"></i> ${new Date(pubDate).toLocaleString()}</div>
+                                    </div>
+                                `;
+                                container.appendChild(card);
+                                count++;
+                            }
+                        });
                     });
-                } catch (err) {
-                    console.error(`Error fetching feed: ${url}`, err);
-                }
-            }
+
+                    countElem.innerText = `(${count}/5)`;
+                });
         }
 
-        // Fetch and display the top, trending, and sidebar feeds
-        fetchRSS(topFeeds, 'topFeeds');
-        fetchRSS(trendingFeeds, 'trendingFeeds');
-        fetchRSS(sidebarFeeds, 'sidebarFeeds');
+        // Fetch and display sidebar content
+        function loadSidebar(feedUrls, containerId, countId) {
+            const container = document.getElementById(containerId);
+            const countElem = document.getElementById(countId);
+
+            Promise.all(feedUrls.map(url => fetch(url).then(res => res.text())))
+                .then(results => {
+                    const parser = new DOMParser();
+                    let count = 0;
+
+                    results.forEach(result => {
+                        const xmlDoc = parser.parseFromString(result, "application/xml");
+                        const items = xmlDoc.getElementsByTagName("item");
+                        Array.from(items).forEach((item, index) => {
+                            if (count < 10) {
+                                const title = item.getElementsByTagName("title")[0].textContent;
+                                const link = item.getElementsByTagName("link")[0].textContent;
+                                const description = item.getElementsByTagName("description")[0].textContent;
+
+                                const listItem = document.createElement("div");
+                                listItem.classList.add("sidebar-list");
+                                listItem.innerHTML = `
+                                    <div class="title">${title}</div>
+                                    <p>${description}</p>
+                                    <a href="${link}" target="_blank">Read more</a>
+                                `;
+                                container.appendChild(listItem);
+                                count++;
+                            }
+                        });
+                    });
+
+                    countElem.innerText = `(${count}/10)`;
+                });
+        }
+
+        // Load content on page load
+        window.onload = () => {
+            loadNews(recentFeeds, 'recent-grid', 'recent-count');
+            loadSidebar(sidebarFeeds, 'sidebar-content', 'sidebar-count');
+        };
     </script>
 </body>
 </html>
