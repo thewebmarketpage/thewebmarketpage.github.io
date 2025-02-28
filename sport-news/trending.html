@@ -1,16 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trending Sports News - X Style</title>
+    <title>Sports News - X Style</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <style>
         body { 
-            background: #0a0e14; /* Darker background */
+            background: #0a0e14;
             color: #ffffff; 
             font-family: Arial, sans-serif;
             margin: 0;
@@ -37,24 +36,15 @@
             margin-bottom: 20px;
             font-size: 22px;
             font-weight: bold;
-            color: #e6e6e6; /* Slightly off-white for better contrast */
+            color: #e6e6e6;
         }
-        .top-news {
-            margin-bottom: 30px;
-        }
-        .top-news-grid {
+        .feed-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-        .trending-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Bigger cards */
             gap: 16px;
             width: 100%;
         }
-        .sidebar-content { 
+        .trending { 
             width: 300px; 
             padding: 20px;
             position: sticky;
@@ -62,116 +52,56 @@
             height: 100vh;
             overflow-y: auto;
         }
-        
-        /* Top news cards - bigger */
-        .top-card {
+        .card { 
             background: #192734; 
-            border-radius: 16px; 
-            display: flex;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            height: 120px; /* Bigger height */
-        }
-        .top-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 24px rgba(29, 161, 242, 0.3);
-            border-color: rgba(29, 161, 242, 0.4);
-            background: #1e3246;
-        }
-        .top-card img {
-            width: 80px; /* Bigger image */
-            height: 80px;
-            object-fit: contain;
-            transition: all 0.3s ease;
-        }
-        .top-card-content {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-        .top-card .title {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 6px;
-            color: #ffffff;
-        }
-
-        /* Trending cards - bigger */
-        .trending-card { 
-            background: #192734; 
-            border-radius: 18px; 
-            padding: 0; 
+            border-radius: 12px; 
+            padding: 15px; 
             display: flex; 
             flex-direction: column; 
-            height: 220px; /* Bigger height */
+            height: 260px; /* Increased height */
             transition: all 0.3s ease;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            overflow: hidden;
-            position: relative;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
         }
-        .trending-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 24px rgba(29, 161, 242, 0.3);
-            border-color: rgba(29, 161, 242, 0.4);
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(29, 161, 242, 0.2);
+            border-color: rgba(29, 161, 242, 0.3);
+            background: #1e3246;
         }
-        .trending-card img { 
-            width: 50px; 
-            height: 50px; /* Bigger image */
-            object-fit: contain; 
-            transition: all 0.3s ease;
+        .card img { 
+            width: 50px; /* Bigger icon */
+            height: 50px;
+            object-fit: cover; 
+            border-radius: 8px;
         }
-        .trending-card-content {
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            background: linear-gradient(to bottom, rgba(25, 39, 52, 0.8) 0%, #192734 100%);
-        }
-        .trending-card .title { 
+        .card .title { 
             font-weight: bold; 
             font-size: 16px; 
-            margin-bottom: 6px; 
+            margin: 10px 0; 
             color: #ffffff;
         }
-        .trending-card .category {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background-color: rgba(29, 161, 242, 0.9);
-            color: white;
-            padding: 5px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 10;
-        }
-        
-        /* Common styles */
-        p { 
+        .card p { 
             font-size: 14px; 
             color: #a0a0a0;
-            margin: 5px 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            margin: 10px 0;
+            flex-grow: 1;
         }
-        a { 
+        .card a { 
             font-size: 14px; 
             color: #1da1f2; 
             text-decoration: none;
-            margin-top: auto;
-            padding-top: 8px;
+            padding: 8px;
             transition: color 0.2s;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
         }
-        a:hover {
+        .card a:hover {
             color: #56c3ff;
-            text-decoration: underline;
+            background: rgba(255, 255, 255, 0.2);
         }
         .nav-item { 
             padding: 12px 15px; 
@@ -187,68 +117,30 @@
             color: #1da1f2;
             transform: translateX(5px);
         }
-        .nav-item i {
-            margin-right: 10px;
-            transition: transform 0.2s;
-        }
-        .nav-item:hover i {
-            transform: scale(1.2);
-            color: #1da1f2;
-        }
-        .nav-item.active {
-            background-color: rgba(29, 161, 242, 0.2);
-            color: #1da1f2;
-        }
-        .sidebar-list { 
+        .trending-text { 
             background: #192734; 
             border-radius: 12px; 
             padding: 15px; 
             margin-bottom: 15px; 
-            overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .sidebar-list:hover {
+        .trending-text:hover {
+            transform: translateX(-5px);
             background: #1e3246;
             box-shadow: 0 6px 16px rgba(29, 161, 242, 0.2);
             border-color: rgba(29, 161, 242, 0.3);
         }
-        .sidebar-list .title {
+        .trending-text .title {
             font-weight: bold; 
             font-size: 16px; 
             margin-bottom: 5px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2; 
-            -webkit-box-orient: vertical;
             color: #ffffff;
         }
-        h1, h2, h3 {
+        h1, h2 {
             margin-bottom: 20px;
             color: #ffffff;
-        }
-        .text-source {
-            font-size: 13px;
-            color: #8899a6;
-            margin: 5px 0;
-        }
-        #top-count, #trending-count, #sidebar-count {
-            font-size: 12px;
-            color: #8899a6;
-            margin-left: 5px;
-        }
-        .timestamp {
-            font-size: 12px;
-            color: #8899a6;
-            margin-top: auto;
-            display: flex;
-            align-items: center;
-        }
-        .timestamp i {
-            margin-right: 4px;
-            font-size: 10px;
         }
         
         /* Scrollbar styling */
@@ -265,39 +157,32 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #1da1f2;
         }
-        
-        /* Media queries for responsive grid */
-        @media (max-width: 1024px) {
-            .top-news-grid, .trending-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+
+        /* Dark mode toggle styling */
+        .dark-mode-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #1da1f2;
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            .sidebar, .sidebar-content {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
+        /* Animations on scroll */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
         }
-        @media (max-width: 480px) {
-            .top-news-grid, .trending-grid {
-                grid-template-columns: 1fr;
-            }
-            .top-card {
-                flex-direction: column;
-                height: auto;
-            }
-            .top-card img {
-                width: 80px;
-                height: 80px;
-            }
+        .fade-in.visible {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
+    <button class="dark-mode-btn" id="darkModeToggle">Toggle Dark Mode</button>
+
     <div class="container">
         <div class="sidebar">
             <h1 class="text-2xl font-bold mb-6">Sports News</h1>
@@ -308,67 +193,37 @@
         </div>
 
         <div class="feed-container">
-            <div class="top-news">
-                <h3 class="feed-title">Top Stories <span id="top-count">(0/5)</span></h3>
-                <div class="top-news-grid" id="top-news-grid">
-                    <!-- Top news cards will be loaded here -->
-                </div>
-            </div>
-            
-            <div class="trending">
-                <h3 class="feed-title">Trending Now <span id="trending-count">(0/20)</span></h3>
-                <div class="trending-grid" id="trending-grid">
-                    <!-- Trending cards will be loaded here -->
-                </div>
+            <div class="feed-title">Latest News <span id="feed-count">(0/10)</span></div>
+            <div class="feed-grid" id="feed-grid">
+                <!-- Feed cards will be loaded here -->
             </div>
         </div>
 
-        <div class="sidebar-content">
-            <h2 class="text-xl font-bold mb-4">Popular Topics <span id="sidebar-count">(0/10)</span></h2>
-            <div id="sidebar-content">
-                <!-- Sidebar content will be loaded here -->
+        <div class="trending">
+            <h2 class="text-xl font-bold mb-4">Trending Topics <span id="trending-count">(0/30)</span></h2>
+            <div id="trending-texts">
+                <!-- Trending posts will be loaded here -->
             </div>
         </div>
     </div>
 
     <script>
-        // Different RSS feeds for the trending page
-        const topNewsFeeds = [
-            "https://www.skysports.com/rss/12040",  // Sky Sports Football
-            "https://www.skysports.com/rss/11095"   // Sky Sports Cricket
+        const rssFeeds = [
+            "https://www.espn.com/espn/rss/news",
+            "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml",
+            "https://feeds.bbci.co.uk/sport/rss.xml",
+            "https://www.cbssports.com/rss/headlines/",
+            "https://sports.yahoo.com/rss/"
         ];
-        
-        const trendingFeeds = [
-            "https://www.skysports.com/rss/11979",  // Sky Sports F1
-            "https://www.skysports.com/rss/12870",  // Sky Sports Golf
-            "https://www.skysports.com/rss/12473"   // Sky Sports Tennis
-        ];
-        
-        const sidebarFeeds = [
-            "https://www.skysports.com/rss/11688",  // Sky Sports NBA
-            "https://www.skysports.com/rss/12562"   // Sky Sports Boxing
-        ];
-        
-        // Categories mapping for trending cards
-        const categories = {
-            "11979": "Formula 1",
-            "12870": "Golf",
-            "12473": "Tennis",
-            "11688": "NBA",
-            "12562": "Boxing",
-            "12040": "Football",
-            "11095": "Cricket"
-        };
-        
-        // Extract category from feed URL
-        function getCategoryFromURL(url) {
-            for (const [id, category] of Object.entries(categories)) {
-                if (url.includes(id)) {
-                    return category;
-                }
-            }
-            return "Sports";
-        }
+
+        let darkMode = false;
+
+        const darkModeToggle = document.getElementById("darkModeToggle");
+        darkModeToggle.addEventListener("click", () => {
+            darkMode = !darkMode;
+            document.body.style.background = darkMode ? "#0a0e14" : "#ffffff";
+            document.body.style.color = darkMode ? "#ffffff" : "#000000";
+        });
 
         async function fetchRSSFeed(url) {
             try {
@@ -380,7 +235,6 @@
             }
         }
 
-        // Function to check if an image URL is valid
         function isValidImage(url) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -389,135 +243,72 @@
                 img.src = url;
             });
         }
-        
-        // Format the date for display
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diff = Math.floor((now - date) / 1000 / 60); // minutes
-            
-            if (diff < 60) {
-                return `${diff}m ago`;
-            } else if (diff < 1440) {
-                return `${Math.floor(diff / 60)}h ago`;
-            } else {
-                return `${Math.floor(diff / 1440)}d ago`;
-            }
+
+        function updateCounters(feedCount, trendingCount) {
+            document.getElementById('feed-count').textContent = `(${feedCount}/20)`;
+            document.getElementById('trending-count').textContent = `(${trendingCount}/30)`;
         }
 
-        // Update the counters
-        function updateCounters(topCount, trendingCount, sidebarCount) {
-            document.getElementById('top-count').textContent = `(${topCount}/5)`;
-            document.getElementById('trending-count').textContent = `(${trendingCount}/20)`;
-            document.getElementById('sidebar-count').textContent = `(${sidebarCount}/20)`;
+        function handleScroll() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.classList.add('visible');
+                }
+            });
         }
 
-        async function fetchTrendingSports() {
-            const topNewsGrid = document.getElementById("top-news-grid");
-            const trendingGrid = document.getElementById("trending-grid");
-            const sidebarContent = document.getElementById("sidebar-content");
-            
-            let topCount = 0;
+        async function fetchSportsNews() {
+            const feedGrid = document.getElementById("feed-grid");
+            const trendingTextsContainer = document.getElementById("trending-texts");
+            let feedCount = 0;
             let trendingCount = 0;
-            let sidebarCount = 0;
             
-            // Fetch and process top news feeds
-            for (let feedIndex = 0; feedIndex < topNewsFeeds.length; feedIndex++) {
-                if (topCount >= 5) break;
-                
-                const feed = topNewsFeeds[feedIndex];
+            for (let feedIndex = 0; feedIndex < rssFeeds.length; feedIndex++) {
+                if (feedCount >= 20 && trendingCount >= 30) break;
+                const feed = rssFeeds[feedIndex];
                 const data = await fetchRSSFeed(feed);
-                const category = getCategoryFromURL(feed);
-                
                 if (!data || !data.items) continue;
-                
-                for (let i = 0; i < data.items.length && topCount < 5; i++) {
+
+                for (let i = 0; i < data.items.length; i++) {
                     const article = data.items[i];
+                    if (feedCount >= 20 && trendingCount >= 30) break;
+
                     const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
                     const isImageValid = await isValidImage(imgUrl);
-                    
-                    if (isImageValid) {
+
+                    if (isImageValid && feedCount < 20) {
                         const newsItem = document.createElement("div");
-                        newsItem.className = "top-card";
+                        newsItem.className = "card fade-in";
                         newsItem.innerHTML = `
                             <img src="${imgUrl}" alt="News Image">
-                            <div class="top-card-content">
-                                <div class="title">${article.title}</div>
-                                <p class="text-source">${data.feed.title}</p>
-                                <div class="timestamp"><i class="far fa-clock"></i> ${formatDate(article.pubDate)}</div>
-                                <a href="${article.link}" target="_blank">Read more</a>
-                            </div>
+                            <div class="title">${article.title}</div>
+                            <p class="text-source">${data.feed.title}</p>
+                            <a href="${article.link}" target="_blank">Read more</a>
                         `;
-                        topNewsGrid.appendChild(newsItem);
-                        topCount++;
-                        updateCounters(topCount, trendingCount, sidebarCount);
-                    }
-                }
-            }
-            
-            // Fetch and process trending feeds
-            for (let feedIndex = 0; feedIndex < trendingFeeds.length; feedIndex++) {
-                if (trendingCount >= 20) break;
-                
-                const feed = trendingFeeds[feedIndex];
-                const data = await fetchRSSFeed(feed);
-                const category = getCategoryFromURL(feed);
-                
-                if (!data || !data.items) continue;
-                
-                for (let i = 0; i < data.items.length && trendingCount < 20; i++) {
-                    const article = data.items[i];
-                    const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
-                    const isImageValid = await isValidImage(imgUrl);
-                    
-                    if (isImageValid) {
-                        const newsItem = document.createElement("div");
-                        newsItem.className = "trending-card";
-                        newsItem.innerHTML = `
-                            <div class="category">${category}</div>
-                            <img src="${imgUrl}" alt="News Image">
-                            <div class="trending-card-content">
-                                <div class="title">${article.title}</div>
-                                <p class="text-source">${data.feed.title}</p>
-                                <div class="timestamp"><i class="far fa-clock"></i> ${formatDate(article.pubDate)}</div>
-                                <a href="${article.link}" target="_blank">Read more</a>
-                            </div>
+                        feedGrid.appendChild(newsItem);
+                        feedCount++;
+                        updateCounters(feedCount, trendingCount);
+                    } else if (trendingCount < 30) {
+                        const trendingText = document.createElement("div");
+                        trendingText.className = "trending-text fade-in";
+                        trendingText.innerHTML = `
+                            <div class="title">${article.title}</div>
+                            <p class="text-source">${data.feed.title}</p>
+                            <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
                         `;
-                        trendingGrid.appendChild(newsItem);
+                        trendingTextsContainer.appendChild(trendingText);
                         trendingCount++;
-                        updateCounters(topCount, trendingCount, sidebarCount);
+                        updateCounters(feedCount, trendingCount);
                     }
                 }
             }
-            
-            // Fetch and process sidebar feeds
-            for (let feedIndex = 0; feedIndex < sidebarFeeds.length; feedIndex++) {
-                if (sidebarCount >= 20) break;
-                
-                const feed = sidebarFeeds[feedIndex];
-                const data = await fetchRSSFeed(feed);
-                
-                if (!data || !data.items) continue;
-                
-                for (let i = 0; i < data.items.length && sidebarCount < 20; i++) {
-                    const article = data.items[i];
-                    
-                    const sidebarItem = document.createElement("div");
-                    sidebarItem.className = "sidebar-list";
-                    sidebarItem.innerHTML = `
-                        <div class="title">${article.title}</div>
-                        <p class="text-source">${data.feed.title}</p>
-                        <div class="timestamp"><i class="far fa-clock"></i> ${formatDate(article.pubDate)}</div>
-                        <a href="${article.link}" target="_blank">Read more</a>
-                    `;
-                    sidebarContent.appendChild(sidebarItem);
-                    sidebarCount++;
-                    updateCounters(topCount, trendingCount, sidebarCount);
-                }
-            }
+
+            window.addEventListener('scroll', handleScroll);
         }
 
-        fetchTrendingSports();
+        fetchSportsNews();
     </script>
 </body>
 </html>
