@@ -5,6 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports News</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: rgb(214, 187, 161);
+            font-family: Georgia, serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper {
+            background: rgb(247, 246, 240);
+            position: relative;
+            margin: 0 auto;
+            width: 1200px;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .headline {
+            font-weight: normal;
+            font-size: 71px;
+            margin: 0 0 20px 0;
+        }
+        .ticker {
+            color: rgb(143, 141, 141);
+            font-size: 24px;
+            border-bottom: 1px solid #bbb;
+            padding-bottom: 8px;
+        }
+        .ticker span {
+            color: rgb(255, 112, 0);
+        }
+        .columns4 {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .teasers {
+            width: 45%;
+            background: rgb(172, 162, 122);
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .teasers h1 {
+            font-size: 22px;
+            margin: 0 0 10px;
+            color: white;
+        }
+        .teasers h2 {
+            font-size: 18px;
+            color: #004A83;
+            margin: 0 0 10px;
+        }
+        .teasers figure img {
+            width: 100%;
+            height: auto;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+        .byline {
+            border-top: 1px solid black;
+            padding: 10px 0;
+            font-weight: bold;
+        }
+        a {
+            text-decoration: none;
+            color: #004A83;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -35,36 +108,7 @@
             "https://www.dailymail.co.uk/sport/index.rss",
             "https://www.independent.co.uk/sport/rss",
             "https://www.bleacherreport.com/articles/feed?tag_id=19",
-            "https://www.eurosport.com/rss.xml",
-            "https://www.tsn.ca/rss/feed/soccer",
-            "https://www.mlssoccer.com/rss/news",
-            "https://www.nba.com/rss/nba_rss.xml",
-            "https://www.nfl.com/rss/rsslanding",
-            "https://www.nhl.com/rss/news.xml",
-            "https://www.mlb.com/rss/news.xml",
-            "https://www.fifa.com/rss.xml",
-            "https://www.uefa.com/rss.xml",
-            "https://www.formula1.com/rss/news.xml",
-            "https://www.motorsport.com/rss/category/news/",
-            "https://www.wimbledon.com/en/rss/news.xml",
-            "https://www.pga.com/rss.xml",
-            "https://www.lpga.com/rss.xml",
-            "https://www.ufc.com/rss/news.xml",
-            "https://www.boxingscene.com/rss.xml",
-            "https://www.wrestlinginc.com/feed/",
-            "https://www.tennis.com/rss/news.xml",
-            "https://www.espncricinfo.com/rss/content/story/feeds/0.xml",
-            "https://www.skysports.com/rss/12028",
-            "https://www.indycar.com/rss/news.xml",
-            "https://www.supercars.com/rss/news.xml",
-            "https://www.wrc.com/rss/news.xml",
-            "https://www.bbc.co.uk/programmes/b006qjxm/episodes/downloads.rss",
-            "https://www.athleticsweekly.com/feed/",
-            "https://www.the-race.com/feed/",
-            "https://www.championat.com/rss.xml",
-            "https://www.sbnation.com/rss/soccer.xml",
-            "https://www.nascar.com/rss/news.xml",
-            "https://www.fivethirtyeight.com/sports/feed/"
+            "https://www.eurosport.com/rss.xml"
         ];
         
         async function fetchRSSFeed(url) {
