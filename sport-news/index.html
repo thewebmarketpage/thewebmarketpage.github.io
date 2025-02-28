@@ -11,14 +11,58 @@
         body { background: #15202b; color: #ffffff; font-family: Arial, sans-serif; }
         .container { max-width: 1200px; margin: auto; display: flex; }
         .sidebar { width: 250px; padding: 20px; }
-        .feed { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .feed { 
+            flex: 1; 
+            padding: 20px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 15px; 
+        }
         .trending { width: 300px; padding: 20px; }
-        .card { background: #192734; border-radius: 12px; padding: 15px; }
-        .card img { border-radius: 12px; width: 100%; height: 200px; object-fit: cover; }
-        .card .title { font-weight: bold; font-size: 18px; margin-top: 10px; }
-        .card p { font-size: 14px; }
+        .card { 
+            background: #192734; 
+            border-radius: 12px; 
+            padding: 15px; 
+            height: 300px; /* Fixed height */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            overflow: hidden; 
+        }
+        .card img { 
+            border-radius: 12px; 
+            width: 100%; 
+            height: 200px; /* Fixed height for images */
+            object-fit: cover; 
+        }
+        .card .title { 
+            font-weight: bold; 
+            font-size: 18px; 
+            margin-top: 10px; 
+            height: 40px; /* Fixed height for title */
+            overflow: hidden; 
+        }
+        .card p { 
+            font-size: 14px; 
+            color: #a0a0a0;
+            margin-top: 5px;
+            height: 50px; /* Fixed height for description */
+            overflow: hidden; 
+        }
+        .card a { 
+            font-size: 14px; 
+            color: #00aaff; 
+            text-decoration: none; 
+        }
         .nav-item { padding: 10px; font-size: 18px; }
-        .trending-text { background: #192734; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .trending-text { 
+            background: #192734; 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            height: 150px; /* Fixed height for trending text */
+            overflow: hidden; 
+        }
     </style>
 </head>
 <body>
