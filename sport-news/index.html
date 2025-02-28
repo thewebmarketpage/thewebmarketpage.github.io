@@ -131,6 +131,11 @@
             color: #8899a6;
             margin: 5px 0;
         }
+        #trending-count, #feed-count {
+            font-size: 12px;
+            color: #8899a6;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -144,11 +149,15 @@
             </nav>
         </div>
 
-        <div class="feed" id="news-container"></div>
+        <div class="feed" id="news-container">
+            <!-- Feed posts will be loaded here -->
+        </div>
 
         <div class="trending">
-            <h2 class="text-xl font-bold mb-4">Trending Topics</h2>
-            <div id="trending-texts"></div>
+            <h2 class="text-xl font-bold mb-4">Trending Topics <span id="trending-count">(0/20)</span></h2>
+            <div id="trending-texts">
+                <!-- Trending posts will be loaded here -->
+            </div>
         </div>
     </div>
 
@@ -181,44 +190,78 @@
             });
         }
 
+        // Update the counters
+        function updateCounters(feedCount, trendingCount) {
+            document.getElementById('feed-count').textContent = `(${feedCount}/10)`;
+            document.getElementById('trending-count').textContent = `(${trendingCount}/20)`;
+        }
+
         async function fetchSportsNews() {
             const newsContainer = document.getElementById("news-container");
             const trendingTextsContainer = document.getElementById("trending-texts");
-            let newsCount = 0;
-            for (const feed of rssFeeds) {
-                if (newsCount >= 12) break; // Fetching only 12 posts
+            let feedCount = 0;
+            let trendingCount = 0;
+            
+            // Add a counter to title
+            const feedTitle = document.createElement("h2");
+            feedTitle.className = "text-xl font-bold mb-4";
+            feedTitle.innerHTML = `Latest News <span id="feed-count">(0/10)</span>`;
+            newsContainer.appendChild(feedTitle);
+            
+            // Create a div to hold the feed cards
+            const feedCardsContainer = document.createElement("div");
+            feedCardsContainer.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4";
+            feedCardsContainer.style.display = "grid";
+            feedCardsContainer.style.gridTemplateColumns = "repeat(auto-fill, minmax(250px, 1fr))";
+            feedCardsContainer.style.gap = "16px";
+            newsContainer.appendChild(feedCardsContainer);
+
+            // Fetch and process all feeds
+            for (let feedIndex = 0; feedIndex < rssFeeds.length; feedIndex++) {
+                if (feedCount >= 10 && trendingCount >= 20) break; // Exit if we have all needed posts
+                
+                const feed = rssFeeds[feedIndex];
                 const data = await fetchRSSFeed(feed);
-                if (data && data.items) {
-                    data.items.slice(0, 2).forEach(async article => {
-                        if (newsCount >= 12) return;
-
-                        const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
-                        const isImageValid = await isValidImage(imgUrl);
-
-                        if (isImageValid) {
-                            // Only add posts with valid images
-                            const newsItem = document.createElement("div");
-                            newsItem.className = "card";
-                            newsItem.innerHTML = `
-                                <img src="${imgUrl}" alt="News Image">
-                                <div class="title">${article.title}</div>
-                                <p class="text-source">${data.feed.title}</p>
-                                <a href="${article.link}" target="_blank">Read more</a>
-                            `;
-                            newsContainer.appendChild(newsItem);
-                            newsCount++;
-                        } else {
-                            // Skip posts with broken images
-                            const trendingText = document.createElement("div");
-                            trendingText.className = "trending-text";
-                            trendingText.innerHTML = `
-                                <div class="title">${article.title}</div>
-                                <p class="text-source">${data.feed.title}</p>
-                                <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
-                            `;
-                            trendingTextsContainer.appendChild(trendingText);
-                        }
-                    });
+                
+                if (!data || !data.items) continue;
+                
+                // Process each item in the feed
+                for (let i = 0; i < data.items.length; i++) {
+                    const article = data.items[i];
+                    
+                    // Skip if we've reached our limits
+                    if (feedCount >= 10 && trendingCount >= 20) break;
+                    
+                    const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
+                    const isImageValid = await isValidImage(imgUrl);
+                    
+                    // For feed posts (with valid images)
+                    if (isImageValid && feedCount < 10) {
+                        const newsItem = document.createElement("div");
+                        newsItem.className = "card";
+                        newsItem.innerHTML = `
+                            <img src="${imgUrl}" alt="News Image">
+                            <div class="title">${article.title}</div>
+                            <p class="text-source">${data.feed.title}</p>
+                            <a href="${article.link}" target="_blank">Read more</a>
+                        `;
+                        feedCardsContainer.appendChild(newsItem);
+                        feedCount++;
+                        updateCounters(feedCount, trendingCount);
+                    } 
+                    // For trending posts
+                    else if (trendingCount < 20) {
+                        const trendingText = document.createElement("div");
+                        trendingText.className = "trending-text";
+                        trendingText.innerHTML = `
+                            <div class="title">${article.title}</div>
+                            <p class="text-source">${data.feed.title}</p>
+                            <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
+                        `;
+                        trendingTextsContainer.appendChild(trendingText);
+                        trendingCount++;
+                        updateCounters(feedCount, trendingCount);
+                    }
                 }
             }
         }
