@@ -11,52 +11,52 @@
     <script src="https://cdn.jsdelivr.net/npm/shadcn-ui@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide-react@latest"></script>
 </head>
-<body class="bg-gradient-to-r from-purple-900 via-indigo-900 to-blue-900 text-gray-100 p-8 font-sans">
-    <div class="container mx-auto space-y-8">
-        <button class="bg-gradient-to-r from-pink-500 to-yellow-500 hover:from-pink-600 hover:to-yellow-600 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transform transition hover:scale-105">Button</button>
+<body class="bg-gradient-to-br from-gray-900 via-blue-800 to-purple-900 text-gray-200 p-10 font-mono">
+    <div class="container mx-auto space-y-10">
+        <button class="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transform transition hover:scale-110">Click Me</button>
         
-        <div class="border border-gray-500 rounded-2xl p-8 bg-gray-800 shadow-2xl hover:shadow-gray-900">
-            <h2 class="text-2xl font-extrabold">Card</h2>
-            <p class="text-gray-300">This is a card component with hover effects.</p>
+        <div class="border border-gray-400 rounded-lg p-6 bg-gray-700 shadow-lg hover:shadow-gray-900 transition-all duration-300">
+            <h2 class="text-xl font-semibold">Stylish Card</h2>
+            <p class="text-gray-300">This card has dynamic hover effects.</p>
         </div>
 
-        <input type="text" class="w-full p-4 rounded-2xl border border-gray-500 bg-gray-700 text-white shadow-inner focus:ring-2 focus:ring-yellow-500" placeholder="Input field" />
+        <input type="text" class="w-full p-3 rounded-lg border border-gray-500 bg-gray-600 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-md" placeholder="Enter text..." />
 
-        <select class="w-full p-4 rounded-2xl border border-gray-500 bg-gray-700 text-white cursor-pointer">
-            <option>Option 1</option>
-            <option>Option 2</option>
+        <select class="w-full p-3 rounded-lg border border-gray-500 bg-gray-600 text-white cursor-pointer focus:ring-2 focus:ring-green-500">
+            <option>Choice A</option>
+            <option>Choice B</option>
         </select>
 
-        <textarea class="w-full p-4 rounded-2xl border border-gray-500 bg-gray-700 text-white focus:ring-2 focus:ring-green-500" placeholder="Textarea"></textarea>
+        <textarea class="w-full p-3 rounded-lg border border-gray-500 bg-gray-600 text-white focus:ring-2 focus:ring-purple-500" placeholder="Type your message..."></textarea>
 
-        <label class="flex items-center space-x-4 cursor-pointer">
-            <input type="checkbox" class="form-checkbox text-green-500 w-6 h-6" />
-            <span class="text-lg">Checkbox</span>
+        <label class="flex items-center space-x-3 cursor-pointer">
+            <input type="checkbox" class="form-checkbox text-yellow-400 w-5 h-5" />
+            <span class="text-lg">Enable feature</span>
         </label>
 
-        <label class="flex items-center space-x-4 cursor-pointer">
-            <input type="radio" name="radio" class="form-radio text-green-500 w-6 h-6" />
-            <span class="text-lg">Radio Button</span>
+        <label class="flex items-center space-x-3 cursor-pointer">
+            <input type="radio" name="option" class="form-radio text-green-400 w-5 h-5" />
+            <span class="text-lg">Select Option</span>
         </label>
 
-        <div class="bg-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-gray-900 transition">
-            <h3 class="text-2xl font-extrabold">Modal</h3>
-            <p class="text-gray-300">This is a simple modal component with a hover effect.</p>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-gray-900 transition-all">
+            <h3 class="text-xl font-bold">Interactive Modal</h3>
+            <p class="text-gray-300">A stylish modal with hover effects.</p>
         </div>
 
-        <div class="bg-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-gray-900 transition">
-            <h3 class="text-2xl font-extrabold">Dropdown</h3>
-            <ul class="space-y-4">
-                <li class="hover:bg-gray-600 p-4 rounded-lg transition">Item 1</li>
-                <li class="hover:bg-gray-600 p-4 rounded-lg transition">Item 2</li>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-gray-900 transition-all">
+            <h3 class="text-xl font-bold">Dropdown Menu</h3>
+            <ul class="space-y-3">
+                <li class="hover:bg-gray-500 p-3 rounded-md transition-all">Menu Item 1</li>
+                <li class="hover:bg-gray-500 p-3 rounded-md transition-all">Menu Item 2</li>
             </ul>
         </div>
 
-        <div class="w-full h-64 bg-gray-700 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-gray-900 transition">
-            <p class="text-gray-300 text-lg">Placeholder for an Image</p>
+        <div class="w-full h-64 bg-gray-800 rounded-lg flex items-center justify-center shadow-lg hover:shadow-gray-900 transition">
+            <p class="text-gray-300 text-lg">Image Placeholder</p>
         </div>
 
-        <progress class="w-full h-4 rounded-2xl overflow-hidden bg-gray-600" value="70" max="100"></progress>
+        <progress class="w-full h-3 rounded-lg overflow-hidden bg-gray-500" value="50" max="100"></progress>
     </div>
 </body>
 </html>
