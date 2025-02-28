@@ -181,7 +181,7 @@
     </style>
 </head>
 <body>
-    <button class="dark-mode-btn" id="darkModeToggle">Toggle Dark Mode</button>
+
 
     <div class="container">
         <div class="sidebar">
@@ -216,14 +216,7 @@
             "https://sports.yahoo.com/rss/"
         ];
 
-        let darkMode = false;
 
-        const darkModeToggle = document.getElementById("darkModeToggle");
-        darkModeToggle.addEventListener("click", () => {
-            darkMode = !darkMode;
-            document.body.style.background = darkMode ? "#0a0e14" : "#ffffff";
-            document.body.style.color = darkMode ? "#ffffff" : "#000000";
-        });
 
         async function fetchRSSFeed(url) {
             try {
