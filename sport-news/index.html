@@ -11,11 +11,12 @@
         body { background: #15202b; color: #ffffff; font-family: Arial, sans-serif; }
         .container { max-width: 1200px; margin: auto; display: flex; }
         .sidebar { width: 250px; padding: 20px; }
-        .feed { flex: 1; padding: 20px; }
+        .feed { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
         .trending { width: 300px; padding: 20px; }
-        .card { background: #192734; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        .card img { border-radius: 12px; }
-        .card .title { font-weight: bold; font-size: 18px; }
+        .card { background: #192734; border-radius: 12px; padding: 15px; }
+        .card img { border-radius: 12px; width: 100%; height: 150px; object-fit: cover; }
+        .card .title { font-weight: bold; font-size: 18px; margin-top: 10px; }
+        .card p { font-size: 14px; }
         .nav-item { padding: 10px; font-size: 18px; }
     </style>
 </head>
@@ -71,8 +72,8 @@
                         const newsItem = document.createElement("div");
                         newsItem.className = "card";
                         newsItem.innerHTML = `
-                            <img src="${article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300'}" alt="News Image" class="w-full">
-                            <p class="title mt-2">${article.title}</p>
+                            <img src="${article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300'}" alt="News Image">
+                            <p class="title">${article.title}</p>
                             <p class="text-gray-400 text-sm">${data.feed.title}</p>
                             <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
                         `;
