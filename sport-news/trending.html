@@ -40,7 +40,7 @@
         }
         .feed-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Bigger cards */
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
             gap: 16px;
             width: 100%;
         }
@@ -58,7 +58,7 @@
             padding: 15px; 
             display: flex; 
             flex-direction: column; 
-            height: 260px; /* Increased height */
+            height: 260px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -73,7 +73,7 @@
             background: #1e3246;
         }
         .card img { 
-            width: 50px; /* Bigger icon */
+            width: 50px; 
             height: 50px;
             object-fit: cover; 
             border-radius: 8px;
@@ -142,7 +142,51 @@
             margin-bottom: 20px;
             color: #ffffff;
         }
-        
+        .quote-card {
+            background: #192734;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .quote-card .quote {
+            font-size: 18px;
+            font-style: italic;
+            color: #e6e6e6;
+            margin-bottom: 10px;
+        }
+        .quote-card .author {
+            font-weight: bold;
+            font-size: 16px;
+            color: #1da1f2;
+        }
+        .social-media-buttons a {
+            color: #ffffff;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 50%;
+            background: #1da1f2;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .social-media-buttons a:hover {
+            background: #56c3ff;
+        }
+        .category-filter {
+            margin-bottom: 20px;
+        }
+        .category-item {
+            background: #192734;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .category-item:hover {
+            background: #1e3246;
+            transform: translateX(5px);
+        }
+
         /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
@@ -157,35 +201,17 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #1da1f2;
         }
-
-        /* Dark mode toggle styling */
-        .dark-mode-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #1da1f2;
-            color: #ffffff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        /* Animations on scroll */
-        .fade-in {
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-        }
-        .fade-in.visible {
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
-
-
     <div class="container">
         <div class="sidebar">
             <h1 class="text-2xl font-bold mb-6">Sports News</h1>
+            <div class="category-filter">
+                <div class="category-item" onclick="filterCategory('Football')">Football</div>
+                <div class="category-item" onclick="filterCategory('Basketball')">Basketball</div>
+                <div class="category-item" onclick="filterCategory('Tennis')">Tennis</div>
+            </div>
             <nav>
                 <div class="nav-item"><a href="https://giantwebmarket.com/sport-news/index.html"><i class="fas fa-home"></i> Home</a></div>
                 <div class="nav-item"><a href="https://giantwebmarket.com/sport-news/trending.html"><i class="fas fa-fire"></i> Trending</a></div>
@@ -196,6 +222,15 @@
             <div class="feed-title">Latest News <span id="feed-count">(0/10)</span></div>
             <div class="feed-grid" id="feed-grid">
                 <!-- Feed cards will be loaded here -->
+            </div>
+            <div class="quote-card">
+                <p class="quote">"The only way to prove that you’re a good sport is to lose." - Ernie Banks</p>
+                <p class="author">Ernie Banks</p>
+            </div>
+            <div class="social-media-buttons">
+                <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
 
@@ -216,7 +251,7 @@
             "https://sports.yahoo.com/rss/"
         ];
 
-
+        let selectedCategory = '';
 
         async function fetchRSSFeed(url) {
             try {
@@ -228,36 +263,24 @@
             }
         }
 
-        function isValidImage(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-        }
-
         function updateCounters(feedCount, trendingCount) {
             document.getElementById('feed-count').textContent = `(${feedCount}/20)`;
             document.getElementById('trending-count').textContent = `(${trendingCount}/30)`;
         }
 
-        function handleScroll() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach((el) => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight) {
-                    el.classList.add('visible');
-                }
-            });
+        function filterCategory(category) {
+            selectedCategory = category;
+            fetchSportsNews();
         }
 
         async function fetchSportsNews() {
             const feedGrid = document.getElementById("feed-grid");
             const trendingTextsContainer = document.getElementById("trending-texts");
+            feedGrid.innerHTML = '';
+            trendingTextsContainer.innerHTML = '';
             let feedCount = 0;
             let trendingCount = 0;
-            
+
             for (let feedIndex = 0; feedIndex < rssFeeds.length; feedIndex++) {
                 if (feedCount >= 20 && trendingCount >= 30) break;
                 const feed = rssFeeds[feedIndex];
@@ -268,37 +291,22 @@
                     const article = data.items[i];
                     if (feedCount >= 20 && trendingCount >= 30) break;
 
-                    const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
-                    const isImageValid = await isValidImage(imgUrl);
+                    if (selectedCategory && !article.title.includes(selectedCategory)) continue;
 
-                    if (isImageValid && feedCount < 20) {
-                        const newsItem = document.createElement("div");
-                        newsItem.className = "card fade-in";
-                        newsItem.innerHTML = `
-                            <img src="${imgUrl}" alt="News Image">
-                            <div class="title">${article.title}</div>
-                            <p class="text-source">${data.feed.title}</p>
-                            <a href="${article.link}" target="_blank">Read more</a>
-                        `;
-                        feedGrid.appendChild(newsItem);
-                        feedCount++;
-                        updateCounters(feedCount, trendingCount);
-                    } else if (trendingCount < 30) {
-                        const trendingText = document.createElement("div");
-                        trendingText.className = "trending-text fade-in";
-                        trendingText.innerHTML = `
-                            <div class="title">${article.title}</div>
-                            <p class="text-source">${data.feed.title}</p>
-                            <a href="${article.link}" target="_blank" class="text-blue-400">Read more</a>
-                        `;
-                        trendingTextsContainer.appendChild(trendingText);
-                        trendingCount++;
-                        updateCounters(feedCount, trendingCount);
-                    }
+                    const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
+                    const newsItem = document.createElement("div");
+                    newsItem.className = "card fade-in";
+                    newsItem.innerHTML = `
+                        <img src="${imgUrl}" alt="News Image">
+                        <div class="title">${article.title}</div>
+                        <p class="text-source">${data.feed.title}</p>
+                        <a href="${article.link}" target="_blank">Read more</a>
+                    `;
+                    feedGrid.appendChild(newsItem);
+                    feedCount++;
+                    updateCounters(feedCount, trendingCount);
                 }
             }
-
-            window.addEventListener('scroll', handleScroll);
         }
 
         fetchSportsNews();
