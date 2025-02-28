@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Sports News - X Style</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        body { 
+            background: #0a0e14; /* Darker background */
+            color: #ffffff; 
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: flex;
+            padding: 10px; 
+        }
+        .sidebar { 
+            width: 250px; 
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        .feed-container {
+            flex: 1;
+            padding: 20px 10px;
+        }
+        .feed-title {
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #e6e6e6; /* Slightly off-white for better contrast */
+        }
+        .top-news {
+            margin-bottom: 30px;
+        }
+        .top-news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+        .sidebar-content { 
+            width: 300px; 
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        /* Top news cards - horizontal layout */
+        .top-card {
+            background: #192734; 
+            border-radius: 12px; 
+            display: flex;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 140px;
+        }
+        .top-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.2);
+            border-color: rgba(29, 161, 242, 0.3);
+            background: #1e3246;
+        }
+        .top-card img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        .top-card:hover img {
+            filter: brightness(1.1);
+        }
+        .top-card-content {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .top-card .title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: #ffffff;
+        }
+        
+        /* Trending cards - rounded with highlight */
+        .trending-card { 
+            background: #192734; 
+            border-radius: 16px; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 300px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            position: relative;
+        }
+        .trending-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(29, 161, 242, 0.2);
+            border-color: rgba(29, 161, 242, 0.3);
+        }
+        .trending-card img { 
+            width: 100%; 
+            height: 160px;
+            object-fit: cover; 
+            transition: all 0.3s ease;
+        }
+        .trending-card:hover img {
+            filter: brightness(1.1);
+        }
+        .trending-card-content {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            background: linear-gradient(to bottom, rgba(25, 39, 52, 0.8) 0%, #192734 100%);
+        }
+        .trending-card .title { 
+            font-weight: bold; 
+            font-size: 16px; 
+            margin-bottom: 8px; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: #ffffff;
+        }
+        .trending-card .category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(29, 161, 242, 0.9);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        /* Common styles */
+        p { 
+            font-size: 14px; 
+            color: #a0a0a0;
+            margin: 5px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        a { 
+            font-size: 14px; 
+            color: #1da1f2; 
+            text-decoration: none;
+            margin-top: auto;
+            padding-top: 8px;
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: #56c3ff;
+            text-decoration: underline;
+        }
+        .nav-item { 
+            padding: 12px 15px; 
+            font-size: 18px;
+            border-radius: 30px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            color: #e6e6e6;
+        }
+        .nav-item:hover {
+            background-color: #1e3246;
+            cursor: pointer;
+            color: #1da1f2;
+            transform: translateX(5px);
+        }
+        .nav-item i {
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+        .nav-item:hover i {
+            transform: scale(1.2);
+            color: #1da1f2;
+        }
+        .nav-item.active {
+            background-color: rgba(29, 161, 242, 0.2);
+            color: #1da1f2;
+        }
+        .sidebar-list { 
+            background: #192734; 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sidebar-list:hover {
+            background: #1e3246;
+            box-shadow: 0 6px 16px rgba(29, 161, 242, 0.2);
+            border-color: rgba(29, 161, 242, 0.3);
+        }
+        .sidebar-list .title {
+            font-weight: bold; 
+            font-size: 16px; 
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical;
+            color: #ffffff;
+        }
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        .text-source {
+            font-size: 13px;
+            color: #8899a6;
+            margin: 5px 0;
+        }
+        #top-count, #trending-count, #sidebar-count {
+            font-size: 12px;
+            color: #8899a6;
+            margin-left: 5px;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #8899a6;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="feed-title">Trending Sports News</div>
+            <div class="nav-item" id="top-feeds">Top Feeds <i class="fa fa-arrow-down"></i></div>
+            <div class="nav-item" id="trending-feeds">Trending Feeds <i class="fa fa-arrow-up"></i></div>
+            <div class="nav-item" id="sidebar-feeds">Sidebar Feeds <i class="fa fa-bars"></i></div>
+        </div>
+        <div class="feed-container">
+            <div class="top-news">
+                <div class="feed-title">Top News</div>
+                <div id="top-news" class="top-news-grid"></div>
+            </div>
+            <div class="feed-title">Trending News</div>
+            <div id="trending-news" class="trending-grid"></div>
+        </div>
+        <div class="sidebar-content">
+            <div class="feed-title">Sidebar News</div>
+            <div id="sidebar-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const topFeeds = [
+            // Array of Top Feed RSS URLs
+        ];
+        const trendingFeeds = [
+            // Array of Trending Feed RSS URLs
+        ];
+        const sidebarFeeds = [
+            // Array of Sidebar Feed RSS URLs
+        ];
+
+        let topCount = 0;
+        let trendingCount = 0;
+        let sidebarCount = 0;
+
+        const topNewsGrid = document.getElementById("top-news");
+        const trendingGrid = document.getElementById("trending-news");
+        const sidebarContent = document.getElementById("sidebar-content");
+
+        async function fetchRSSFeed(url) {
+            const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${url}`);
+            const data = await response.json();
+            return data;
+        }
+
+        async function isValidImage(url) {
+            try {
+                const response = await fetch(url);
+                return response.ok;
+            } catch {
+                return false;
+            }
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function updateCounters(top, trending, sidebar) {
+            document.getElementById("top-count").textContent = `Top: ${top}`;
+            document.getElementById("trending-count").textContent = `Trending: ${trending}`;
+            document.getElementById("sidebar-count").textContent = `Sidebar: ${sidebar}`;
+        }
+
+        async function fetchTrendingSports() {
+            for (let feedIndex = 0; feedIndex < topFeeds.length; feedIndex++) {
+                if (topCount >= 5) break;
+
+                const feed = topFeeds[feedIndex];
+                const data = await fetchRSSFeed(feed);
+
+                if (!data || !data.items) continue;
+
+                for (let i = 0; i < data.items.length && topCount < 5; i++) {
+                    const article = data.items[i];
+                    const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
+                    const isImageValid = await isValidImage(imgUrl);
+
+                    if (isImageValid) {
+                        const newsItem = document.createElement("div");
+                        newsItem.className = "top-card";
+                        newsItem.innerHTML = `
+                            <img src="${imgUrl}" alt="Top News Image">
+                            <div class="top-card-content">
+                                <div class="title">${article.title}</div>
+                                <p class="text-source">${data.feed.title}</p>
+                                <div class="timestamp"><i class="far fa-clock"></i> ${formatDate(article.pubDate)}</div>
+                                <a href="${article.link}" target="_blank">Read more</a>
+                            </div>
+                        `;
+                        topNewsGrid.appendChild(newsItem);
+                        topCount++;
+                        updateCounters(topCount, trendingCount, sidebarCount);
+                    }
+                }
+            }
+
+            for (let feedIndex = 0; feedIndex < trendingFeeds.length; feedIndex++) {
+                if (trendingCount >= 5) break;
+
+                const feed = trendingFeeds[feedIndex];
+                const data = await fetchRSSFeed(feed);
+
+                if (!data || !data.items) continue;
+
+                for (let i = 0; i < data.items.length && trendingCount < 5; i++) {
+                    const article = data.items[i];
+                    const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
+                    const isImageValid = await isValidImage(imgUrl);
+
+                    if (isImageValid) {
+                        const newsItem = document.createElement("div");
+                        newsItem.className = "trending-card";
+                        newsItem.innerHTML = `
+                            <div class="category">${article.category || 'Sports'}</div>
+                            <img src="${imgUrl}" alt="Trending Image">
+                            <div class="trending-card-content">
+                                <div class="title">${article.title}</div>
+                                <p class="text-source">${data.feed.title}</p>
+                                <div class="timestamp"><i class="far fa-clock"></i> ${formatDate(article.pubDate)}</div>
+                                <a href="${article.link}" target="_blank">Read more</a>
+                            </div>
+                        `;
+                        trendingGrid.appendChild(newsItem);
+                        trendingCount++;
+                        updateCounters(topCount, trendingCount, sidebarCount);
+                    }
+                }
+            }
+
+            for (let feedIndex = 0; feedIndex < sidebarFeeds.length; feedIndex++) {
+                if (sidebarCount >= 10) break;
+
+                const feed = sidebarFeeds[feedIndex];
+                const data = await fetchRSSFeed(feed);
+
+                if (!data || !data.items) continue;
+
+                for (let i = 0; i < data.items.length && sidebarCount < 10; i++) {
+                    const article = data.items[i];
+                    const imgUrl = article.enclosure ? article.enclosure.link : 'https://via.placeholder.com/600x300';
+                    const isImageValid = await isValidImage(imgUrl);
+
+                    if (isImageValid) {
+                        const newsItem = document.createElement("div");
+                        newsItem.className = "sidebar-list";
+                        newsItem.innerHTML = `
+                            <img src="${imgUrl}" alt="Sidebar Image">
+                            <div class="sidebar-list-content">
+                                <div class="title">${article.title}</div>
+                                <p class="text-source">${data.feed.title}</p>
+                                <div class="timestamp"><i class="far fa-clock"></i> ${formatDate(article.pubDate)}</div>
+                                <a href="${article.link}" target="_blank">Read more</a>
+                            </div>
+                        `;
+                        sidebarContent.appendChild(newsItem);
+                        sidebarCount++;
+                        updateCounters(topCount, trendingCount, sidebarCount);
+                    }
+                }
+            }
+        }
+
+        window.onload = function() {
+            fetchTrendingSports();
+        }
+    </script>
+</body>
+</html>
