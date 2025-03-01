@@ -268,14 +268,93 @@
             all: [
                 'https://techcrunch.com/feed/',
                 'https://www.theverge.com/rss/index.xml',
-                // Add more RSS feeds here
+                'https://feeds.feedburner.com/TechCrunch/',
+                'https://www.wired.com/feed/rss',
+                'https://www.engadget.com/rss.xml',
+                'https://www.cnet.com/rss/news/',
+                'https://www.zdnet.com/news/rss.xml',
+                'https://www.tomsguide.com/feeds/all',
+                'https://www.digitaltrends.com/feed/',
+                'https://www.techradar.com/rss',
+                'https://www.gsmarena.com/rss-news-reviews.php3',
+                'https://www.androidauthority.com/feed/',
+                'https://www.xda-developers.com/feed/',
+                'https://www.anandtech.com/rss/',
+                'https://www.arstechnica.com/feed/',
+                'https://www.howtogeek.com/feed/',
+                'https://www.lifehacker.com/rss',
+                'https://www.macrumors.com/macrumors.xml',
+                'https://www.iphonehacks.com/feed',
+                'https://www.slashgear.com/rss/',
+                'https://www.techmeme.com/feed.xml',
+                'https://www.techrepublic.com/rssfeeds/articles/',
+                'https://www.techspot.com/feed/',
+                'https://www.theregister.com/feed/',
+                'https://www.venturebeat.com/feed/',
+                'https://www.extremetech.com/feed',
+                'https://www.gizmodo.com/rss',
+                'https://www.kotaku.com/rss',
+                'https://www.techdirt.com/techdirt_rss.xml',
+                'https://www.technewsworld.com/perl/syndication/rssfull.pl',
+                'https://www.techworm.net/feed',
+                'https://www.thenextweb.com/feed/',
+                'https://www.tweaktown.com/rss/news.xml',
+                'https://www.techpp.com/feed/',
+                'https://www.techconnecto.com/feed/',
+                'https://www.techviral.net/feed/',
+                'https://www.techlecticism.com/feed/',
+                'https://www.techacute.com/feed/',
+                'https://www.techweez.com/feed/',
+                'https://www.techzim.co.zw/feed/',
+                'https://www.techjuice.pk/feed/',
+                'https://www.techmoran.com/feed/',
+                'https://www.techpoint.africa/feed/',
+                'https://www.techloy.com/feed/',
+                'https://www.techbooky.com/feed/',
+                'https://www.techcityng.com/feed/',
+                'https://www.technext.ng/feed/',
+                'https://www.techpreacher.com/feed/',
+                'https://www.techsisi.com/feed/',
+                'https://www.techshout.com/feed/'
             ],
-            ai: ['https://example.com/ai-feed.xml'],
-            programming: ['https://example.com/programming-feed.xml'],
-            gadgets: ['https://example.com/gadgets-feed.xml'],
+            ai: [
+                'https://openai.com/blog/rss/',
+                'https://www.deepmind.com/blog/rss.xml',
+                'https://www.aitrends.com/feed/',
+                'https://www.kdnuggets.com/feed',
+                'https://www.analyticsvidhya.com/feed/',
+                'https://www.aitimejournal.com/feed/',
+                'https://www.artificial-intelligence.blog/feed/',
+                'https://www.machinelearningmastery.com/feed/',
+                'https://www.datasciencecentral.com/feed/',
+                'https://www.towardsdatascience.com/feed'
+            ],
+            programming: [
+                'https://stackoverflow.blog/feed/',
+                'https://www.smashingmagazine.com/feed/',
+                'https://css-tricks.com/feed/',
+                'https://www.sitepoint.com/feed/',
+                'https://www.codeproject.com/WebServices/ArticleRSS.aspx',
+                'https://dev.to/feed',
+                'https://www.freecodecamp.org/news/rss/',
+                'https://www.reddit.com/r/programming/.rss',
+                'https://www.reddit.com/r/javascript/.rss',
+                'https://www.reddit.com/r/python/.rss'
+            ],
+            gadgets: [
+                'https://www.gizmodo.com/rss',
+                'https://www.engadget.com/rss.xml',
+                'https://www.cnet.com/rss/gadgets/',
+                'https://www.techradar.com/rss',
+                'https://www.gsmarena.com/rss-news-reviews.php3',
+                'https://www.androidauthority.com/feed/',
+                'https://www.xda-developers.com/feed/',
+                'https://www.macrumors.com/macrumors.xml',
+                'https://www.iphonehacks.com/feed',
+                'https://www.slashgear.com/rss/'
+            ]
         };
 
-        const apiUrl = 'https://api.allorigins.win/get?url=';
         const newsGrid = document.getElementById('news-grid');
         const loading = document.getElementById('loading');
 
@@ -286,10 +365,10 @@
 
             for (const feed of feeds) {
                 try {
-                    const response = await fetch(`${apiUrl}${encodeURIComponent(feed)}`);
-                    const data = await response.json();
+                    const response = await fetch(feed);
+                    const text = await response.text();
                     const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+                    const xmlDoc = parser.parseFromString(text, "text/xml");
 
                     const items = xmlDoc.querySelectorAll('item');
                     items.forEach((item, index) => {
