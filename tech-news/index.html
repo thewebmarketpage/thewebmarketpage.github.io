@@ -279,7 +279,7 @@
                             title: item.querySelector('title').textContent,
                             description: item.querySelector('description').textContent,
                             link: item.querySelector('link').textContent,
-                            image: item.querySelector('media\\:content') ? item.querySelector('media\\:content').getAttribute('url') : 'https://via.placeholder.com/300x180',
+                            image: item.querySelector('media\\:content') ? item.querySelector('media\\:content').getAttribute('url') : item.querySelector('enclosure') ? item.querySelector('enclosure').getAttribute('url') : 'https://via.placeholder.com/300x180',
                             pubDate: item.querySelector('pubDate').textContent,
                         }));
                         return news;
