@@ -1,272 +1,544 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tech News Feed</title>
-  <!-- Free CSS Library (Tailwind CSS) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" />
-  <style>
-    /* Custom CSS (compiled from SCSS concepts) */
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-    header {
-      background-color: #003366;
-      color: white;
-      padding: 10px 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    header h1 {
-      font-size: 2.5rem;
-    }
-    nav ul {
-      list-style-type: none;
-      display: flex;
-      gap: 15px;
-    }
-    nav a {
-      color: #f1f1f1;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      color: #ffcc00;
-    }
-    #categories ul {
-      list-style-type: none;
-    }
-    #categories li a {
-      text-decoration: none;
-      color: #003366;
-      font-weight: bold;
-      display: block;
-      padding: 5px 0;
-    }
-    #categories li a:hover {
-      color: #ffcc00;
-    }
-    /* Expanded post modal (hidden by default) */
-    #expandedPost.hidden {
-      display: none;
-    }
-    /* Styling for news cards */
-    .news-card {
-      background-color: white;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
-    }
-    .news-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
-    .news-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 16px;
-    }
-    .news-card h3 {
-      font-size: 1.25rem;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 12px;
-    }
-    .news-card p {
-      color: #555;
-      margin-bottom: 12px;
-      font-size: 1rem;
-    }
-    .read-more {
-      color: #ffcc00;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    .read-more:hover {
-      text-decoration: underline;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechFeedHub - Facebook-like Tech News Aggregator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #1877f2;
+            --secondary-color: #f0f2f5;
+            --text-color: #050505;
+            --text-secondary: #65676b;
+            --hover-color: #e4e6eb;
+            --border-color: #dddfe2;
+            --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --header-height: 60px;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .logo i {
+            margin-right: 8px;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: none;
+            background-color: var(--secondary-color);
+            font-size: 15px;
+        }
+
+        .search-container i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin-left: auto;
+        }
+
+        nav ul li {
+            margin: 0 8px;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            background-color: var(--hover-color);
+        }
+
+        nav ul li a.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-pic i {
+            font-size: 24px;
+            color: #888;
+        }
+
+        /* Main Content */
+        .container {
+            display: flex;
+            margin-top: var(--header-height);
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            height: calc(100vh - var(--header-height));
+            overflow-y: auto;
+            padding: 20px;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            color: var(--text-color);
+        }
+
+        .sidebar ul li a:hover {
+            background-color: var(--hover-color);
+        }
+
+        .sidebar ul li a i {
+            width: 24px;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .sidebar .categories li a.active {
+            background-color: rgba(24, 119, 242, 0.1);
+            font-weight: 500;
+        }
+
+        /* Main Feed */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+        }
+
+        .news-feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .news-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .news-card:hover .news-image img {
+            transform: scale(1.05);
+        }
+
+        .news-content {
+            padding: 16px;
+        }
+
+        .news-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-actions {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .action-btn i {
+            margin-right: 5px;
+        }
+
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            margin-right: 8px;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .no-results i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Mobile Responsiveness */
+        @media screen and (max-width: 992px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .main-content {
+                margin-left: 240px;
+            }
+
+            :root {
+                --sidebar-width: 240px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                display: none;
+                width: 100%;
+                z-index: 999;
+            }
+
+            .sidebar.active {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            header {
+                position: static;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin: 8px 0;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+        }
+
+        /* Expanded Post */
+        .expanded-post {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--card-shadow);
+            border-radius: 8px;
+        }
+
+        .expanded-post.open {
+            display: block;
+        }
+
+        .expanded-post .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .expanded-post .post-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .expanded-post .post-header i {
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
+        .expanded-post .post-body {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+    </style>
 </head>
+
 <body>
-  <!-- Header with Navigation -->
-  <header class="flex justify-between items-center py-4">
-    <h1 class="text-3xl font-bold">Tech News</h1>
-    <nav>
-      <ul class="flex space-x-4">
-        <li><a href="#tech" class="hover:underline">Tech</a></li>
-        <li><a href="#ai" class="hover:underline">AI</a></li>
-        <li><a href="#gadgets" class="hover:underline">Gadgets</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Main Content -->
-  <main class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-    <!-- News Grid -->
-    <div id="newsGrid" class="col-span-3 md:col-span-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- News cards will be injected here -->
-    </div>
-    <!-- Sidebar for Categories -->
-    <aside id="sidebar" class="col-span-3 md:col-span-1">
-      <div id="categories" class="bg-white p-4 rounded shadow">
-        <h3 class="text-xl font-bold mb-4">Categories</h3>
-        <ul>
-          <li><a href="#tech">Tech</a></li>
-          <li><a href="#ai">AI</a></li>
-          <li><a href="#gadgets">Gadgets</a></li>
-          <!-- Add more categories as needed -->
-        </ul>
-      </div>
-    </aside>
-  </main>
-
-  <!-- Expanded Post Modal -->
-  <div id="expandedPost" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-6">
-    <div class="bg-white p-6 rounded-lg w-full max-w-3xl overflow-y-auto max-h-full">
-      <h2 id="postTitle" class="text-2xl font-bold mb-4"></h2>
-      <img id="postImage" class="w-full h-auto mb-4" alt="News Image" />
-      <p id="postDescription" class="mb-4"></p>
-      <a id="readMoreLink" href="#" target="_blank" class="text-blue-500 mb-4 inline-block">Read more</a>
-      <div id="similarPosts" class="mt-6">
-        <h3 class="text-xl font-bold mb-2">Similar Posts</h3>
-        <div id="similarPostsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Similar posts will appear here -->
+    <!-- Header -->
+    <header>
+        <div class="logo"><i class="fa-solid fa-laptop-code"></i> TechFeedHub</div>
+        <div class="search-container">
+            <input type="text" placeholder="Search Tech News...">
+            <i class="fa-solid fa-search"></i>
         </div>
-      </div>
-      <button id="closePost" class="mt-4 bg-red-500 text-white p-2 rounded">Close</button>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="user-profile">
+            <div class="profile-pic">
+                <i class="fa-solid fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3>Categories</h3>
+            <ul class="categories">
+                <li><a href="#" class="active"><i class="fa-solid fa-code"></i> Programming</a></li>
+                <li><a href="#"><i class="fa-solid fa-robot"></i> AI</a></li>
+                <li><a href="#"><i class="fa-solid fa-laptop"></i> Gadgets</a></li>
+                <li><a href="#"><i class="fa-solid fa-globe"></i> Web Development</a></li>
+                <li><a href="#"><i class="fa-solid fa-phone"></i> Mobile Tech</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="news-feed">
+                <!-- News Cards will go here -->
+            </div>
+            <div class="loading">
+                <i class="fa-solid fa-spinner"></i> Loading News...
+            </div>
+            <div class="no-results" style="display:none;">
+                <i class="fa-solid fa-frown"></i>
+                <h3>No News Found</h3>
+                <p>Try a different search or check back later.</p>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- JavaScript -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const newsGrid = document.getElementById('newsGrid');
-      const expandedPost = document.getElementById('expandedPost');
-      const closePostButton = document.getElementById('closePost');
-      const postTitle = document.getElementById('postTitle');
-      const postDescription = document.getElementById('postDescription');
-      const postImage = document.getElementById('postImage');
-      const readMoreLink = document.getElementById('readMoreLink');
-      const similarPostsContainer = document.getElementById('similarPostsContainer');
+    <!-- Expanded Post Modal -->
+    <div class="expanded-post">
+        <div class="post-header">
+            <h2>Post Title</h2>
+            <i class="fa-solid fa-times"></i>
+        </div>
+        <div class="post-body">
+            <p>Full content of the news post will go here...</p>
+        </div>
+    </div>
 
-      // Array to store all news items
-      let allNews = [];
+    <script>
+        // Script for fetching and displaying tech news, as well as post expansion and search
+        // Example for how to fetch tech news from an API and display it in news cards.
 
-      // Example RSS feed URLs – add more as needed
-      const rssUrls = [
-        'https://rss.cnn.com/rss/cnn_tech.rss',
-        'https://feeds.bbci.co.uk/news/technology/rss.xml'
-      ];
+        document.addEventListener('DOMContentLoaded', function () {
+            // Example news data (can be fetched from an API or RSS feed)
+            const newsData = [
+                {
+                    title: "AI Breakthrough in Machine Learning",
+                    description: "The latest AI advancements are reshaping industries with improved learning capabilities.",
+                    image: "https://via.placeholder.com/300x180",
+                    url: "#",
+                    category: "AI"
+                },
+                {
+                    title: "New Gadgets Released in 2025",
+                    description: "Discover the most exciting gadgets that are set to revolutionize the tech world.",
+                    image: "https://via.placeholder.com/300x180",
+                    url: "#",
+                    category: "Gadgets"
+                },
+                // More news data can be added here...
+            ];
 
-      // Fetch RSS feeds using AllOrigins to bypass CORS
-      async function fetchRSSFeeds() {
-        for (let url of rssUrls) {
-          try {
-            const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-            const data = await response.json();
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(data.contents, 'application/xml');
-            const items = xmlDoc.querySelectorAll('item');
+            // Function to populate news feed
+            function populateNewsFeed(news) {
+                const newsFeedContainer = document.querySelector('.news-feed');
+                newsFeedContainer.innerHTML = ''; // Clear previous content
 
-            items.forEach(item => {
-              const title = item.querySelector('title') ? item.querySelector('title').textContent : 'No title';
-              const description = item.querySelector('description') ? item.querySelector('description').textContent : '';
-              let image = '';
-              // Try to get an image from <enclosure> or media:content tags
-              const enclosure = item.querySelector('enclosure');
-              if (enclosure && enclosure.getAttribute('url')) {
-                image = enclosure.getAttribute('url');
-              } else {
-                const mediaContent = item.querySelector('media\\:content, content');
-                if (mediaContent && mediaContent.getAttribute('url')) {
-                  image = mediaContent.getAttribute('url');
+                news.forEach(item => {
+                    const card = document.createElement('div');
+                    card.classList.add('news-card');
+                    card.innerHTML = `
+                        <div class="news-image">
+                            <img src="${item.image}" alt="${item.title}">
+                        </div>
+                        <div class="news-content">
+                            <div class="news-title">${item.title}</div>
+                            <div class="news-description">${item.description}</div>
+                            <div class="news-actions">
+                                <div class="action-btn"><i class="fa-solid fa-thumbs-up"></i> Like</div>
+                                <div class="action-btn"><i class="fa-solid fa-comment"></i> Comment</div>
+                            </div>
+                        </div>
+                    `;
+                    newsFeedContainer.appendChild(card);
+                });
+
+                // Hide loading indicator when done
+                document.querySelector('.loading').style.display = 'none';
+                if (news.length === 0) {
+                    document.querySelector('.no-results').style.display = 'block';
                 }
-              }
-              const link = item.querySelector('link') ? item.querySelector('link').textContent : '#';
-              const pubDate = item.querySelector('pubDate') ? item.querySelector('pubDate').textContent : '';
+            }
 
-              // Save the news item
-              allNews.push({ title, description, image, link, pubDate });
-            });
-          } catch (error) {
-            console.error('Error fetching RSS from', url, error);
-          }
-        }
-        renderNews(allNews);
-      }
-
-      // Render news cards in the grid
-      function renderNews(newsItems) {
-        newsGrid.innerHTML = '';
-        newsItems.forEach((news, index) => {
-          const card = document.createElement('div');
-          card.className = 'news-card hover:shadow-xl cursor-pointer';
-          card.innerHTML = `
-            ${news.image ? `<img src="${news.image}" alt="${news.title}" class="rounded-lg">` : ''}
-            <h3 class="text-xl font-bold mb-2">${news.title}</h3>
-            <p class="text-gray-600 mb-2">${news.description.substring(0, 100)}...</p>
-            <a href="${news.link}" target="_blank" class="read-more">Read more</a>
-          `;
-          // Clicking the card opens the expanded view
-          card.addEventListener('click', () => openPost(news, index));
-          newsGrid.appendChild(card);
+            // Call the populate function
+            populateNewsFeed(newsData);
         });
-      }
-
-      // Open the expanded post view
-      function openPost(news, index) {
-        postTitle.textContent = news.title;
-        postDescription.innerHTML = news.description;
-        if (news.image) {
-          postImage.src = news.image;
-          postImage.style.display = 'block';
-        } else {
-          postImage.style.display = 'none';
-        }
-        readMoreLink.href = news.link;
-
-        // Display similar posts (for demo purposes, pick 3 random items other than the current)
-        displaySimilarPosts(index);
-
-        expandedPost.classList.remove('hidden');
-      }
-
-      // Display similar posts
-      function displaySimilarPosts(currentIndex) {
-        similarPostsContainer.innerHTML = '';
-        const similar = allNews.filter((_, idx) => idx !== currentIndex);
-        shuffle(similar);
-        const similarThree = similar.slice(0, 3);
-        similarThree.forEach(news => {
-          const simCard = document.createElement('div');
-          simCard.className = 'bg-gray-100 p-2 rounded cursor-pointer';
-          simCard.innerHTML = `<h4 class="text-lg font-semibold">${news.title}</h4>`;
-          simCard.addEventListener('click', () => openPost(news, allNews.indexOf(news)));
-          similarPostsContainer.appendChild(simCard);
-        });
-      }
-
-      // Shuffle array (for displaying random similar posts)
-      function shuffle(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-      }
-
-      // Close expanded post view
-      closePostButton.addEventListener('click', () => {
-        expandedPost.classList.add('hidden');
-      });
-
-      // Load the feeds
-      fetchRSSFeeds();
-    });
-  </script>
+    </script>
 </body>
+
 </html>
