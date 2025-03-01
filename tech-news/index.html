@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Like Theme</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f5;
+        }
+        .content {
+            flex: 1;
+        }
+        .navbar .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .sidebar .list-group-item {
+            cursor: pointer;
+        }
+        .sidebar .list-group-item:hover {
+            background-color: #e4e6eb;
+        }
+        .card {
+            border-radius: 10px;
+        }
+        button {
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Facebook</a>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-light" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container mt-4 content">
+        <div class="row">
+            <div class="col-md-3 sidebar">
+                <ul class="list-group">
+                    <li class="list-group-item"><i class="fas fa-user-friends"></i> Friends</li>
+                    <li class="list-group-item"><i class="fas fa-photo-video"></i> Photos</li>
+                    <li class="list-group-item"><i class="fas fa-users"></i> Groups</li>
+                    <li class="list-group-item"><i class="fas fa-calendar-alt"></i> Events</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <textarea class="form-control" placeholder="What's on your mind?"></textarea>
+                        <button class="btn btn-primary mt-2">Post</button>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5>User Name</h5>
+                        <p>This is a sample post...</p>
+                        <button class="btn btn-outline-primary"><i class="far fa-thumbs-up"></i> Like</button>
+                        <button class="btn btn-outline-secondary"><i class="far fa-comment"></i> Comment</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h5>People You May Know</h5>
+                <div class="card">
+                    <div class="card-body">
+                        <p>John Doe</p>
+                        <button class="btn btn-primary btn-sm">Add Friend</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
