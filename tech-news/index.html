@@ -3,87 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Like Theme</title>
+    <title>Tech News</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            background-color: #f0f2f5;
-        }
-        .content {
-            flex: 1;
-        }
-        .navbar .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        .sidebar .list-group-item {
-            cursor: pointer;
-        }
-        .sidebar .list-group-item:hover {
-            background-color: #e4e6eb;
-        }
-        .card {
-            border-radius: 10px;
-        }
-        button {
-            border-radius: 20px;
-        }
+        body { background-color: #f0f2f5; }
+        .news-card img { height: 200px; object-fit: cover; }
+        #expanded-post { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: white; z-index: 9999; overflow-y: auto; padding: 20px; }
+        #expanded-post img { width: 100%; max-height: 400px; object-fit: cover; }
+        .back-btn { position: absolute; top: 10px; left: 10px; background: black; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="#">Facebook</a>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-light" type="submit"><i class="fas fa-search"></i></button>
-            </form>
+            <a class="navbar-brand" href="#">Tech News</a>
         </div>
     </nav>
 
-    <div class="container mt-4 content">
-        <div class="row">
-            <div class="col-md-3 sidebar">
-                <ul class="list-group">
-                    <li class="list-group-item"><i class="fas fa-user-friends"></i> Friends</li>
-                    <li class="list-group-item"><i class="fas fa-photo-video"></i> Photos</li>
-                    <li class="list-group-item"><i class="fas fa-users"></i> Groups</li>
-                    <li class="list-group-item"><i class="fas fa-calendar-alt"></i> Events</li>
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <textarea class="form-control" placeholder="What's on your mind?"></textarea>
-                        <button class="btn btn-primary mt-2">Post</button>
-                    </div>
-                </div>
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h5>User Name</h5>
-                        <p>This is a sample post...</p>
-                        <button class="btn btn-outline-primary"><i class="far fa-thumbs-up"></i> Like</button>
-                        <button class="btn btn-outline-secondary"><i class="far fa-comment"></i> Comment</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <h5>People You May Know</h5>
-                <div class="card">
-                    <div class="card-body">
-                        <p>John Doe</p>
-                        <button class="btn btn-primary btn-sm">Add Friend</button>
-                    </div>
-                </div>
-            </div>
+    <div class="container mt-4">
+        <div class="row" id="news-container">
+            <!-- News articles will be inserted here -->
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <div id="expanded-post">
+        <div class="back-btn" onclick="closePost()">← Back</div>
+        <h2 id="post-title"></h2>
+        <img id="post-image" src="">
+        <p id="post-description"></p>
+        <p><small>Source: <span id="post-source"></span> | Published: <span id="post-time"></span></small></p>
+        <a id="post-link" target="_blank" class="btn btn-primary">Read Original</a>
+        <h3 class="mt-4">Similar Posts</h3>
+        <div class="row" id="similar-posts"></div>
+    </div>
+
+    <script>
+        const RSS_FEEDS = [
+            "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
+            "https://www.wired.com/feed/rss",
+            "https://feeds.feedburner.com/TechCrunch/",
+            "https://www.theverge.com/rss/index.xml",
+            "https://arstechnica.com/feed/",
+            "https://www.cnet.com/rss/news/",
+            "https://www.zdnet.com/news/rss.xml",
+            "https://www.engadget.com/rss.xml",
+            "https://www.digitaltrends.com/feed/",
+            "https://www.theguardian.com/uk/technology/rss"
+        ];
+
+        async function fetchRSS(url) {
+            try {
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                return new window.DOMParser().parseFromString(data.contents, "text/xml");
+            } catch (error) {
+                console.error("Error fetching RSS feed:", error);
+                return null;
+            }
+        }
+
+        async function loadNews() {
+            const newsContainer = document.getElementById("news-container");
+            let newsItems = [];
+
+            for (const feed of RSS_FEEDS) {
+                const xml = await fetchRSS(feed);
+                if (!xml) continue;
+
+                const items = xml.querySelectorAll("item");
+                items.forEach(item => {
+                    const title = item.querySelector("title")?.textContent;
+                    const description = item.querySelector("description")?.textContent;
+                    const link = item.querySelector("link")?.textContent;
+                    const image = item.querySelector("media\\:content, enclosure")?.getAttribute("url") || "https://via.placeholder.com/400";
+                    const source = new URL(link).hostname;
+                    const pubDate = item.querySelector("pubDate")?.textContent || "Unknown";
+
+                    newsItems.push({ title, description, link, image, source, pubDate });
+                });
+            }
+
+            newsItems.slice(0, 50).forEach((article, index) => {
+                const newsHTML = `
+                    <div class="col-md-4">
+                        <div class="card news-card mb-4" onclick="expandPost(${index})">
+                            <img src="${article.image}" class="card-img-top" alt="News Image">
+                            <div class="card-body">
+                                <h5 class="card-title">${article.title}</h5>
+                                <p class="card-text">${article.description || 'No description available.'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                newsContainer.innerHTML += newsHTML;
+            });
+
+            window.articles = newsItems;
+        }
+
+        function expandPost(index) {
+            const article = window.articles[index];
+            document.getElementById("post-title").textContent = article.title;
+            document.getElementById("post-description").textContent = article.description;
+            document.getElementById("post-image").src = article.image;
+            document.getElementById("post-source").textContent = article.source;
+            document.getElementById("post-time").textContent = article.pubDate;
+            document.getElementById("post-link").href = article.link;
+            document.getElementById("expanded-post").style.display = "block";
+
+            // Show similar posts
+            const similarPostsContainer = document.getElementById("similar-posts");
+            similarPostsContainer.innerHTML = "";
+            const similarPosts = window.articles.filter((_, i) => i !== index).slice(0, 3);
+            similarPosts.forEach(similar => {
+                const similarHTML = `
+                    <div class="col-md-4">
+                        <div class="card news-card mb-4" onclick="expandPost(${window.articles.indexOf(similar)})">
+                            <img src="${similar.image}" class="card-img-top" alt="News Image">
+                            <div class="card-body">
+                                <h5 class="card-title">${similar.title}</h5>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                similarPostsContainer.innerHTML += similarHTML;
+            });
+
+            // Update URL
+            history.pushState({}, "", `?post=${index}`);
+        }
+
+        function closePost() {
+            document.getElementById("expanded-post").style.display = "none";
+            history.pushState({}, "", "/");
+        }
+
+        // Load the specific post if a link is shared
+        function checkURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has("post")) {
+                expandPost(parseInt(params.get("post")));
+            }
+        }
+
+        loadNews().then(checkURLParams);
+    </script>
+
 </body>
 </html>
