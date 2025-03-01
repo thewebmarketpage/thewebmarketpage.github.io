@@ -1,369 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechFeedHub</title>
-    <style>
-        :root {
-            --primary-color: #1a1a1a;
-            --secondary-color: #3d3d3d;
-            --card-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            --highlight-color: #007BFF;
-            --text-primary: #fff;
-            --text-secondary: #aaa;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #121212;
-            color: var(--text-primary);
-            font-family: Arial, sans-serif;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--highlight-color);
-        }
-
-        .search-container input {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            background-color: #1a1a1a;
-            color: var(--text-primary);
-            outline: none;
-        }
-
-        .search-container input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .container {
-            display: flex;
-            margin-top: 60px;
-        }
-
-        .sidebar {
-            width: 250px;
-            padding: 20px;
-            background-color: var(--secondary-color);
-        }
-
-        .categories {
-            list-style: none;
-            padding: 0;
-        }
-
-        .categories li {
-            margin: 10px 0;
-        }
-
-        .categories a {
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 18px;
-            display: block;
-            padding: 5px 0;
-        }
-
-        .categories a:hover {
-            color: var(--highlight-color);
-        }
-
-        .main-content {
-            flex-grow: 1;
-            padding: 20px;
-        }
-
-        .news-feed {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .news-card {
-            background-color: var(--primary-color);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .news-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .news-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-
-        .news-card .news-content {
-            padding: 15px;
-        }
-
-        .news-card .news-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .news-card .news-description {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: var(--text-secondary);
-        }
-
-        .news-card .read-more {
-            color: var(--highlight-color);
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        .expanded-post {
-            display: none;
-            background-color: var(--primary-color);
-            padding: 30px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 200;
-            overflow-y: auto;
-            box-shadow: var(--card-shadow);
-        }
-
-        .expanded-post.open {
-            display: block;
-        }
-
-        .expanded-post .post-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .expanded-post .post-header h2 {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .expanded-post .post-body {
-            font-size: 16px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-
-        .expanded-post .close-btn {
-            cursor: pointer;
-            color: var(--highlight-color);
-        }
-
-        .expanded-post .similar-posts {
-            margin-top: 30px;
-        }
-
-        .expanded-post .similar-posts .similar-card {
-            background-color: var(--secondary-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .expanded-post .similar-posts .similar-card .similar-title {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .expanded-post .similar-posts .similar-card .similar-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech News RSS Fetcher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #222;
+      color: #ddd;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      color: #00b0ff;
+    }
+    .rss-feed {
+      margin: 20px;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      background-color: #333;
+    }
+    .rss-item {
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      background-color: #444;
+    }
+    .rss-item a {
+      color: #00b0ff;
+      text-decoration: none;
+    }
+    .rss-item a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-
 <body>
-    <header>
-        <div class="logo">TechFeedHub</div>
-        <div class="search-container">
-            <input type="text" placeholder="Search Tech News..." id="searchInput">
-        </div>
-    </header>
 
-    <div class="container">
-        <div class="sidebar">
-            <h3>Categories</h3>
-            <ul class="categories">
-                <li><a href="#">Programming</a></li>
-                <li><a href="#">AI</a></li>
-                <li><a href="#">Gadgets</a></li>
-                <li><a href="#">Web Development</a></li>
-                <li><a href="#">Mobile Tech</a></li>
-            </ul>
-        </div>
+  <h1>Tech News from Multiple Sources</h1>
 
-        <div class="main-content">
-            <div class="news-feed"></div>
-            <div class="loading" style="display: none;">Loading...</div>
-        </div>
-    </div>
+  <div id="rss-container"></div>
 
-    <!-- Expanded Post Modal -->
-    <div class="expanded-post">
-        <div class="post-header">
-            <h2 class="post-title">Post Title</h2>
-            <span class="close-btn">&times;</span>
-        </div>
-        <div class="post-body">
-            <p class="post-description">Full content of the news post...</p>
-        </div>
-        <div class="similar-posts">
-            <h3>Similar Posts</h3>
-            <div class="similar-card">
-                <div class="similar-title">Related Post 1</div>
-                <div class="similar-description">Short description of related post 1...</div>
-            </div>
-            <div class="similar-card">
-                <div class="similar-title">Related Post 2</div>
-                <div class="similar-description">Short description of related post 2...</div>
-            </div>
-            <div class="similar-card">
-                <div class="similar-title">Related Post 3</div>
-                <div class="similar-description">Short description of related post 3...</div>
-            </div>
-        </div>
-    </div>
+  <script>
+    // List of RSS feed URLs
+    const rssFeeds = [
+      'https://www.mashable.com/tech/rss',
+      'https://www.recode.net/rss/index.xml',
+      'https://www.theverge.com/tech/rss',
+      'https://www.9to5mac.com/feed/',
+      'https://www.laptopmag.com/rss',
+      'https://www.anandtech.com/rss',
+      'https://www.phonearena.com/feed',
+      'https://www.gizmodo.com/rss',
+      'https://www.bloomberg.com/technology/feed',
+      'https://www.theinquirer.net/rss',
+      'https://www.pcworld.com/article/feed.xml',
+      'https://www.siliconvalley.com/rss',
+      'https://www.techcrunch.com/startups/feed/',
+      'https://www.scientificamerican.com/technology/feed/',
+      'https://www.space.com/rss',
+      'https://www.huffpost.com/technology/feed/',
+      'https://www.foxnews.com/tech/feed',
+      'https://www.pcmag.com/feed',
+      'https://www.tomshardware.com/feeds',
+      'https://www.ibtimes.com/rss'
+    ];
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const rssFeeds = [
-                'https://techcrunch.com/feed/',
-                'https://www.theverge.com/rss/index.xml',
-                'https://www.wired.com/feed/rss',
-                'https://www.engadget.com/rss.xml',
-                'https://www.cnet.com/rss/all/',
-                'https://www.bbc.com/news/technology/rss.xml',
-                'https://feeds.bbci.co.uk/news/technology/rss.xml',
-                'https://www.techradar.com/rss',
-                'https://www.forbes.com/tech/feed/',
-                'https://www.zdnet.com/news/feed/',
-                'https://www.businessinsider.com/tech',
-                'https://www.technologyreview.com/feed/',
-                'https://venturebeat.com/feed/',
-                'https://arstechnica.com/feed/',
-                'https://www.digitaltrends.com/rss',
-                'https://www.tomshardware.com/news/rss',
-                'https://www.techmeme.com/feed.xml',
-                'https://www.slashgear.com/feed/',
-                'https://www.xda-developers.com/feed/',
-                'https://www.cnbc.com/id/100003114/device/rss/',
-                'https://www.dailystar.co.uk/news/weird-news/technology/rss',
-                'https://www.techspot.com/rss',
-                'https://www.gsmarena.com/rss-news.php',
-                'https://www.mashable.com/tech/rss',
-                'https://www.theverge.com/tech/rss',
-                'https://www.recode.net/rss/index.xml',
-                'https://www.theinquirer.net/rss',
-                'https://www.pcworld.com/article/feed.xml',
-                'https://www.laptopmag.com/rss',
-                'https://www.siliconvalley.com/rss',
-                'https://www.9to5mac.com/feed/',
-                'https://www.phonearena.com/feed',
-                'https://www.anandtech.com/rss',
-                'https://www.techcrunch.com/startups/feed/',
-                'https://www.gizmodo.com/rss',
-                'https://www.bloomberg.com/technology/feed',
-                'https://www.scientificamerican.com/technology/feed/',
-                'https://www.space.com/rss',
-                'https://www.huffpost.com/technology/feed/',
-                'https://www.foxnews.com/tech/feed',
-                'https://www.pcmag.com/feed',
-                'https://www.tomshardware.com/feeds',
-                'https://www.neowin.net/rss',
-                'https://www.ibtimes.com/rss',
-                'https://www.cio.com/rss',
-                'https://www.v3.co.uk/feed',
-                'https://www.computerworld.com/news/feed.xml',
-                'https://www.infoworld.com/news/feed.xml',
-                'https://www.cnbc.com/id/100003114/device/rss',
-                'https://www.bbc.com/news/technology/rss.xml'
-            ];
-
-            let allNews = [];
-
-            function fetchRSS(feedUrl) {
-                return fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const parser = new DOMParser();
-                        const xml = parser.parseFromString(data.contents, 'application/xml');
-                        const items = xml.querySelectorAll('item');
-                        const news = Array.from(items).map(item => ({
-                            title: item.querySelector('title').textContent,
-                            description: item.querySelector('description').textContent,
-                            link: item.querySelector('link').textContent,
-                            image: item.querySelector('media\\:content') ? item.querySelector('media\\:content').getAttribute('url') : item.querySelector('enclosure') ? item.querySelector('enclosure').getAttribute('url') : 'https://via.placeholder.com/300x180',
-                            pubDate: item.querySelector('pubDate').textContent,
-                        }));
-                        return news;
-                    });
-            }
-
-            function displayNews(news) {
-                const newsFeedContainer = document.querySelector('.news-feed');
-                newsFeedContainer.innerHTML = '';
-
-                news.forEach((item, index) => {
-                    const card = document.createElement('div');
-                    card.classList.add('news-card');
-                    card.setAttribute('data-index', index);
-                    card.innerHTML = `
-                        <div class="news-image">
-                            <img src="${item.image}" alt="${item.title}">
-                        </div>
-                        <div class="news-content">
-                            <div class="news-title">${item.title}</div>
-                            <div class="news-description">${item.description}</div>
-                            <a href="${item.link}" class="read-more" target="_blank">Read More</a>
-                        </div>
-                    `;
-                    newsFeedContainer.appendChild(card);
-                });
-            }
-
-            Promise.all(rssFeeds.map(fetchRSS))
-                .then(results => {
-                    allNews = results.flat();
-                    displayNews(allNews);
-                })
-                .catch(error => console.error(error));
-
-            document.querySelector('.loading').style.display = 'none';
+    // Function to fetch and display RSS feed
+    async function fetchRSS(feedUrl) {
+      try {
+        const response = await fetch(feedUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/xml',
+          },
         });
-    </script>
-</body>
 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text(); // Get the response as text (XML)
+        console.log('Raw RSS Feed:', data); // Log the raw XML data to the console
+
+        // Parse the XML data
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(data, "application/xml");
+
+        // Get all the items from the RSS feed
+        const items = xmlDoc.getElementsByTagName("item");
+        const rssContainer = document.getElementById('rss-container');
+
+        // Display the items
+        Array.from(items).forEach(item => {
+          const title = item.querySelector("title") ? item.querySelector("title").textContent : "No title";
+          const link = item.querySelector("link") ? item.querySelector("link").textContent : "#";
+          const description = item.querySelector("description") ? item.querySelector("description").textContent : "No description available.";
+
+          const rssItemDiv = document.createElement('div');
+          rssItemDiv.className = 'rss-item';
+          rssItemDiv.innerHTML = `
+            <h3><a href="${link}" target="_blank">${title}</a></h3>
+            <p>${description}</p>
+            <a href="${link}" target="_blank">Read more</a>
+          `;
+
+          rssContainer.appendChild(rssItemDiv);
+        });
+      } catch (error) {
+        console.error('Fetching error:', error);
+      }
+    }
+
+    // Fetch each RSS feed directly
+    rssFeeds.forEach(feed => fetchRSS(feed));
+
+  </script>
+
+</body>
 </html>
