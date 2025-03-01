@@ -38,11 +38,12 @@
             background-color: #1e1e1e;
             border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
         .card img {
@@ -91,13 +92,14 @@
         }
 
         .expanded-post-content {
-            background-color: #1e1e1e;
+            background: linear-gradient(145deg, #1e1e1e, #2c2c2c);
             padding: 20px;
             border-radius: 10px;
             max-width: 800px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
         .expanded-post-content img {
@@ -124,31 +126,165 @@
             text-decoration: underline;
         }
 
+        .expanded-post-content button {
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .expanded-post-content button:hover {
+            background-color: #0077cc;
+        }
+
+        /* Similar Posts */
+        .similar-posts {
+            margin-top: 20px;
+        }
+
+        .similar-posts h3 {
+            margin-bottom: 10px;
+        }
+
+        .similar-card {
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .similar-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .similar-card h3 {
+            margin: 10px 0;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e90ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
+
+            .expanded-post-content {
+                padding: 10px;
+                max-width: 100%;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #1e1e1e;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #1e90ff;
+        }
+
+        /* Search */
+        #search {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #2c2c2c;
+            color: #e0e0e0;
         }
     </style>
 </head>
 <body class="dark-theme">
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#" data-category="all">All</a></li>
+            <li><a href="#" data-category="ai">AI</a></li>
+            <li><a href="#" data-category="programming">Programming</a></li>
+            <li><a href="#" data-category="gadgets">Gadgets</a></li>
+        </ul>
+        <input type="text" id="search" placeholder="Search news...">
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- News Grid -->
     <div class="grid" id="news-grid">
         <!-- News cards will be injected here by JavaScript -->
     </div>
 
     <script>
-        const rssFeeds = [
-            'https://techcrunch.com/feed/',
-            'https://www.theverge.com/rss/index.xml',
-            // Add more RSS feeds here
-        ];
+        const rssFeeds = {
+            all: [
+                'https://techcrunch.com/feed/',
+                'https://www.theverge.com/rss/index.xml',
+                // Add more RSS feeds here
+            ],
+            ai: ['https://example.com/ai-feed.xml'],
+            programming: ['https://example.com/programming-feed.xml'],
+            gadgets: ['https://example.com/gadgets-feed.xml'],
+        };
 
         const apiUrl = 'https://api.allorigins.win/get?url=';
         const newsGrid = document.getElementById('news-grid');
+        const loading = document.getElementById('loading');
 
-        async function fetchNews() {
-            for (const feed of rssFeeds) {
+        async function fetchNews(category = 'all') {
+            showLoading();
+            newsGrid.innerHTML = ''; // Clear previous news
+            const feeds = rssFeeds[category];
+
+            for (const feed of feeds) {
                 try {
                     const response = await fetch(`${apiUrl}${encodeURIComponent(feed)}`);
                     const data = await response.json();
@@ -156,7 +292,7 @@
                     const xmlDoc = parser.parseFromString(data.contents, "text/xml");
 
                     const items = xmlDoc.querySelectorAll('item');
-                    items.forEach(item => {
+                    items.forEach((item, index) => {
                         const title = item.querySelector('title').textContent;
                         const description = item.querySelector('description').textContent;
                         const link = item.querySelector('link').textContent;
@@ -172,14 +308,96 @@
                                 <a href="${link}" target="_blank">Read More</a>
                             </div>
                         `;
+                        card.addEventListener('click', () => {
+                            showExpandedPost(title, description, image, link, index);
+                        });
                         newsGrid.appendChild(card);
                     });
                 } catch (error) {
                     console.error('Error fetching RSS feed:', error);
                 }
             }
+            hideLoading();
         }
- 
+
+        function showExpandedPost(title, description, image, link, index) {
+            const url = new URL(window.location);
+            url.searchParams.set('post', index);
+            window.history.pushState({}, '', url);
+
+            const expandedPost = document.createElement('div');
+            expandedPost.className = 'expanded-post';
+            expandedPost.innerHTML = `
+                <div class="expanded-post-content">
+                    <img src="${image}" alt="${title}">
+                    <h2>${title}</h2>
+                    <p>${description}</p>
+                    <a href="${link}" target="_blank">Read More</a>
+                    <button onclick="closeExpandedPost()">Close</button>
+                    <div class="similar-posts">
+                        <h3>Similar Posts</h3>
+                        ${getSimilarPosts(index)}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(expandedPost);
+        }
+
+        function closeExpandedPost() {
+            const expandedPost = document.querySelector('.expanded-post');
+            if (expandedPost) {
+                expandedPost.remove();
+            }
+        }
+
+        function getSimilarPosts(currentIndex) {
+            const cards = document.querySelectorAll('.card');
+            const similarPosts = [];
+            for (let i = 0; i < cards.length; i++) {
+                if (i !== currentIndex && similarPosts.length < 3) {
+                    similarPosts.push(cards[i]);
+                }
+            }
+            return similarPosts.map(card => `
+                <div class="similar-card">
+                    <img src="${card.querySelector('img').src}" alt="${card.querySelector('h3').textContent}">
+                    <h3>${card.querySelector('h3').textContent}</h3>
+                    <a href="${card.querySelector('a').href}" target="_blank">Read More</a>
+                </div>
+            `).join('');
+        }
+
+        function showLoading() {
+            loading.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            loading.style.display = 'none';
+        }
+
+        // Event Listeners
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = e.target.getAttribute('data-category');
+                fetchNews(category);
+            });
+        });
+
+        document.getElementById('search').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.card').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                if (title.includes(query) || description.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Initial Load
         fetchNews();
     </script>
 </body>
