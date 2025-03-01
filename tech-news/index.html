@@ -263,7 +263,53 @@
                 'https://techcrunch.com/feed/',
                 'https://www.theverge.com/rss/index.xml',
                 'https://www.wired.com/feed/rss',
-                // Add more RSS feed URLs here...
+                'https://www.engadget.com/rss.xml',
+                'https://www.cnet.com/rss/all/',
+                'https://www.bbc.com/news/technology/rss.xml',
+                'https://feeds.bbci.co.uk/news/technology/rss.xml',
+                'https://www.techradar.com/rss',
+                'https://www.forbes.com/tech/feed/',
+                'https://www.zdnet.com/news/feed/',
+                'https://www.businessinsider.com/tech',
+                'https://www.technologyreview.com/feed/',
+                'https://venturebeat.com/feed/',
+                'https://arstechnica.com/feed/',
+                'https://www.digitaltrends.com/rss',
+                'https://www.tomshardware.com/news/rss',
+                'https://www.techmeme.com/feed.xml',
+                'https://www.slashgear.com/feed/',
+                'https://www.xda-developers.com/feed/',
+                'https://www.cnbc.com/id/100003114/device/rss/',
+                'https://www.dailystar.co.uk/news/weird-news/technology/rss',
+                'https://www.techspot.com/rss',
+                'https://www.gsmarena.com/rss-news.php',
+                'https://www.mashable.com/tech/rss',
+                'https://www.theverge.com/tech/rss',
+                'https://www.recode.net/rss/index.xml',
+                'https://www.theinquirer.net/rss',
+                'https://www.pcworld.com/article/feed.xml',
+                'https://www.laptopmag.com/rss',
+                'https://www.siliconvalley.com/rss',
+                'https://www.9to5mac.com/feed/',
+                'https://www.phonearena.com/feed',
+                'https://www.anandtech.com/rss',
+                'https://www.techcrunch.com/startups/feed/',
+                'https://www.gizmodo.com/rss',
+                'https://www.bloomberg.com/technology/feed',
+                'https://www.scientificamerican.com/technology/feed/',
+                'https://www.space.com/rss',
+                'https://www.huffpost.com/technology/feed/',
+                'https://www.foxnews.com/tech/feed',
+                'https://www.pcmag.com/feed',
+                'https://www.tomshardware.com/feeds',
+                'https://www.neowin.net/rss',
+                'https://www.ibtimes.com/rss',
+                'https://www.cio.com/rss',
+                'https://www.v3.co.uk/feed',
+                'https://www.computerworld.com/news/feed.xml',
+                'https://www.infoworld.com/news/feed.xml',
+                'https://www.cnbc.com/id/100003114/device/rss',
+                'https://www.bbc.com/news/technology/rss.xml'
             ];
 
             let allNews = [];
@@ -304,62 +350,18 @@
                             <a href="${item.link}" class="read-more" target="_blank">Read More</a>
                         </div>
                     `;
-                    card.addEventListener('click', function () {
-                        openExpandedPost(index);
-                    });
                     newsFeedContainer.appendChild(card);
                 });
             }
 
-            function openExpandedPost(index) {
-                const expandedPost = document.querySelector('.expanded-post');
-                const post = allNews[index];
+            Promise.all(rssFeeds.map(fetchRSS))
+                .then(results => {
+                    allNews = results.flat();
+                    displayNews(allNews);
+                })
+                .catch(error => console.error(error));
 
-                const postTitle = expandedPost.querySelector('.post-title');
-                const postDescription = expandedPost.querySelector('.post-description');
-                const similarPostsContainer = expandedPost.querySelector('.similar-posts');
-
-                postTitle.textContent = post.title;
-                postDescription.textContent = post.description;
-
-                // Populate similar posts (for now, just display a few random ones)
-                similarPostsContainer.innerHTML = '';
-                allNews.slice(0, 3).forEach((similarPost) => {
-                    const similarCard = document.createElement('div');
-                    similarCard.classList.add('similar-card');
-                    similarCard.innerHTML = `
-                        <div class="similar-title">${similarPost.title}</div>
-                        <div class="similar-description">${similarPost.description}</div>
-                    `;
-                    similarPostsContainer.appendChild(similarCard);
-                });
-
-                expandedPost.classList.add('open');
-            }
-
-            function closeExpandedPost() {
-                const expandedPost = document.querySelector('.expanded-post');
-                expandedPost.classList.remove('open');
-            }
-
-            document.querySelector('.expanded-post .close-btn').addEventListener('click', closeExpandedPost);
-
-            function fetchAllNews() {
-                let completedRequests = 0;
-
-                rssFeeds.forEach(feedUrl => {
-                    fetchRSS(feedUrl).then(news => {
-                        allNews = [...allNews, ...news];
-                        completedRequests++;
-
-                        if (completedRequests === rssFeeds.length) {
-                            displayNews(allNews);
-                        }
-                    });
-                });
-            }
-
-            fetchAllNews();
+            document.querySelector('.loading').style.display = 'none';
         });
     </script>
 </body>
