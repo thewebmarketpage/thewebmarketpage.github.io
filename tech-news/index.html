@@ -106,6 +106,7 @@
             overflow: hidden;
             box-shadow: var(--card-shadow);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         .news-card:hover {
@@ -196,6 +197,11 @@
             font-size: 16px;
             font-weight: bold;
         }
+
+        .expanded-post .similar-posts .similar-card .similar-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 
@@ -253,7 +259,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // RSS Feed URLs (Replace these with real URLs)
             const rssFeeds = [
                 'https://techcrunch.com/feed/',
                 'https://www.theverge.com/rss/index.xml',
@@ -261,7 +266,8 @@
                 // Add more RSS feed URLs here...
             ];
 
-            // Function to fetch and parse RSS feed
+            let allNews = [];
+
             function fetchRSS(feedUrl) {
                 return fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`)
                     .then(response => response.json())
@@ -269,26 +275,25 @@
                         const parser = new DOMParser();
                         const xml = parser.parseFromString(data.contents, 'application/xml');
                         const items = xml.querySelectorAll('item');
-
                         const news = Array.from(items).map(item => ({
                             title: item.querySelector('title').textContent,
                             description: item.querySelector('description').textContent,
                             link: item.querySelector('link').textContent,
                             image: item.querySelector('media\\:content') ? item.querySelector('media\\:content').getAttribute('url') : 'https://via.placeholder.com/300x180',
+                            pubDate: item.querySelector('pubDate').textContent,
                         }));
-
                         return news;
                     });
             }
 
-            // Function to display news feed
             function displayNews(news) {
                 const newsFeedContainer = document.querySelector('.news-feed');
-                newsFeedContainer.innerHTML = ''; // Clear previous content
+                newsFeedContainer.innerHTML = '';
 
-                news.forEach(item => {
+                news.forEach((item, index) => {
                     const card = document.createElement('div');
                     card.classList.add('news-card');
+                    card.setAttribute('data-index', index);
                     card.innerHTML = `
                         <div class="news-image">
                             <img src="${item.image}" alt="${item.title}">
@@ -299,18 +304,52 @@
                             <a href="${item.link}" class="read-more" target="_blank">Read More</a>
                         </div>
                     `;
+                    card.addEventListener('click', function () {
+                        openExpandedPost(index);
+                    });
                     newsFeedContainer.appendChild(card);
                 });
             }
 
-            // Function to fetch and display all news from the RSS feeds
+            function openExpandedPost(index) {
+                const expandedPost = document.querySelector('.expanded-post');
+                const post = allNews[index];
+
+                const postTitle = expandedPost.querySelector('.post-title');
+                const postDescription = expandedPost.querySelector('.post-description');
+                const similarPostsContainer = expandedPost.querySelector('.similar-posts');
+
+                postTitle.textContent = post.title;
+                postDescription.textContent = post.description;
+
+                // Populate similar posts (for now, just display a few random ones)
+                similarPostsContainer.innerHTML = '';
+                allNews.slice(0, 3).forEach((similarPost) => {
+                    const similarCard = document.createElement('div');
+                    similarCard.classList.add('similar-card');
+                    similarCard.innerHTML = `
+                        <div class="similar-title">${similarPost.title}</div>
+                        <div class="similar-description">${similarPost.description}</div>
+                    `;
+                    similarPostsContainer.appendChild(similarCard);
+                });
+
+                expandedPost.classList.add('open');
+            }
+
+            function closeExpandedPost() {
+                const expandedPost = document.querySelector('.expanded-post');
+                expandedPost.classList.remove('open');
+            }
+
+            document.querySelector('.expanded-post .close-btn').addEventListener('click', closeExpandedPost);
+
             function fetchAllNews() {
-                const allNews = [];
                 let completedRequests = 0;
 
                 rssFeeds.forEach(feedUrl => {
                     fetchRSS(feedUrl).then(news => {
-                        allNews.push(...news);
+                        allNews = [...allNews, ...news];
                         completedRequests++;
 
                         if (completedRequests === rssFeeds.length) {
