@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Dashboard</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        #dashboard {
+            font-size: 22px;
+            font-weight: bold;
+            color: green;
+        }
+        #logout {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Secure Dashboard</h2>
+    <p id="dashboard">✅ Welcome to your secure dashboard.</p>
 
+    <button id="logout">Logout</button>
+
+    <script>
+        // Check if the user is logged in
+        function checkLogin() {
+            const user = sessionStorage.getItem("user");
+            if (!user) {
+                // Redirect to login page if not logged in
+                window.location.href = "index.html";
+            }
+        }
+
+        // Logout function
+        document.getElementById("logout").addEventListener("click", function() {
+            sessionStorage.removeItem("user");
+            window.location.href = "index.html";
+        });
+
+        // Run check on page load
+        checkLogin();
+    </script>
+</body>
+</html>
