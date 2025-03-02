@@ -70,7 +70,7 @@
             margin-bottom: 5px;
         }
 
-        /* Logout Button */
+        /* Buttons */
         .logout-btn, .fetch-btn {
             display: block;
             width: 100%;
@@ -138,6 +138,13 @@
         const url = 'https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/thewebsitemarket/templates/template1.html';
 
         function checkLogin() {
+            const params = new URLSearchParams(window.location.search);
+            
+            // If visiting with a generated link, skip login check
+            if (params.has('id')) {
+                return;
+            }
+
             const user = sessionStorage.getItem("user");
             if (!user) {
                 window.location.href = "login.html";
@@ -205,10 +212,10 @@
                 document.open();
                 document.write(text);
                 document.close();
+            } else {
+                checkLogin();
             }
         };
-
-        checkLogin();
     </script>
 </body>
 </html>
