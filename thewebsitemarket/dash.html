@@ -27,15 +27,16 @@
             padding: 10px;
             border-radius: 8px;
             margin: 10px;
-            display: inline-block;
-            width: 200px;
-            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .template-card:hover {
-            background: #333;
+        .template-card input {
+            width: 20px;
+            height: 20px;
         }
-        .logout-btn, .copy-btn, .delete-btn {
-            background: #e63946;
+        .logout-btn, .copy-btn, .delete-btn, .generate-btn {
+            background: #4CAF50;
             color: white;
             padding: 10px;
             border: none;
@@ -43,10 +44,17 @@
             cursor: pointer;
             margin: 5px;
         }
-        .copy-btn { background: #4CAF50; }
         .delete-btn { background: #FF9800; }
+        .logout-btn { background: #e63946; }
         .generated-pages {
             margin-top: 20px;
+        }
+        .page-name-input {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: none;
         }
     </style>
 </head>
@@ -92,7 +100,7 @@
         function checkLogin() {
             const user = sessionStorage.getItem("user");
             if (!user) {
-                window.location.href = "login.html";
+                window.location.href = "index.html";
                 return;
             }
 
@@ -100,11 +108,16 @@
             document.getElementById("content").innerHTML = `
                 <div class='dashboard-container'>
                     <h2>Welcome, ${userData.name}</h2>
-                    <p>Choose a template to create a page:</p>
-                    <div class="template-card" onclick="generatePage('template1')">
-                        <h3>Template 1</h3>
-                        <p>Basic HTML template</p>
+                    <p>Choose a template and enter a page name:</p>
+                    
+                    <div class="template-card">
+                        <input type="radio" name="template" value="template1">
+                        <label>Template 1</label>
                     </div>
+
+                    <input type="text" id="pageName" class="page-name-input" placeholder="Enter page name">
+                    <button class="generate-btn" onclick="generatePage()">Generate Page</button>
+
                     <div class="generated-pages" id="generatedPages"></div>
                     <button class='logout-btn' onclick='logout()'>Logout</button>
                 </div>
@@ -112,8 +125,20 @@
             loadUserPages(userData.email);
         }
 
-        async function generatePage(templateName) {
+        async function generatePage() {
             const user = JSON.parse(sessionStorage.getItem("user"));
+            const selectedTemplate = document.querySelector('input[name="template"]:checked');
+            const pageName = document.getElementById("pageName").value.trim();
+
+            if (!selectedTemplate) {
+                alert("Please select a template!");
+                return;
+            }
+            if (!pageName) {
+                alert("Please enter a page name!");
+                return;
+            }
+
             const templateUrl = "https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/thewebsitemarket/templates/template1.html";
 
             try {
@@ -123,10 +148,10 @@
                 const pageId = Math.random().toString(36).substr(2, 9);
                 const pageRef = doc(db, "htmlPages", pageId);
 
-                await setDoc(pageRef, { user: user.email, html: htmlContent });
+                await setDoc(pageRef, { user: user.email, pageName, html: htmlContent });
 
                 const userPageRef = collection(db, "userPages");
-                await addDoc(userPageRef, { user: user.email, pageId, url: `${window.location.origin}${window.location.pathname}?page=${pageId}` });
+                await addDoc(userPageRef, { user: user.email, pageId, pageName, url: `${window.location.origin}${window.location.pathname}?page=${pageId}` });
 
                 alert("Page created successfully!");
                 loadUserPages(user.email);
@@ -144,6 +169,7 @@
                 const data = doc.data();
                 pagesHtml += `
                     <div>
+                        <strong>${data.pageName}</strong>
                         <a href="${data.url}" target="_blank">${data.url}</a>
                         <button class='copy-btn' onclick='copyLink("${data.url}")'>Copy</button>
                         <button class='delete-btn' onclick='deletePage("${doc.id}")'>Delete</button>
@@ -167,7 +193,7 @@
 
         function logout() {
             sessionStorage.removeItem("user");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         }
 
         window.generatePage = generatePage;
