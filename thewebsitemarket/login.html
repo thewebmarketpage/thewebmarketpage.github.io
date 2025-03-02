@@ -3,24 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Login Secure Dashboard</title>
+    <title>Login with Google</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
         #dashboard {
             display: none;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: green;
-            margin-top: 20px;
         }
-        body{background-color: black;}h2{color: white;}
     </style>
 </head>
 <body>
     <h2>Login with Google</h2>
 
     <div id="g_id_onload"
-         data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
+         data-client_id="YOUR_CLIENT_ID"
          data-context="signin"
          data-ux_mode="popup"
          data-callback="handleCredentialResponse"
@@ -29,7 +32,7 @@
 
     <div class="g_id_signin" data-type="standard"></div>
 
-    <div id="dashboard">✅ Your Dashboard - This is a secure place.</div>
+    <div id="dashboard">✅ Logged in! Redirecting...</div>
 
     <script>
         function handleCredentialResponse(response) {
@@ -40,8 +43,13 @@
             // Store login state
             sessionStorage.setItem("user", JSON.stringify(userData));
 
-            // Show dashboard
-            showDashboard();
+            // Show dashboard message
+            document.getElementById("dashboard").style.display = "block";
+
+            // Redirect to the secure dashboard
+            setTimeout(() => {
+                window.location.href = "dash.html";
+            }, 2000);
         }
 
         function parseJwt(token) {
@@ -50,15 +58,12 @@
             return JSON.parse(atob(base64));
         }
 
-        function showDashboard() {
-            const user = sessionStorage.getItem("user");
-            if (user) {
-                document.getElementById("dashboard").style.display = "block";
+        // If already logged in, go to the dashboard
+        window.onload = function() {
+            if (sessionStorage.getItem("user")) {
+                window.location.href = "dash.html";
             }
-        }
-
-        // Show dashboard if user is already logged in
-        window.onload = showDashboard;
+        };
     </script>
 </body>
 </html>
