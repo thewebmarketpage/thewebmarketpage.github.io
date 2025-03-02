@@ -6,39 +6,86 @@
     <title>Secure Dashboard</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        body {
+        /* General styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
         }
+
+        body {
+            background-color: #121212;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #1DB954;
+        }
+
         #dashboard {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
-            color: green;
-        }
-        #user-info {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f3f3f3;
-            display: inline-block;
+            background: #1DB954;
+            padding: 10px 20px;
             border-radius: 10px;
-            text-align: center;
+            margin-bottom: 20px;
+            display: inline-block;
         }
+
+        /* User info box */
+        #user-info {
+            background: #222;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 255, 100, 0.2);
+            text-align: center;
+            width: 300px;
+            transition: transform 0.3s ease;
+        }
+
+        #user-info:hover {
+            transform: scale(1.05);
+        }
+
         #user-info img {
             border-radius: 50%;
             width: 100px;
             height: 100px;
             margin-bottom: 10px;
+            border: 3px solid #1DB954;
         }
-        #logout {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: red;
-            color: white;
-            border: none;
-            cursor: pointer;
+
+        #user-info p {
+            margin: 10px 0;
             font-size: 16px;
         }
+
+        /* Logout button */
+        #logout {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: #ff4747;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        #logout:hover {
+            background: #ff2525;
+        }
+
     </style>
 </head>
 <body>
