@@ -37,12 +37,50 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        .save-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #txt-doc {
+            margin-top: 20px;
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
     <div id="content"></div>
 
     <script type="module">
+        // URL to store and edit JSON data
+        const dataUrl = "https://writeurl.com/xziBYP23MbqE9fhK";
+
+        // Function to fetch the data
+        async function fetchData() {
+            const response = await fetch(dataUrl);
+            const data = await response.json();
+            return data;
+        }
+
+        // Function to update the data
+        async function updateData(data) {
+            const response = await fetch(dataUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+            return response.json();
+        }
+
         // Check if user is logged in
         function checkLogin() {
             const user = sessionStorage.getItem("user");
@@ -60,9 +98,43 @@
                         <p><strong>Email:</strong> ${userData.email}</p>
                         <p><strong>Account Created:</strong> ${new Date(userData.createdAt).toLocaleDateString()}</p>
                     </div>
+                    <h3>Edit Your Data</h3>
+                    <div id="txt-doc" class="ql-container ql-snow ql-disabled">
+                        <div class="ql-editor" contenteditable="true">
+                            <p>[]</p>
+                        </div>
+                    </div>
+                    <button class="save-btn" onclick="saveData()">Save Data</button>
                     <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             `;
+            loadUserData();
+        }
+
+        // Load and display user data from the external document
+        async function loadUserData() {
+            const data = await fetchData();
+            const user = JSON.parse(sessionStorage.getItem("user"));
+
+            if (data && data.content) {
+                const docContent = data.content.replace("[]", JSON.stringify(user, null, 2));
+                document.querySelector('.ql-editor').innerHTML = docContent;
+            }
+        }
+
+        // Save the edited data
+        async function saveData() {
+            const editedContent = document.querySelector('.ql-editor').innerText.trim();
+            const userData = JSON.parse(sessionStorage.getItem("user"));
+
+            // Ensure data is in proper format before saving
+            const newData = {
+                content: editedContent || `{"name": "${userData.name}", "email": "${userData.email}", "createdAt": "${userData.createdAt}"}`
+            };
+
+            // Update data on the external URL
+            await updateData(newData);
+            alert("Data saved successfully!");
         }
 
         function logout() {
