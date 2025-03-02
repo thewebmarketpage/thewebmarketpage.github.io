@@ -56,40 +56,27 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .form-group .page-url-group {
-            display: flex;
-            gap: 10px;
-        }
-        .form-group .page-url-group input {
-            width: 80%;
-        }
-        .form-group .page-url-group button {
-            width: 20%;
-        }
     </style>
 </head>
 <body>
     <div id="content"></div>
 
-    <script type="module">
+    <script>
         const dataUrl = "https://notepad.pw/G5BIhexqw5inkZwYbDFH";
 
         async function fetchData() {
             const response = await fetch(dataUrl);
-            const data = await response.json();
-            return data;
+            return response.json();
         }
 
         async function updateData(data) {
-            const response = await fetch(dataUrl, {
+            await fetch(dataUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
-            return response.json();
         }
 
-        // Check if user is logged in
         function checkLogin() {
             const user = sessionStorage.getItem("user");
             if (!user) {
@@ -104,69 +91,66 @@
                     <p>Edit your user data below:</p>
                     
                     <form id="userForm">
-                        <!-- User ID -->
                         <div class="form-group">
                             <label for="user_id">User ID</label>
-                            <input type="text" id="user_id" value="" readonly />
+                            <input type="text" id="user_id" readonly />
                         </div>
 
-                        <!-- User Balance -->
                         <div class="form-group">
                             <label for="user_balance">User Balance</label>
-                            <input type="number" id="user_balance" value="" step="0.01" />
+                            <input type="number" id="user_balance" step="0.01" />
                         </div>
 
-                        <!-- User Count Pages -->
                         <div class="form-group">
                             <label for="user_count_pages">User Page Count</label>
-                            <input type="number" id="user_count_pages" value="" readonly />
+                            <input type="number" id="user_count_pages" readonly />
                         </div>
 
-                        <!-- User Pages -->
                         <div class="form-group">
                             <label>User Pages</label>
                             <div id="userPagesContainer"></div>
                             <button type="button" id="addPageBtn">Add New Page</button>
                         </div>
 
-                        <!-- User Billing History -->
                         <div class="form-group">
                             <label>User Billing History</label>
                             <div id="billingHistoryContainer"></div>
                             <button type="button" id="addPaymentBtn">Add New Payment</button>
                         </div>
 
-                        <button type="submit" class="form-group">Save Changes</button>
+                        <button type="submit">Save Changes</button>
                     </form>
                     
-                    <button class='logout-btn' onclick='logout()'>Logout</button>
+                    <button class='logout-btn' id="logoutBtn">Logout</button>
                 </div>
             `;
+
             loadUserData(userData.email);
+            setupEventListeners();
         }
 
         async function loadUserData(email) {
             const data = await fetchData();
             const user = data.users[email];
+
             if (user) {
-                // Load User Info
                 document.getElementById("user_id").value = user.user_id;
                 document.getElementById("user_balance").value = user.user_balance;
                 document.getElementById("user_count_pages").value = user.user_count_pages;
 
-                // Load Pages
                 const userPagesContainer = document.getElementById("userPagesContainer");
+                userPagesContainer.innerHTML = "";
                 user.user_pages.forEach((page, index) => {
                     userPagesContainer.innerHTML += `
                         <div class="page-url-group" id="page_${index}">
                             <input type="text" class="page_url" value="${page.page_url}" />
-                            <button type="button" class="deletePageBtn" onclick="deletePage(${index})">Delete</button>
+                            <button type="button" onclick="deletePage(${index})">Delete</button>
                         </div>
                     `;
                 });
 
-                // Load Billing History
                 const billingHistoryContainer = document.getElementById("billingHistoryContainer");
+                billingHistoryContainer.innerHTML = "";
                 user.user_billing_history.forEach((payment, index) => {
                     billingHistoryContainer.innerHTML += `
                         <div class="payment-group" id="payment_${index}">
@@ -174,77 +158,59 @@
                             <input type="number" class="amount_paid" value="${payment.amount_paid}" step="0.01" />
                             <input type="date" class="payment_date" value="${payment.payment_date}" />
                             <input type="text" class="payment_method" value="${payment.payment_method}" />
-                            <button type="button" class="deletePaymentBtn" onclick="deletePayment(${index})">Delete</button>
+                            <button type="button" onclick="deletePayment(${index})">Delete</button>
                         </div>
                     `;
                 });
             }
         }
 
-        function logout() {
-            sessionStorage.removeItem("user");
-            window.location.href = "index.html";
+        function setupEventListeners() {
+            document.getElementById("addPageBtn").addEventListener("click", function () {
+                const userPagesContainer = document.getElementById("userPagesContainer");
+                const newIndex = userPagesContainer.children.length;
+                const newPage = document.createElement("div");
+                newPage.className = "page-url-group";
+                newPage.innerHTML = `
+                    <input type="text" class="page_url" placeholder="Enter new page URL" />
+                    <button type="button" onclick="deletePage(${newIndex})">Delete</button>
+                `;
+                userPagesContainer.appendChild(newPage);
+            });
+
+            document.getElementById("addPaymentBtn").addEventListener("click", function () {
+                const billingHistoryContainer = document.getElementById("billingHistoryContainer");
+                const newIndex = billingHistoryContainer.children.length;
+                const newPayment = document.createElement("div");
+                newPayment.className = "payment-group";
+                newPayment.innerHTML = `
+                    <input type="text" class="payment_id" placeholder="Payment ID" />
+                    <input type="number" class="amount_paid" placeholder="Amount Paid" step="0.01" />
+                    <input type="date" class="payment_date" />
+                    <input type="text" class="payment_method" placeholder="Payment Method" />
+                    <button type="button" onclick="deletePayment(${newIndex})">Delete</button>
+                `;
+                billingHistoryContainer.appendChild(newPayment);
+            });
+
+            document.getElementById("userForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+                alert("Changes saved successfully!");
+            });
+
+            document.getElementById("logoutBtn").addEventListener("click", function () {
+                sessionStorage.removeItem("user");
+                window.location.href = "index.html";
+            });
         }
 
-        document.getElementById("addPageBtn").addEventListener("click", function() {
-            const newPageGroup = document.createElement("div");
-            newPageGroup.className = "page-url-group";
-            newPageGroup.innerHTML = `
-                <input type="text" class="page_url" placeholder="Enter new page URL" />
-                <button type="button" class="deletePageBtn">Delete</button>
-            `;
-            document.getElementById("userPagesContainer").appendChild(newPageGroup);
-        });
-
-        document.getElementById("addPaymentBtn").addEventListener("click", function() {
-            const newPaymentGroup = document.createElement("div");
-            newPaymentGroup.className = "payment-group";
-            newPaymentGroup.innerHTML = `
-                <input type="text" class="payment_id" placeholder="Payment ID" />
-                <input type="number" class="amount_paid" placeholder="Amount Paid" step="0.01" />
-                <input type="date" class="payment_date" />
-                <input type="text" class="payment_method" placeholder="Payment Method" />
-                <button type="button" class="deletePaymentBtn">Delete</button>
-            `;
-            document.getElementById("billingHistoryContainer").appendChild(newPaymentGroup);
-        });
-
         function deletePage(index) {
-            const pageContainer = document.getElementById(`page_${index}`);
-            pageContainer.remove();
+            document.getElementById(`page_${index}`).remove();
         }
 
         function deletePayment(index) {
-            const paymentContainer = document.getElementById(`payment_${index}`);
-            paymentContainer.remove();
+            document.getElementById(`payment_${index}`).remove();
         }
-
-        document.getElementById("userForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-
-            const userData = JSON.parse(sessionStorage.getItem("user"));
-            const data = await fetchData();
-            const user = data.users[userData.email];
-
-            if (user) {
-                // Update user info
-                user.user_balance = parseFloat(document.getElementById("user_balance").value);
-                user.user_pages = Array.from(document.getElementsByClassName("page_url")).map(input => ({
-                    page_id: `page_${Math.random().toString(36).substr(2, 9)}`,
-                    page_url: input.value
-                }));
-                user.user_billing_history = Array.from(document.getElementsByClassName("payment-group")).map(payment => ({
-                    payment_id: payment.querySelector(".payment_id").value,
-                    amount_paid: parseFloat(payment.querySelector(".amount_paid").value),
-                    payment_date: payment.querySelector(".payment_date").value,
-                    payment_method: payment.querySelector(".payment_method").value
-                }));
-
-                user.user_count_pages = user.user_pages.length;
-                await updateData(data);
-                alert("Changes saved successfully!");
-            }
-        });
 
         window.onload = checkLogin;
     </script>
