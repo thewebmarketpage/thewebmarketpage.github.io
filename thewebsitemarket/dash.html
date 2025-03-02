@@ -219,7 +219,7 @@
             paymentContainer.remove();
         }
 
-        document.getElementById("userForm").addEventListener("submit", function(event) {
+        document.getElementById("userForm").addEventListener("submit", async function(event) {
             event.preventDefault();
 
             const userData = JSON.parse(sessionStorage.getItem("user"));
@@ -233,7 +233,7 @@
                     page_id: `page_${Math.random().toString(36).substr(2, 9)}`,
                     page_url: input.value
                 }));
-                user.user_billing_history = Array.from(document.getElementsByClassName("payment_group")).map(payment => ({
+                user.user_billing_history = Array.from(document.getElementsByClassName("payment-group")).map(payment => ({
                     payment_id: payment.querySelector(".payment_id").value,
                     amount_paid: parseFloat(payment.querySelector(".amount_paid").value),
                     payment_date: payment.querySelector(".payment_date").value,
