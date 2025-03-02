@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Dashboard</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,28 +22,31 @@
             width: 80%;
             margin: 20px auto;
         }
-        .logout-btn, .generate-btn {
+        .template-card {
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+            cursor: pointer;
+        }
+        .template-card:hover {
+            background: #333;
+        }
+        .logout-btn, .copy-btn, .delete-btn {
             background: #e63946;
             color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px;
+            margin: 5px;
         }
-        textarea {
-            width: 100%;
-            height: 150px;
-            margin-top: 10px;
-            padding: 10px;
-            background: #222;
-            color: white;
-            border: 1px solid #555;
-        }
-        .generated-link {
-            margin-top: 10px;
-            color: #4CAF50;
-            font-weight: bold;
+        .copy-btn { background: #4CAF50; }
+        .delete-btn { background: #FF9800; }
+        .generated-pages {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -53,7 +56,7 @@
     <script type="module">
         // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -74,7 +77,7 @@
         const pageId = urlParams.get('page');
 
         if (pageId) {
-            // Fetch stored HTML and render it
+            // Render stored HTML page for visitors
             getDoc(doc(db, "htmlPages", pageId)).then(snapshot => {
                 if (snapshot.exists()) {
                     document.body.innerHTML = snapshot.data().html;
@@ -89,7 +92,7 @@
         function checkLogin() {
             const user = sessionStorage.getItem("user");
             if (!user) {
-                window.location.href = "login.html";
+                window.location.href = "index.html";
                 return;
             }
 
@@ -97,36 +100,79 @@
             document.getElementById("content").innerHTML = `
                 <div class='dashboard-container'>
                     <h2>Welcome, ${userData.name}</h2>
-                    <textarea id="htmlContent" placeholder="Enter your HTML code here..."></textarea>
-                    <button class='generate-btn' onclick='generatePage()'>Generate Page</button>
-                    <p class='generated-link' id="generatedLink"></p>
+                    <p>Choose a template to create a page:</p>
+                    <div class="template-card" onclick="generatePage('template1')">
+                        <h3>Template 1</h3>
+                        <p>Basic HTML template</p>
+                    </div>
+                    <div class="generated-pages" id="generatedPages"></div>
                     <button class='logout-btn' onclick='logout()'>Logout</button>
                 </div>
             `;
+            loadUserPages(userData.email);
         }
 
-        async function generatePage() {
+        async function generatePage(templateName) {
             const user = JSON.parse(sessionStorage.getItem("user"));
-            const htmlContent = document.getElementById("htmlContent").value;
-            if (!htmlContent.trim()) {
-                alert("Please enter some HTML content.");
-                return;
-            }
+            const templateUrl = "https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/thewebsitemarket/templates/template1.html";
 
-            const pageId = Math.random().toString(36).substr(2, 9);
-            await setDoc(doc(db, "htmlPages", pageId), {
-                user: user.email,
-                html: htmlContent
+            try {
+                const response = await fetch(templateUrl);
+                const htmlContent = await response.text();
+
+                const pageId = Math.random().toString(36).substr(2, 9);
+                const pageRef = doc(db, "htmlPages", pageId);
+
+                await setDoc(pageRef, { user: user.email, html: htmlContent });
+
+                const userPageRef = collection(db, "userPages");
+                await addDoc(userPageRef, { user: user.email, pageId, url: `${window.location.origin}${window.location.pathname}?page=${pageId}` });
+
+                alert("Page created successfully!");
+                loadUserPages(user.email);
+            } catch (error) {
+                console.error("Error fetching template:", error);
+            }
+        }
+
+        async function loadUserPages(email) {
+            const userPagesQuery = query(collection(db, "userPages"), where("user", "==", email));
+            const querySnapshot = await getDocs(userPagesQuery);
+
+            let pagesHtml = "<h3>Your Pages:</h3>";
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                pagesHtml += `
+                    <div>
+                        <a href="${data.url}" target="_blank">${data.url}</a>
+                        <button class='copy-btn' onclick='copyLink("${data.url}")'>Copy</button>
+                        <button class='delete-btn' onclick='deletePage("${doc.id}")'>Delete</button>
+                    </div>
+                `;
             });
 
-            const generatedUrl = `${window.location.origin}${window.location.pathname}?page=${pageId}`;
-            document.getElementById("generatedLink").innerHTML = `Generated Page: <a href="${generatedUrl}" target="_blank">${generatedUrl}</a>`;
+            document.getElementById("generatedPages").innerHTML = pagesHtml;
+        }
+
+        async function deletePage(docId) {
+            await deleteDoc(doc(db, "userPages", docId));
+            alert("Page deleted.");
+            checkLogin();
+        }
+
+        function copyLink(url) {
+            navigator.clipboard.writeText(url);
+            alert("Copied to clipboard!");
         }
 
         function logout() {
             sessionStorage.removeItem("user");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         }
+
+        window.generatePage = generatePage;
+        window.copyLink = copyLink;
+        window.deletePage = deletePage;
     </script>
 </body>
 </html>
