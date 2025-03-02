@@ -3,32 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Render</title>
+    <title>Secure Dashboard</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>
     <script src="https://cdn.jsdelivr.net/npm/twind"></script>
     <style>
-        body { font-family: sans-serif; }
-        textarea { width: 100%; height: 200px; }
-        iframe { width: 100%; height: 100vh; border: none; }
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Page Styling */
+        body {
+            background-color: #111;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Dashboard Card */
+        .dashboard-container {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .dashboard-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        /* User Info */
+        .user-info img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #3a3a3a;
+            margin-bottom: 15px;
+        }
+
+        .user-info p {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        /* Logout Button */
+        .logout-btn, .fetch-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn {
+            background: #e63946;
+            color: white;
+        }
+
+        .logout-btn:hover {
+            background: #c92b38;
+        }
+
+        .fetch-btn {
+            background: #1d72b8;
+            color: white;
+        }
+
+        .fetch-btn:hover {
+            background: #155a8a;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+
         .hidden { display: none; }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .dashboard-container {
+                padding: 30px;
+            }
+        }
     </style>
 </head>
-<body id="container" class="bg-gray-900 text-white flex flex-col items-center p-4">
-    <h1 class="text-2xl font-bold">Fetch and Render HTML</h1>
-    <button class="bg-blue-500 px-4 py-2 rounded mt-4" onclick="fetchAndRender()">Fetch & Render</button>
-    <textarea id="htmlContent" class="mt-4 hidden"></textarea>
-    <p id="shareLink" class="mt-4 text-sm text-gray-300 hidden"></p>
-    <iframe id="preview" class="mt-4"></iframe>
+<body id="container">
+    <div class="dashboard-container">
+        <h2>Secure Dashboard</h2>
+        <p>Welcome to your private space.</p>
+
+        <div class="user-info">
+            <img id="user-pic" src="" alt="Profile Picture">
+            <p><strong>Name:</strong> <span id="user-name"></span></p>
+            <p><strong>Email:</strong> <span id="user-email"></span></p>
+        </div>
+
+        <button class="fetch-btn" onclick="fetchAndRender()">Fetch & Render HTML</button>
+        <button class="logout-btn" id="logout">Logout</button>
+    </div>
+
+    <iframe id="preview" class="hidden"></iframe>
 
     <script>
         const url = 'https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/thewebsitemarket/templates/template1.html';
+
+        function checkLogin() {
+            const user = sessionStorage.getItem("user");
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+            const userData = JSON.parse(user);
+            document.getElementById("user-name").textContent = userData.name;
+            document.getElementById("user-email").textContent = userData.email;
+            document.getElementById("user-pic").src = userData.picture;
+        }
+
+        document.getElementById("logout").addEventListener("click", function() {
+            sessionStorage.removeItem("user");
+            window.location.href = "index.html";
+        });
 
         async function fetchAndRender() {
             try {
                 let response = await fetch(url);
                 let text = await response.text();
-
-                // Find the wanted text
+                
                 let startIndex = text.indexOf('<!DOCTYPE html>');
                 if (startIndex !== -1) {
                     text = text.substring(startIndex);
@@ -37,39 +167,33 @@
                     return;
                 }
 
-                // Remove "create folder" form if present
                 text = text.replace(/<form[^>]*>[\s\S]*?create folder[\s\S]*?<\/form>/gi, '');
 
-                document.getElementById('htmlContent').value = text;
-                renderHTML(text);
-                
-                // Generate a unique URL
-                let id = btoa(text).substring(0, 10); // Short hash
+                let id = btoa(text).substring(0, 10);
                 let shareURL = `${window.location.origin}${window.location.pathname}?id=${id}`;
                 history.pushState(null, "", shareURL);
-                document.getElementById('shareLink').textContent = `Shareable Link: ${shareURL}`;
-                document.getElementById('shareLink').classList.remove('hidden');
+
+                let iframe = document.getElementById('preview');
+                let doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write(text);
+                doc.close();
+
+                iframe.classList.remove("hidden");
+                document.querySelector(".dashboard-container").classList.add("hidden");
             } catch (error) {
                 console.error('Error fetching:', error);
                 alert('Failed to fetch content.');
             }
         }
 
-        function renderHTML(content) {
-            let iframe = document.getElementById('preview').contentWindow.document;
-            iframe.open();
-            iframe.write(content);
-            iframe.close();
-        }
-
-        // Check if page loaded with a unique ID and render
         window.onload = async function() {
             const params = new URLSearchParams(window.location.search);
             if (params.has('id')) {
-                document.getElementById('container').classList.add('hidden'); // Hide UI
-                document.body.style.background = "white"; // Ensure white background
-                document.body.style.margin = "0"; // Remove default margin
-                
+                document.getElementById('container').classList.add('hidden');
+                document.body.style.background = "white";
+                document.body.style.margin = "0";
+
                 let response = await fetch(url);
                 let text = await response.text();
 
@@ -78,12 +202,13 @@
                     text = text.substring(startIndex);
                 }
 
-                // Remove all body content and replace with fetched HTML
                 document.open();
                 document.write(text);
                 document.close();
             }
         };
+
+        checkLogin();
     </script>
 </body>
 </html>
