@@ -16,6 +16,20 @@
             font-weight: bold;
             color: green;
         }
+        #user-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f3f3f3;
+            display: inline-block;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #user-info img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
         #logout {
             margin-top: 20px;
             padding: 10px 20px;
@@ -31,22 +45,35 @@
     <h2>Secure Dashboard</h2>
     <p id="dashboard">✅ Welcome to your secure dashboard.</p>
 
+    <div id="user-info">
+        <img id="user-pic" src="" alt="Profile Picture">
+        <p><strong>Name:</strong> <span id="user-name"></span></p>
+        <p><strong>Email:</strong> <span id="user-email"></span></p>
+    </div>
+
     <button id="logout">Logout</button>
 
     <script>
-        // Check if the user is logged in
         function checkLogin() {
             const user = sessionStorage.getItem("user");
             if (!user) {
-                // Redirect to login page if not logged in
-                window.location.href = "login.html";
+                window.location.href = "index.html";
+                return;
             }
+
+            // Parse user data
+            const userData = JSON.parse(user);
+
+            // Display user info
+            document.getElementById("user-name").textContent = userData.name;
+            document.getElementById("user-email").textContent = userData.email;
+            document.getElementById("user-pic").src = userData.picture;
         }
 
         // Logout function
         document.getElementById("logout").addEventListener("click", function() {
             sessionStorage.removeItem("user");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         });
 
         // Run check on page load
