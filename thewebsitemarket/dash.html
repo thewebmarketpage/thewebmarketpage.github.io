@@ -28,16 +28,7 @@
             border-radius: 8px;
             margin: 10px 0;
         }
-        .logout-btn {
-            background: #e63946;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .save-btn {
+        .logout-btn, .save-btn {
             background: #4CAF50;
             color: white;
             padding: 10px;
@@ -46,14 +37,15 @@
             cursor: pointer;
             margin-top: 20px;
         }
-        #txt-doc {
-            margin-top: 20px;
-            background: #333;
+        .save-btn {
+            background: #008CBA;
+        }
+        .input-field {
+            margin: 10px 0;
             padding: 10px;
+            width: 80%;
             border-radius: 5px;
-            min-height: 200px;
-            max-height: 400px;
-            overflow-y: auto;
+            border: none;
         }
     </style>
 </head>
@@ -64,7 +56,7 @@
         // URL to store and edit JSON data
         const dataUrl = "https://writeurl.com/xziBYP23MbqE9fhK";
 
-        // Function to fetch the data
+        // Function to fetch the current data
         async function fetchData() {
             const response = await fetch(dataUrl);
             const data = await response.json();
@@ -99,44 +91,62 @@
                         <p><strong>Account Created:</strong> ${new Date(userData.createdAt).toLocaleDateString()}</p>
                     </div>
                     <h3>Edit Your Data</h3>
-                    <div id="txt-doc" class="ql-container ql-snow ql-disabled">
-                        <div class="ql-editor" contenteditable="true">
-                            <p>[]</p>
-                        </div>
+                    <div>
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" class="input-field" value="${userData.name}" placeholder="Enter username">
+                    </div>
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" class="input-field" value="${userData.email}" placeholder="Enter email">
+                    </div>
+                    <div>
+                        <label for="createdAt">Account Created At:</label>
+                        <input type="datetime-local" id="createdAt" class="input-field" value="${new Date(userData.createdAt).toISOString().slice(0, 16)}">
                     </div>
                     <button class="save-btn" onclick="saveData()">Save Data</button>
                     <button class="logout-btn" onclick="logout()">Logout</button>
+                    <div id="message"></div>
                 </div>
             `;
-            loadUserData();
         }
 
-        // Load and display user data from the external document
-        async function loadUserData() {
-            const data = await fetchData();
-            const user = JSON.parse(sessionStorage.getItem("user"));
+        // Generate JSON format from form inputs
+        function generateJsonData() {
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const createdAt = document.getElementById("createdAt").value.trim();
 
-            if (data && data.content) {
-                const docContent = data.content.replace("[]", JSON.stringify(user, null, 2));
-                document.querySelector('.ql-editor').innerHTML = docContent;
+            if (!username || !email || !createdAt) {
+                alert("Please fill in all fields!");
+                return null;
             }
-        }
 
-        // Save the edited data
-        async function saveData() {
-            const editedContent = document.querySelector('.ql-editor').innerText.trim();
-            const userData = JSON.parse(sessionStorage.getItem("user"));
-
-            // Ensure data is in proper format before saving
             const newData = {
-                content: editedContent || `{"name": "${userData.name}", "email": "${userData.email}", "createdAt": "${userData.createdAt}"}`
+                "username": username,
+                "id": "user" + Math.random().toString(36).substr(2, 9), // Generate a random ID
+                "createdAt": createdAt,
+                "email": email
             };
-
-            // Update data on the external URL
-            await updateData(newData);
-            alert("Data saved successfully!");
+            return newData;
         }
 
+        // Save the generated JSON data to the URL
+        async function saveData() {
+            const newData = generateJsonData();
+            if (!newData) return;
+
+            const data = await fetchData();
+            if (!data.users) {
+                data.users = [];
+            }
+            data.users.push(newData); // Add the new user data
+
+            // Save the updated data
+            await updateData(data);
+            document.getElementById("message").innerText = "Data saved successfully!";
+        }
+
+        // Logout and clear session
         function logout() {
             sessionStorage.removeItem("user");
             window.location.href = "index.html";
