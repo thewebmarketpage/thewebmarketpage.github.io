@@ -5,217 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Dashboard</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>
-    <script src="https://cdn.jsdelivr.net/npm/twind"></script>
-    <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
 
-        /* Page Styling */
+    <style>
         body {
-            background-color: #111;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
             text-align: center;
+            margin: 0;
             padding: 20px;
         }
-
-        /* Dashboard Card */
         .dashboard-container {
+            padding: 20px;
             background: #1a1a1a;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
+            border-radius: 10px;
+            width: 80%;
+            margin: 20px auto;
         }
-
-        .dashboard-container:hover {
-            transform: translateY(-5px);
-        }
-
-        h2 {
-            font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        p {
-            font-size: 16px;
-            opacity: 0.8;
-            margin-bottom: 20px;
-        }
-
-        /* User Info */
-        .user-info img {
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            border: 3px solid #3a3a3a;
-            margin-bottom: 15px;
-        }
-
-        .user-info p {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        /* Buttons */
-        .logout-btn, .fetch-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .logout-btn {
+        .logout-btn, .generate-btn {
             background: #e63946;
             color: white;
-        }
-
-        .logout-btn:hover {
-            background: #c92b38;
-        }
-
-        .fetch-btn {
-            background: #1d72b8;
-            color: white;
-        }
-
-        .fetch-btn:hover {
-            background: #155a8a;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100vh;
+            padding: 10px;
             border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
         }
-
-        .hidden { display: none; }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .dashboard-container {
-                padding: 30px;
-            }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #222;
+            color: white;
+            border: 1px solid #555;
+        }
+        .generated-link {
+            margin-top: 10px;
+            color: #4CAF50;
+            font-weight: bold;
         }
     </style>
 </head>
-<body id="container">
-    <div class="dashboard-container">
-        <h2>Secure Dashboard</h2>
-        <p>Welcome to your private space.</p>
+<body>
+    <div id="content"></div>
 
-        <div class="user-info">
-            <img id="user-pic" src="" alt="Profile Picture">
-            <p><strong>Name:</strong> <span id="user-name"></span></p>
-            <p><strong>Email:</strong> <span id="user-email"></span></p>
-        </div>
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-        <button class="fetch-btn" onclick="fetchAndRender()">Fetch & Render HTML</button>
-        <button class="logout-btn" id="logout">Logout</button>
-    </div>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaUly2DkXD9t9XDVVSjM_f524IVufsnbc",
+            authDomain: "myalexmarkfor.firebaseapp.com",
+            projectId: "myalexmarkfor",
+            storageBucket: "myalexmarkfor.firebasestorage.app",
+            messagingSenderId: "671468550432",
+            appId: "1:671468550432:web:85b63218abfbf41f8d7f45",
+            measurementId: "G-SBNRDH95HR"
+        };
 
-    <iframe id="preview" class="hidden"></iframe>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    <script>
-        const url = 'https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/thewebsitemarket/templates/template1.html';
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageId = urlParams.get('page');
+
+        if (pageId) {
+            // Fetch stored HTML and render it
+            getDoc(doc(db, "htmlPages", pageId)).then(snapshot => {
+                if (snapshot.exists()) {
+                    document.body.innerHTML = snapshot.data().html;
+                } else {
+                    document.body.innerHTML = "<h2>Page not found</h2>";
+                }
+            });
+        } else {
+            checkLogin();
+        }
 
         function checkLogin() {
-            const params = new URLSearchParams(window.location.search);
-            
-            // If visiting with a generated link, skip login check
-            if (params.has('id')) {
-                return;
-            }
-
             const user = sessionStorage.getItem("user");
             if (!user) {
                 window.location.href = "login.html";
                 return;
             }
+
             const userData = JSON.parse(user);
-            document.getElementById("user-name").textContent = userData.name;
-            document.getElementById("user-email").textContent = userData.email;
-            document.getElementById("user-pic").src = userData.picture;
+            document.getElementById("content").innerHTML = `
+                <div class='dashboard-container'>
+                    <h2>Welcome, ${userData.name}</h2>
+                    <textarea id="htmlContent" placeholder="Enter your HTML code here..."></textarea>
+                    <button class='generate-btn' onclick='generatePage()'>Generate Page</button>
+                    <p class='generated-link' id="generatedLink"></p>
+                    <button class='logout-btn' onclick='logout()'>Logout</button>
+                </div>
+            `;
         }
 
-        document.getElementById("logout").addEventListener("click", function() {
+        async function generatePage() {
+            const user = JSON.parse(sessionStorage.getItem("user"));
+            const htmlContent = document.getElementById("htmlContent").value;
+            if (!htmlContent.trim()) {
+                alert("Please enter some HTML content.");
+                return;
+            }
+
+            const pageId = Math.random().toString(36).substr(2, 9);
+            await setDoc(doc(db, "htmlPages", pageId), {
+                user: user.email,
+                html: htmlContent
+            });
+
+            const generatedUrl = `${window.location.origin}${window.location.pathname}?page=${pageId}`;
+            document.getElementById("generatedLink").innerHTML = `Generated Page: <a href="${generatedUrl}" target="_blank">${generatedUrl}</a>`;
+        }
+
+        function logout() {
             sessionStorage.removeItem("user");
             window.location.href = "login.html";
-        });
-
-        async function fetchAndRender() {
-            try {
-                let response = await fetch(url);
-                let text = await response.text();
-                
-                let startIndex = text.indexOf('<!DOCTYPE html>');
-                if (startIndex !== -1) {
-                    text = text.substring(startIndex);
-                } else {
-                    alert('Wanted text not found.');
-                    return;
-                }
-
-                text = text.replace(/<form[^>]*>[\s\S]*?create folder[\s\S]*?<\/form>/gi, '');
-
-                let id = btoa(text).substring(0, 10);
-                let shareURL = `${window.location.origin}${window.location.pathname}?id=${id}`;
-                history.pushState(null, "", shareURL);
-
-                let iframe = document.getElementById('preview');
-                let doc = iframe.contentWindow.document;
-                doc.open();
-                doc.write(text);
-                doc.close();
-
-                iframe.classList.remove("hidden");
-                document.querySelector(".dashboard-container").classList.add("hidden");
-            } catch (error) {
-                console.error('Error fetching:', error);
-                alert('Failed to fetch content.');
-            }
         }
-
-        window.onload = async function() {
-            const params = new URLSearchParams(window.location.search);
-            if (params.has('id')) {
-                document.getElementById('container').classList.add('hidden');
-                document.body.style.background = "white";
-                document.body.style.margin = "0";
-
-                let response = await fetch(url);
-                let text = await response.text();
-
-                let startIndex = text.indexOf('<!DOCTYPE html>');
-                if (startIndex !== -1) {
-                    text = text.substring(startIndex);
-                }
-
-                document.open();
-                document.write(text);
-                document.close();
-            } else {
-                checkLogin();
-            }
-        };
     </script>
 </body>
 </html>
