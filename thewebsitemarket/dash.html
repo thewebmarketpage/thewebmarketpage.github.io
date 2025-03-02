@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
+    <title>Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,35 +21,33 @@
             margin: 20px auto;
         }
         .user-info {
-            background: #222;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 10px 0;
+            margin-bottom: 20px;
         }
-        .logout-btn, .save-btn {
+        .input-field {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        .save-btn, .logout-btn {
             background: #4CAF50;
             color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
+        }
+        .logout-btn { background: #e63946; }
+        .input-group-append {
             margin-top: 20px;
         }
-        .save-btn {
-            background: #008CBA;
-        }
-        .input-field {
-            margin: 10px 0;
-            padding: 10px;
-            width: 80%;
-            border-radius: 5px;
-            border: none;
-        }
-        .input-group-append button {
-            background: #f0ad4e;
+        button {
+            background: #333;
             color: white;
             padding: 10px;
-            border-radius: 5px;
+            border: none;
             cursor: pointer;
         }
     </style>
@@ -59,27 +55,7 @@
 <body>
     <div id="content"></div>
 
-    <script type="module">
-        // URL to store and edit JSON data
-        const dataUrl = "https://writeurl.com/xziBYP23MbqE9fhK";
-
-        // Function to fetch the current data
-        async function fetchData() {
-            const response = await fetch(dataUrl);
-            const data = await response.json();
-            return data;
-        }
-
-        // Function to update the data
-        async function updateData(data) {
-            const response = await fetch(dataUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-            return response.json();
-        }
-
+    <script>
         // Check if user is logged in
         function checkLogin() {
             const user = sessionStorage.getItem("user");
@@ -89,13 +65,23 @@
             }
 
             const userData = JSON.parse(user);
+
+            // Ensure createdAt is a valid date
+            let createdAt = userData.createdAt;
+            const date = new Date(createdAt);
+            
+            // If createdAt is invalid, use current date as fallback
+            if (isNaN(date.getTime())) {
+                createdAt = new Date().toISOString();  // Fallback to current date
+            }
+
             document.getElementById("content").innerHTML = `
                 <div class="dashboard-container">
                     <h2>User Dashboard</h2>
                     <div class="user-info">
                         <h3>Welcome, ${userData.name}</h3>
                         <p><strong>Email:</strong> ${userData.email}</p>
-                        <p><strong>Account Created:</strong> ${new Date(userData.createdAt).toLocaleDateString()}</p>
+                        <p><strong>Account Created:</strong> ${new Date(createdAt).toLocaleDateString()}</p>
                     </div>
                     <h3>Edit Your Data</h3>
                     <div>
@@ -108,7 +94,7 @@
                     </div>
                     <div>
                         <label for="createdAt">Account Created At:</label>
-                        <input type="datetime-local" id="createdAt" class="input-field" value="${new Date(userData.createdAt).toISOString().slice(0, 16)}">
+                        <input type="datetime-local" id="createdAt" class="input-field" value="${createdAt.slice(0, 16)}">
                     </div>
                     <button class="save-btn" onclick="saveData()">Save Data</button>
                     <button class="logout-btn" onclick="logout()">Logout</button>
@@ -122,56 +108,51 @@
             `;
         }
 
-        // Generate JSON format from form inputs
-        function generateJsonData() {
-            const username = document.getElementById("username").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const createdAt = document.getElementById("createdAt").value.trim();
-
-            if (!username || !email || !createdAt) {
-                alert("Please fill in all fields!");
-                return null;
-            }
-
-            const newData = {
-                "username": username,
-                "id": "user" + Math.random().toString(36).substr(2, 9), // Generate a random ID
-                "createdAt": createdAt,
-                "email": email
-            };
-            return newData;
-        }
-
-        // Save the generated JSON data to the URL
+        // Save data to server
         async function saveData() {
-            const newData = generateJsonData();
-            if (!newData) return;
+            const user = JSON.parse(sessionStorage.getItem("user"));
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const createdAt = document.getElementById("createdAt").value;
 
-            const data = await fetchData();
-            if (!data.users) {
-                data.users = [];
+            const data = {
+                username,
+                email,
+                createdAt,
+            };
+
+            // Example format
+            const format = {
+                username: data.username,
+                id: Math.random().toString(36).substr(2, 9),
+                createdAt: new Date(data.createdAt).toISOString(),
+                email: data.email,
+            };
+
+            // Push data to URL (Update the URL with new data)
+            const response = await fetch("https://writeurl.com/xziBYP23MbqE9fhK", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(format),
+            });
+
+            if (response.ok) {
+                document.getElementById("message").innerHTML = "Data saved successfully!";
+            } else {
+                document.getElementById("message").innerHTML = "Error saving data.";
             }
-            data.users.push(newData); // Add the new user data
-
-            // Save the updated data
-            await updateData(data);
-            document.getElementById("message").innerText = "Data saved successfully!";
         }
 
-        // Trigger the URL update with new data
-        function triggerUrlUpdate() {
-            const newData = generateJsonData();
-            if (!newData) return;
-
-            // Assuming the format to be updated should be saved directly to a new URL.
-            const newUrl = `https://writeurl.com/ifNkWeZFDlr0QBtX`; // This is an example URL, you would get the real URL dynamically.
-            // For the sake of this demo, we will just update the URL and trigger the click.
-
-            window.location.href = newUrl;
-            document.getElementById("message").innerText = "URL has been updated!";
+        // Trigger URL update with edit action
+        async function triggerUrlUpdate() {
+            const url = new URL(window.location.href);
+            url.searchParams.set("page", "edit");
+            window.history.pushState({}, "", url);
         }
 
-        // Logout and clear session
+        // Logout function
         function logout() {
             sessionStorage.removeItem("user");
             window.location.href = "index.html";
