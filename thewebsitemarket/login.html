@@ -1,11 +1,10 @@
-<html>
-
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-
-<title> login - the website market </title>
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <style>
 body{
@@ -18,12 +17,31 @@ h1{
 color: white;
 }
 </style>
-
 <body>
+    <h2>Login with Google</h2>
+    <div id="g_id_onload"
+         data-client_id="YOUR_CLIENT_ID"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
 
+    <div class="g_id_signin" data-type="standard"></div>
 
-<h1>login</h1>
+    <script>
+        function handleCredentialResponse(response) {
+            // Decode JWT Token
+            const data = parseJwt(response.credential);
+            console.log("User Info:", data);
+            alert("Hello, " + data.name);
+        }
 
+        function parseJwt(token) {
+            let base64Url = token.split('.')[1];
+            let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(atob(base64));
+        }
+    </script>
 </body>
-
 </html>
