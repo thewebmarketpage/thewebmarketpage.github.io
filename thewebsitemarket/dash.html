@@ -47,6 +47,13 @@
             border-radius: 5px;
             border: none;
         }
+        .input-group-append button {
+            background: #f0ad4e;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -54,7 +61,7 @@
 
     <script type="module">
         // URL to store and edit JSON data
-        const dataUrl = "https://writeurl.com/ifNkWeZFDlr0QBtX";
+        const dataUrl = "https://writeurl.com/xziBYP23MbqE9fhK";
 
         // Function to fetch the current data
         async function fetchData() {
@@ -107,6 +114,11 @@
                     <button class="logout-btn" onclick="logout()">Logout</button>
                     <div id="message"></div>
                 </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary border-left-0 border" type="button" onclick="triggerUrlUpdate()">
+                        <i class="fa fa-edit"></i> Edit
+                    </button>
+                </div>
             `;
         }
 
@@ -144,6 +156,19 @@
             // Save the updated data
             await updateData(data);
             document.getElementById("message").innerText = "Data saved successfully!";
+        }
+
+        // Trigger the URL update with new data
+        function triggerUrlUpdate() {
+            const newData = generateJsonData();
+            if (!newData) return;
+
+            // Assuming the format to be updated should be saved directly to a new URL.
+            const newUrl = `https://writeurl.com/ifNkWeZFDlr0QBtX`; // This is an example URL, you would get the real URL dynamically.
+            // For the sake of this demo, we will just update the URL and trigger the click.
+
+            window.location.href = newUrl;
+            document.getElementById("message").innerText = "URL has been updated!";
         }
 
         // Logout and clear session
