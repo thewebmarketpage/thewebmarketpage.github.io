@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Edit User Data</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,42 +22,73 @@
             width: 80%;
             margin: 20px auto;
         }
-        .user-info {
-            margin-bottom: 20px;
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
         }
-        .input-field {
-            width: 80%;
+        .form-group label {
+            font-weight: bold;
+            display: block;
+        }
+        .form-group input {
+            width: 100%;
             padding: 10px;
-            margin: 10px;
+            margin-top: 5px;
             border-radius: 5px;
             border: none;
         }
-        .save-btn, .logout-btn {
+        .form-group button {
             background: #4CAF50;
             color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 5px;
         }
-        .logout-btn { background: #e63946; }
-        .input-group-append {
-            margin-top: 20px;
+        .form-group button:hover {
+            background-color: #45a049;
         }
-        button {
-            background: #333;
+        .logout-btn {
+            background: #e63946;
             color: white;
             padding: 10px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+        }
+        .form-group .page-url-group {
+            display: flex;
+            gap: 10px;
+        }
+        .form-group .page-url-group input {
+            width: 80%;
+        }
+        .form-group .page-url-group button {
+            width: 20%;
         }
     </style>
 </head>
 <body>
     <div id="content"></div>
 
-    <script>
+    <script type="module">
+        const dataUrl = "https://notepad.pw/G5BIhexqw5inkZwYbDFH";
+
+        async function fetchData() {
+            const response = await fetch(dataUrl);
+            const data = await response.json();
+            return data;
+        }
+
+        async function updateData(data) {
+            const response = await fetch(dataUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+            return response.json();
+        }
+
         // Check if user is logged in
         function checkLogin() {
             const user = sessionStorage.getItem("user");
@@ -65,100 +98,154 @@
             }
 
             const userData = JSON.parse(user);
-
-            // Ensure createdAt is a valid date
-            let createdAt = userData.createdAt;
-            const date = new Date(createdAt);
-            
-            // If createdAt is invalid, use current date as fallback
-            if (isNaN(date.getTime())) {
-                createdAt = new Date().toISOString();  // Fallback to current date
-            }
-
             document.getElementById("content").innerHTML = `
-                <div class="dashboard-container">
-                    <h2>User Dashboard</h2>
-                    <div class="user-info">
-                        <h3>Welcome, ${userData.name}</h3>
-                        <p><strong>Email:</strong> ${userData.email}</p>
-                        <p><strong>Account Created:</strong> ${new Date(createdAt).toLocaleDateString()}</p>
-                    </div>
-                    <h3>Edit Your Data</h3>
-                    <div>
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" class="input-field" value="${userData.name}" placeholder="Enter username">
-                    </div>
-                    <div>
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" class="input-field" value="${userData.email}" placeholder="Enter email">
-                    </div>
-                    <div>
-                        <label for="createdAt">Account Created At:</label>
-                        <input type="datetime-local" id="createdAt" class="input-field" value="${createdAt.slice(0, 16)}">
-                    </div>
-                    <button class="save-btn" onclick="saveData()">Save Data</button>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                    <div id="message"></div>
-                </div>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary border-left-0 border" type="button" onclick="triggerUrlUpdate()">
-                        <i class="fa fa-edit"></i> Edit
-                    </button>
+                <div class='dashboard-container'>
+                    <h2>Welcome, ${userData.name}</h2>
+                    <p>Edit your user data below:</p>
+                    
+                    <form id="userForm">
+                        <!-- User ID -->
+                        <div class="form-group">
+                            <label for="user_id">User ID</label>
+                            <input type="text" id="user_id" value="" readonly />
+                        </div>
+
+                        <!-- User Balance -->
+                        <div class="form-group">
+                            <label for="user_balance">User Balance</label>
+                            <input type="number" id="user_balance" value="" step="0.01" />
+                        </div>
+
+                        <!-- User Count Pages -->
+                        <div class="form-group">
+                            <label for="user_count_pages">User Page Count</label>
+                            <input type="number" id="user_count_pages" value="" readonly />
+                        </div>
+
+                        <!-- User Pages -->
+                        <div class="form-group">
+                            <label>User Pages</label>
+                            <div id="userPagesContainer"></div>
+                            <button type="button" id="addPageBtn">Add New Page</button>
+                        </div>
+
+                        <!-- User Billing History -->
+                        <div class="form-group">
+                            <label>User Billing History</label>
+                            <div id="billingHistoryContainer"></div>
+                            <button type="button" id="addPaymentBtn">Add New Payment</button>
+                        </div>
+
+                        <button type="submit" class="form-group">Save Changes</button>
+                    </form>
+                    
+                    <button class='logout-btn' onclick='logout()'>Logout</button>
                 </div>
             `;
+            loadUserData(userData.email);
         }
 
-        // Save data to server
-        async function saveData() {
-            const user = JSON.parse(sessionStorage.getItem("user"));
-            const username = document.getElementById("username").value;
-            const email = document.getElementById("email").value;
-            const createdAt = document.getElementById("createdAt").value;
+        async function loadUserData(email) {
+            const data = await fetchData();
+            const user = data.users[email];
+            if (user) {
+                // Load User Info
+                document.getElementById("user_id").value = user.user_id;
+                document.getElementById("user_balance").value = user.user_balance;
+                document.getElementById("user_count_pages").value = user.user_count_pages;
 
-            const data = {
-                username,
-                email,
-                createdAt,
-            };
+                // Load Pages
+                const userPagesContainer = document.getElementById("userPagesContainer");
+                user.user_pages.forEach((page, index) => {
+                    userPagesContainer.innerHTML += `
+                        <div class="page-url-group" id="page_${index}">
+                            <input type="text" class="page_url" value="${page.page_url}" />
+                            <button type="button" class="deletePageBtn" onclick="deletePage(${index})">Delete</button>
+                        </div>
+                    `;
+                });
 
-            // Example format
-            const format = {
-                username: data.username,
-                id: Math.random().toString(36).substr(2, 9),
-                createdAt: new Date(data.createdAt).toISOString(),
-                email: data.email,
-            };
-
-            // Push data to URL (Update the URL with new data)
-            const response = await fetch("https://writeurl.com/xziBYP23MbqE9fhK", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(format),
-            });
-
-            if (response.ok) {
-                document.getElementById("message").innerHTML = "Data saved successfully!";
-            } else {
-                document.getElementById("message").innerHTML = "Error saving data.";
+                // Load Billing History
+                const billingHistoryContainer = document.getElementById("billingHistoryContainer");
+                user.user_billing_history.forEach((payment, index) => {
+                    billingHistoryContainer.innerHTML += `
+                        <div class="payment-group" id="payment_${index}">
+                            <input type="text" class="payment_id" value="${payment.payment_id}" readonly />
+                            <input type="number" class="amount_paid" value="${payment.amount_paid}" step="0.01" />
+                            <input type="date" class="payment_date" value="${payment.payment_date}" />
+                            <input type="text" class="payment_method" value="${payment.payment_method}" />
+                            <button type="button" class="deletePaymentBtn" onclick="deletePayment(${index})">Delete</button>
+                        </div>
+                    `;
+                });
             }
         }
 
-        // Trigger URL update with edit action
-        async function triggerUrlUpdate() {
-            const url = new URL(window.location.href);
-            url.searchParams.set("page", "edit");
-            window.history.pushState({}, "", url);
-        }
-
-        // Logout function
         function logout() {
             sessionStorage.removeItem("user");
             window.location.href = "index.html";
         }
 
-        // Initialize on page load
+        document.getElementById("addPageBtn").addEventListener("click", function() {
+            const newPageGroup = document.createElement("div");
+            newPageGroup.className = "page-url-group";
+            newPageGroup.innerHTML = `
+                <input type="text" class="page_url" placeholder="Enter new page URL" />
+                <button type="button" class="deletePageBtn">Delete</button>
+            `;
+            document.getElementById("userPagesContainer").appendChild(newPageGroup);
+        });
+
+        document.getElementById("addPaymentBtn").addEventListener("click", function() {
+            const newPaymentGroup = document.createElement("div");
+            newPaymentGroup.className = "payment-group";
+            newPaymentGroup.innerHTML = `
+                <input type="text" class="payment_id" placeholder="Payment ID" />
+                <input type="number" class="amount_paid" placeholder="Amount Paid" step="0.01" />
+                <input type="date" class="payment_date" />
+                <input type="text" class="payment_method" placeholder="Payment Method" />
+                <button type="button" class="deletePaymentBtn">Delete</button>
+            `;
+            document.getElementById("billingHistoryContainer").appendChild(newPaymentGroup);
+        });
+
+        function deletePage(index) {
+            const pageContainer = document.getElementById(`page_${index}`);
+            pageContainer.remove();
+        }
+
+        function deletePayment(index) {
+            const paymentContainer = document.getElementById(`payment_${index}`);
+            paymentContainer.remove();
+        }
+
+        document.getElementById("userForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const userData = JSON.parse(sessionStorage.getItem("user"));
+            const data = await fetchData();
+            const user = data.users[userData.email];
+
+            if (user) {
+                // Update user info
+                user.user_balance = parseFloat(document.getElementById("user_balance").value);
+                user.user_pages = Array.from(document.getElementsByClassName("page_url")).map(input => ({
+                    page_id: `page_${Math.random().toString(36).substr(2, 9)}`,
+                    page_url: input.value
+                }));
+                user.user_billing_history = Array.from(document.getElementsByClassName("payment_group")).map(payment => ({
+                    payment_id: payment.querySelector(".payment_id").value,
+                    amount_paid: parseFloat(payment.querySelector(".amount_paid").value),
+                    payment_date: payment.querySelector(".payment_date").value,
+                    payment_method: payment.querySelector(".payment_method").value
+                }));
+
+                user.user_count_pages = user.user_pages.length;
+                await updateData(data);
+                alert("Changes saved successfully!");
+            }
+        });
+
         window.onload = checkLogin;
     </script>
 </body>
