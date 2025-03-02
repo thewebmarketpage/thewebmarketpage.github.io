@@ -62,41 +62,25 @@
     <div id="content"></div>
 
     <script type="module">
-        // Import Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        // URL to store and edit JSON data
+        const dataUrl = "https://notepad.pw/G5BIhexqw5inkZwYbDFH";
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCaUly2DkXD9t9XDVVSjM_f524IVufsnbc",
-            authDomain: "myalexmarkfor.firebaseapp.com",
-            projectId: "myalexmarkfor",
-            storageBucket: "myalexmarkfor.firebasestorage.app",
-            messagingSenderId: "671468550432",
-            appId: "1:671468550432:web:85b63218abfbf41f8d7f45",
-            measurementId: "G-SBNRDH95HR"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const pageId = urlParams.get('page');
-
-        if (pageId) {
-            // Render stored HTML page for visitors
-            getDoc(doc(db, "htmlPages", pageId)).then(snapshot => {
-                if (snapshot.exists()) {
-                    document.body.innerHTML = snapshot.data().html;
-                } else {
-                    document.body.innerHTML = "<h2>Page not found</h2>";
-                }
-            });
-        } else {
-            checkLogin();
+        async function fetchData() {
+            const response = await fetch(dataUrl);
+            const data = await response.json();
+            return data;
         }
 
+        async function updateData(data) {
+            const response = await fetch(dataUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+            return response.json();
+        }
+
+        // Check if user is logged in
         function checkLogin() {
             const user = sessionStorage.getItem("user");
             if (!user) {
@@ -125,6 +109,26 @@
             loadUserPages(userData.email);
         }
 
+        async function loadUserPages(email) {
+            const data = await fetchData();
+            const user = data.users[email];
+
+            if (user) {
+                let pagesHtml = "<h3>Your Pages:</h3>";
+                user.pages.forEach(page => {
+                    pagesHtml += `
+                        <div>
+                            <strong>${page.pageName}</strong>
+                            <a href="${page.url}" target="_blank">${page.url}</a>
+                            <button class='copy-btn' onclick='copyLink("${page.url}")'>Copy</button>
+                            <button class='delete-btn' onclick='deletePage("${page.pageId}")'>Delete</button>
+                        </div>
+                    `;
+                });
+                document.getElementById("generatedPages").innerHTML = pagesHtml;
+            }
+        }
+
         async function generatePage() {
             const user = JSON.parse(sessionStorage.getItem("user"));
             const selectedTemplate = document.querySelector('input[name="template"]:checked');
@@ -140,50 +144,49 @@
             }
 
             const templateUrl = "https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/thewebsitemarket/templates/template1.html";
-
             try {
                 const response = await fetch(templateUrl);
                 const htmlContent = await response.text();
 
                 const pageId = Math.random().toString(36).substr(2, 9);
-                const pageRef = doc(db, "htmlPages", pageId);
+                const userData = JSON.parse(sessionStorage.getItem("user"));
+                const pageUrl = `${window.location.origin}${window.location.pathname}?page=${pageId}`;
 
-                await setDoc(pageRef, { user: user.email, pageName, html: htmlContent });
+                // Fetch current data and add new page
+                const data = await fetchData();
+                if (!data.users[userData.email]) {
+                    data.users[userData.email] = { name: userData.name, email: userData.email, pages: [] };
+                }
 
-                const userPageRef = collection(db, "userPages");
-                await addDoc(userPageRef, { user: user.email, pageId, pageName, url: `${window.location.origin}${window.location.pathname}?page=${pageId}` });
+                // Add the new page data
+                data.users[userData.email].pages.push({
+                    pageId,
+                    pageName,
+                    url: pageUrl,
+                    template: selectedTemplate.value,
+                    html: htmlContent,
+                });
 
+                // Update the data on the server
+                await updateData(data);
                 alert("Page created successfully!");
-                loadUserPages(user.email);
+                loadUserPages(userData.email);
             } catch (error) {
                 console.error("Error fetching template:", error);
             }
         }
 
-        async function loadUserPages(email) {
-            const userPagesQuery = query(collection(db, "userPages"), where("user", "==", email));
-            const querySnapshot = await getDocs(userPagesQuery);
+        async function deletePage(pageId) {
+            const userData = JSON.parse(sessionStorage.getItem("user"));
+            const data = await fetchData();
 
-            let pagesHtml = "<h3>Your Pages:</h3>";
-            querySnapshot.forEach(doc => {
-                const data = doc.data();
-                pagesHtml += `
-                    <div>
-                        <strong>${data.pageName}</strong>
-                        <a href="${data.url}" target="_blank">${data.url}</a>
-                        <button class='copy-btn' onclick='copyLink("${data.url}")'>Copy</button>
-                        <button class='delete-btn' onclick='deletePage("${doc.id}")'>Delete</button>
-                    </div>
-                `;
-            });
-
-            document.getElementById("generatedPages").innerHTML = pagesHtml;
-        }
-
-        async function deletePage(docId) {
-            await deleteDoc(doc(db, "userPages", docId));
-            alert("Page deleted.");
-            checkLogin();
+            const user = data.users[userData.email];
+            if (user) {
+                user.pages = user.pages.filter(page => page.pageId !== pageId);
+                await updateData(data);
+                alert("Page deleted.");
+                loadUserPages(userData.email);
+            }
         }
 
         function copyLink(url) {
@@ -196,9 +199,8 @@
             window.location.href = "index.html";
         }
 
-        window.generatePage = generatePage;
-        window.copyLink = copyLink;
-        window.deletePage = deletePage;
+        // Initialize on page load
+        window.onload = checkLogin;
     </script>
 </body>
 </html>
