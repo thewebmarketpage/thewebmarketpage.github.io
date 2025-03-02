@@ -183,7 +183,7 @@
         function checkLogin() {
             const user = sessionStorage.getItem("user");
             if (!user) {
-                window.location.href = "index.html";
+                window.location.href = "login.html";
                 return;
             }
 
@@ -211,9 +211,9 @@
                 return;
             }
 
-            const githubUsername = "YOUR_GITHUB_USERNAME";
-            const repoName = "YOUR_REPO_NAME";
-            const accessToken = "YOUR_ACCESS_TOKEN";
+            const githubUsername = "thewebmarketpage";
+            const repoName = "thewebmarketpage";
+            const accessToken = "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";
             const filePath = `${folderName}/newfile.txt`;
             const apiUrl = `https://api.github.com/repos/${githubUsername}/${repoName}/contents/${filePath}`;
             const encodedContent = btoa(unescape(encodeURIComponent(textContent)));
