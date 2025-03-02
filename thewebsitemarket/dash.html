@@ -68,6 +68,50 @@
             margin-bottom: 5px;
         }
 
+        /* Form Styling */
+        .github-form {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .github-form label {
+            font-size: 14px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .github-form input, .github-form textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #2a2a2a;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .github-form textarea {
+            height: 80px;
+            resize: none;
+        }
+
+        .github-form button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .github-form button:hover {
+            background: #3e8e41;
+        }
+
         /* Logout Button */
         .logout-btn {
             display: block;
@@ -85,6 +129,17 @@
 
         .logout-btn:hover {
             background: #c92b38;
+        }
+
+        /* Result Box */
+        .result {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .result a {
+            color: #4CAF50;
+            text-decoration: none;
         }
 
         /* Responsive */
@@ -106,6 +161,20 @@
             <p><strong>Name:</strong> <span id="user-name"></span></p>
             <p><strong>Email:</strong> <span id="user-email"></span></p>
         </div>
+
+        <!-- GitHub Form -->
+        <div class="github-form">
+            <h3>Create Folder & File in GitHub</h3>
+            <label>Folder Name:</label>
+            <input type="text" id="folderName" required>
+
+            <label>Text Content:</label>
+            <textarea id="textContent" required></textarea>
+
+            <button onclick="createGitHubFile()">Create</button>
+        </div>
+
+        <div id="result" class="result"></div>
 
         <button class="logout-btn" id="logout">Logout</button>
     </div>
@@ -133,7 +202,50 @@
             window.location.href = "login.html";
         });
 
-        // Run check on page load
+        async function createGitHubFile() {
+            const folderName = document.getElementById("folderName").value.trim();
+            const textContent = document.getElementById("textContent").value;
+
+            if (!folderName || !textContent) {
+                alert("Please enter both folder name and text content.");
+                return;
+            }
+
+            const githubUsername = "YOUR_GITHUB_USERNAME";
+            const repoName = "YOUR_REPO_NAME";
+            const accessToken = "YOUR_ACCESS_TOKEN";
+            const filePath = `${folderName}/newfile.txt`;
+            const apiUrl = `https://api.github.com/repos/${githubUsername}/${repoName}/contents/${filePath}`;
+            const encodedContent = btoa(unescape(encodeURIComponent(textContent)));
+
+            const response = await fetch(apiUrl, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${accessToken}`,
+                    "Accept": "application/vnd.github.v3+json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `Create ${filePath}`,
+                    content: encodedContent
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                const folderLink = `https://github.com/${githubUsername}/${repoName}/tree/main/${folderName}`;
+                const rawFileLink = `https://raw.githubusercontent.com/${githubUsername}/${repoName}/main/${filePath}`;
+
+                document.getElementById("result").innerHTML = `
+                    <p>✅ Folder and file created successfully!</p>
+                    <p><a href="${folderLink}" target="_blank">📁 View Folder</a></p>
+                    <p><a href="${rawFileLink}" target="_blank">📄 View Raw Text File</a></p>
+                `;
+            } else {
+                document.getElementById("result").innerHTML = `<p>❌ Error: ${result.message}</p>`;
+            }
+        }
+
         checkLogin();
     </script>
 </body>
