@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User Data</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>User Dashboard</title>
     
     <style>
         body {
@@ -16,203 +15,117 @@
             padding: 20px;
         }
         .dashboard-container {
-            padding: 20px;
             background: #1a1a1a;
+            padding: 20px;
             border-radius: 10px;
             width: 80%;
             margin: 20px auto;
         }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group label {
-            font-weight: bold;
-            display: block;
-        }
-        .form-group input {
-            width: 100%;
+        .input-field {
+            width: 90%;
             padding: 10px;
-            margin-top: 5px;
+            margin: 5px 0;
             border-radius: 5px;
             border: none;
         }
-        .form-group button {
+        .button {
             background: #4CAF50;
             color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
         }
-        .form-group button:hover {
-            background-color: #45a049;
-        }
-        .logout-btn {
-            background: #e63946;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+        .delete-btn { background: #FF9800; }
+        .logout-btn { background: #e63946; }
     </style>
 </head>
 <body>
-    <div id="content"></div>
+
+    <div class="dashboard-container">
+        <h2>User Dashboard</h2>
+        
+        <h3>Page URLs</h3>
+        <div id="userPages"></div>
+
+        <h3>Billing History</h3>
+        <div id="billingHistory"></div>
+
+        <button class="button" onclick="saveData()">Save Changes</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
 
     <script>
+        const proxyUrl = "https://api.allorigins.win/get?url=";
         const dataUrl = "https://notepad.pw/G5BIhexqw5inkZwYbDFH";
 
+        let userData = {};
+
         async function fetchData() {
-            const response = await fetch(dataUrl);
-            return response.json();
-        }
-
-        async function updateData(data) {
-            await fetch(dataUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-        }
-
-        function checkLogin() {
-            const user = sessionStorage.getItem("user");
-            if (!user) {
-                window.location.href = "index.html";
-                return;
-            }
-
-            const userData = JSON.parse(user);
-            document.getElementById("content").innerHTML = `
-                <div class='dashboard-container'>
-                    <h2>Welcome, ${userData.name}</h2>
-                    <p>Edit your user data below:</p>
-                    
-                    <form id="userForm">
-                        <div class="form-group">
-                            <label for="user_id">User ID</label>
-                            <input type="text" id="user_id" readonly />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="user_balance">User Balance</label>
-                            <input type="number" id="user_balance" step="0.01" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="user_count_pages">User Page Count</label>
-                            <input type="number" id="user_count_pages" readonly />
-                        </div>
-
-                        <div class="form-group">
-                            <label>User Pages</label>
-                            <div id="userPagesContainer"></div>
-                            <button type="button" id="addPageBtn">Add New Page</button>
-                        </div>
-
-                        <div class="form-group">
-                            <label>User Billing History</label>
-                            <div id="billingHistoryContainer"></div>
-                            <button type="button" id="addPaymentBtn">Add New Payment</button>
-                        </div>
-
-                        <button type="submit">Save Changes</button>
-                    </form>
-                    
-                    <button class='logout-btn' id="logoutBtn">Logout</button>
-                </div>
-            `;
-
-            loadUserData(userData.email);
-            setupEventListeners();
-        }
-
-        async function loadUserData(email) {
-            const data = await fetchData();
-            const user = data.users[email];
-
-            if (user) {
-                document.getElementById("user_id").value = user.user_id;
-                document.getElementById("user_balance").value = user.user_balance;
-                document.getElementById("user_count_pages").value = user.user_count_pages;
-
-                const userPagesContainer = document.getElementById("userPagesContainer");
-                userPagesContainer.innerHTML = "";
-                user.user_pages.forEach((page, index) => {
-                    userPagesContainer.innerHTML += `
-                        <div class="page-url-group" id="page_${index}">
-                            <input type="text" class="page_url" value="${page.page_url}" />
-                            <button type="button" onclick="deletePage(${index})">Delete</button>
-                        </div>
-                    `;
-                });
-
-                const billingHistoryContainer = document.getElementById("billingHistoryContainer");
-                billingHistoryContainer.innerHTML = "";
-                user.user_billing_history.forEach((payment, index) => {
-                    billingHistoryContainer.innerHTML += `
-                        <div class="payment-group" id="payment_${index}">
-                            <input type="text" class="payment_id" value="${payment.payment_id}" readonly />
-                            <input type="number" class="amount_paid" value="${payment.amount_paid}" step="0.01" />
-                            <input type="date" class="payment_date" value="${payment.payment_date}" />
-                            <input type="text" class="payment_method" value="${payment.payment_method}" />
-                            <button type="button" onclick="deletePayment(${index})">Delete</button>
-                        </div>
-                    `;
-                });
+            try {
+                const response = await fetch(proxyUrl + encodeURIComponent(dataUrl));
+                const data = await response.json();
+                userData = JSON.parse(data.contents);
+                renderForm();
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
         }
 
-        function setupEventListeners() {
-            document.getElementById("addPageBtn").addEventListener("click", function () {
-                const userPagesContainer = document.getElementById("userPagesContainer");
-                const newIndex = userPagesContainer.children.length;
-                const newPage = document.createElement("div");
-                newPage.className = "page-url-group";
-                newPage.innerHTML = `
-                    <input type="text" class="page_url" placeholder="Enter new page URL" />
-                    <button type="button" onclick="deletePage(${newIndex})">Delete</button>
+        function renderForm() {
+            let pagesHtml = "";
+            userData.user_pages.forEach((page, index) => {
+                pagesHtml += `
+                    <div>
+                        <input class="input-field" type="text" value="${page.page_url}" id="page_${index}">
+                    </div>
                 `;
-                userPagesContainer.appendChild(newPage);
             });
+            document.getElementById("userPages").innerHTML = pagesHtml;
 
-            document.getElementById("addPaymentBtn").addEventListener("click", function () {
-                const billingHistoryContainer = document.getElementById("billingHistoryContainer");
-                const newIndex = billingHistoryContainer.children.length;
-                const newPayment = document.createElement("div");
-                newPayment.className = "payment-group";
-                newPayment.innerHTML = `
-                    <input type="text" class="payment_id" placeholder="Payment ID" />
-                    <input type="number" class="amount_paid" placeholder="Amount Paid" step="0.01" />
-                    <input type="date" class="payment_date" />
-                    <input type="text" class="payment_method" placeholder="Payment Method" />
-                    <button type="button" onclick="deletePayment(${newIndex})">Delete</button>
+            let billingHtml = "";
+            userData.user_billing_history.forEach((payment, index) => {
+                billingHtml += `
+                    <div>
+                        <input class="input-field" type="text" value="${payment.amount_paid}" id="payment_${index}_amount">
+                        <input class="input-field" type="text" value="${payment.payment_date}" id="payment_${index}_date">
+                        <input class="input-field" type="text" value="${payment.payment_method}" id="payment_${index}_method">
+                    </div>
                 `;
-                billingHistoryContainer.appendChild(newPayment);
             });
-
-            document.getElementById("userForm").addEventListener("submit", async function (event) {
-                event.preventDefault();
-                alert("Changes saved successfully!");
-            });
-
-            document.getElementById("logoutBtn").addEventListener("click", function () {
-                sessionStorage.removeItem("user");
-                window.location.href = "index.html";
-            });
+            document.getElementById("billingHistory").innerHTML = billingHtml;
         }
 
-        function deletePage(index) {
-            document.getElementById(`page_${index}`).remove();
+        async function saveData() {
+            userData.user_pages.forEach((page, index) => {
+                userData.user_pages[index].page_url = document.getElementById(`page_${index}`).value;
+            });
+
+            userData.user_billing_history.forEach((payment, index) => {
+                userData.user_billing_history[index].amount_paid = document.getElementById(`payment_${index}_amount`).value;
+                userData.user_billing_history[index].payment_date = document.getElementById(`payment_${index}_date`).value;
+                userData.user_billing_history[index].payment_method = document.getElementById(`payment_${index}_method`).value;
+            });
+
+            try {
+                await fetch(dataUrl, {
+                    method: "POST",
+                    body: JSON.stringify(userData),
+                    headers: { "Content-Type": "application/json" }
+                });
+                alert("Data saved successfully!");
+            } catch (error) {
+                console.error("Error saving data:", error);
+            }
         }
 
-        function deletePayment(index) {
-            document.getElementById(`payment_${index}`).remove();
+        function logout() {
+            sessionStorage.removeItem("user");
+            window.location.href = "index.html";
         }
 
-        window.onload = checkLogin;
+        fetchData();
     </script>
 </body>
 </html>
