@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Login</title>
+    <title>Google Login Secure Dashboard</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        #dashboard {
+            display: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: green;
+            margin-top: 20px;
+        }
+        body{background-color: black;}h2{color: white;}
+    </style>
 </head>
-<style>
-body{
-
-background-color: black;
-}
-
-h2{
-
-color: white;
-}
-</style>
 <body>
     <h2>Login with Google</h2>
+
     <div id="g_id_onload"
          data-client_id="YOUR_CLIENT_ID"
          data-context="signin"
@@ -29,12 +29,19 @@ color: white;
 
     <div class="g_id_signin" data-type="standard"></div>
 
+    <div id="dashboard">✅ Your Dashboard - This is a secure place.</div>
+
     <script>
         function handleCredentialResponse(response) {
             // Decode JWT Token
-            const data = parseJwt(response.credential);
-            console.log("User Info:", data);
-            alert("Hello, " + data.name);
+            const userData = parseJwt(response.credential);
+            console.log("User Info:", userData);
+
+            // Store login state
+            sessionStorage.setItem("user", JSON.stringify(userData));
+
+            // Show dashboard
+            showDashboard();
         }
 
         function parseJwt(token) {
@@ -42,6 +49,16 @@ color: white;
             let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             return JSON.parse(atob(base64));
         }
+
+        function showDashboard() {
+            const user = sessionStorage.getItem("user");
+            if (user) {
+                document.getElementById("dashboard").style.display = "block";
+            }
+        }
+
+        // Show dashboard if user is already logged in
+        window.onload = showDashboard;
     </script>
 </body>
 </html>
