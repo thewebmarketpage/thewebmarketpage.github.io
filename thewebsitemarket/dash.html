@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Dashboard</title>
+    <title>User Dashboard</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
@@ -22,39 +22,20 @@
             width: 80%;
             margin: 20px auto;
         }
-        .template-card {
+        .user-info {
             background: #222;
-            padding: 10px;
+            padding: 20px;
             border-radius: 8px;
-            margin: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin: 10px 0;
         }
-        .template-card input {
-            width: 20px;
-            height: 20px;
-        }
-        .logout-btn, .copy-btn, .delete-btn, .generate-btn {
-            background: #4CAF50;
+        .logout-btn {
+            background: #e63946;
             color: white;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 5px;
-        }
-        .delete-btn { background: #FF9800; }
-        .logout-btn { background: #e63946; }
-        .generated-pages {
             margin-top: 20px;
-        }
-        .page-name-input {
-            width: 80%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: none;
         }
     </style>
 </head>
@@ -62,24 +43,6 @@
     <div id="content"></div>
 
     <script type="module">
-        // URL to store and edit JSON data
-        const dataUrl = "https://notepad.pw/G5BIhexqw5inkZwYbDFH";
-
-        async function fetchData() {
-            const response = await fetch(dataUrl);
-            const data = await response.json();
-            return data;
-        }
-
-        async function updateData(data) {
-            const response = await fetch(dataUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-            return response.json();
-        }
-
         // Check if user is logged in
         function checkLogin() {
             const user = sessionStorage.getItem("user");
@@ -90,108 +53,16 @@
 
             const userData = JSON.parse(user);
             document.getElementById("content").innerHTML = `
-                <div class='dashboard-container'>
-                    <h2>Welcome, ${userData.name}</h2>
-                    <p>Choose a template and enter a page name:</p>
-                    
-                    <div class="template-card">
-                        <input type="radio" name="template" value="template1">
-                        <label>Template 1</label>
+                <div class="dashboard-container">
+                    <h2>User Dashboard</h2>
+                    <div class="user-info">
+                        <h3>Welcome, ${userData.name}</h3>
+                        <p><strong>Email:</strong> ${userData.email}</p>
+                        <p><strong>Account Created:</strong> ${new Date(userData.createdAt).toLocaleDateString()}</p>
                     </div>
-
-                    <input type="text" id="pageName" class="page-name-input" placeholder="Enter page name">
-                    <button class="generate-btn" onclick="generatePage()">Generate Page</button>
-
-                    <div class="generated-pages" id="generatedPages"></div>
-                    <button class='logout-btn' onclick='logout()'>Logout</button>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             `;
-            loadUserPages(userData.email);
-        }
-
-        async function loadUserPages(email) {
-            const data = await fetchData();
-            const user = data.users[email];
-
-            if (user) {
-                let pagesHtml = "<h3>Your Pages:</h3>";
-                user.pages.forEach(page => {
-                    pagesHtml += `
-                        <div>
-                            <strong>${page.pageName}</strong>
-                            <a href="${page.url}" target="_blank">${page.url}</a>
-                            <button class='copy-btn' onclick='copyLink("${page.url}")'>Copy</button>
-                            <button class='delete-btn' onclick='deletePage("${page.pageId}")'>Delete</button>
-                        </div>
-                    `;
-                });
-                document.getElementById("generatedPages").innerHTML = pagesHtml;
-            }
-        }
-
-        async function generatePage() {
-            const user = JSON.parse(sessionStorage.getItem("user"));
-            const selectedTemplate = document.querySelector('input[name="template"]:checked');
-            const pageName = document.getElementById("pageName").value.trim();
-
-            if (!selectedTemplate) {
-                alert("Please select a template!");
-                return;
-            }
-            if (!pageName) {
-                alert("Please enter a page name!");
-                return;
-            }
-
-            const templateUrl = "https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/thewebsitemarket/templates/template1.html";
-            try {
-                const response = await fetch(templateUrl);
-                const htmlContent = await response.text();
-
-                const pageId = Math.random().toString(36).substr(2, 9);
-                const userData = JSON.parse(sessionStorage.getItem("user"));
-                const pageUrl = `${window.location.origin}${window.location.pathname}?page=${pageId}`;
-
-                // Fetch current data and add new page
-                const data = await fetchData();
-                if (!data.users[userData.email]) {
-                    data.users[userData.email] = { name: userData.name, email: userData.email, pages: [] };
-                }
-
-                // Add the new page data
-                data.users[userData.email].pages.push({
-                    pageId,
-                    pageName,
-                    url: pageUrl,
-                    template: selectedTemplate.value,
-                    html: htmlContent,
-                });
-
-                // Update the data on the server
-                await updateData(data);
-                alert("Page created successfully!");
-                loadUserPages(userData.email);
-            } catch (error) {
-                console.error("Error fetching template:", error);
-            }
-        }
-
-        async function deletePage(pageId) {
-            const userData = JSON.parse(sessionStorage.getItem("user"));
-            const data = await fetchData();
-
-            const user = data.users[userData.email];
-            if (user) {
-                user.pages = user.pages.filter(page => page.pageId !== pageId);
-                await updateData(data);
-                alert("Page deleted.");
-                loadUserPages(userData.email);
-            }
-        }
-
-        function copyLink(url) {
-            navigator.clipboard.writeText(url);
-            alert("Copied to clipboard!");
         }
 
         function logout() {
