@@ -1,4 +1,10 @@
 (function () {
+    // Check if localStorage is supported
+    if (typeof Storage === "undefined") {
+        console.error("LocalStorage is not supported in this browser.");
+        return;
+    }
+
     // Cookie Consent Popup Styles
     const styles = `
         .cookie-consent-popup {
@@ -93,8 +99,8 @@
                 <a href="https://giantwebmarket.com/privacy-policy.html" target="_blank">Learn more</a>.
             </p>
             <div class="buttons">
-                <button class="accept" onclick="acceptCookies()">Accept</button>
-                <button class="decline" onclick="declineCookies()">Decline</button>
+                <button class="accept" id="acceptCookies">Accept</button>
+                <button class="decline" id="declineCookies">Decline</button>
             </div>
         </div>
     `;
@@ -114,16 +120,16 @@
     }
 
     // Function to handle "Accept" button click
-    window.acceptCookies = function () {
+    function acceptCookies() {
         localStorage.setItem("cookieConsent", "accepted");
         hideCookieConsentPopup();
-    };
+    }
 
     // Function to handle "Decline" button click
-    window.declineCookies = function () {
+    function declineCookies() {
         localStorage.setItem("cookieConsent", "declined");
         hideCookieConsentPopup();
-    };
+    }
 
     // Function to hide the cookie consent popup
     function hideCookieConsentPopup() {
@@ -131,6 +137,17 @@
         popup.classList.remove("show");
     }
 
-    // Show the cookie consent popup when the page loads
-    document.addEventListener("DOMContentLoaded", showCookieConsentPopup);
+    // Attach event listeners to buttons
+    document.addEventListener("DOMContentLoaded", function () {
+        const acceptButton = document.getElementById("acceptCookies");
+        const declineButton = document.getElementById("declineCookies");
+
+        if (acceptButton && declineButton) {
+            acceptButton.addEventListener("click", acceptCookies);
+            declineButton.addEventListener("click", declineCookies);
+        }
+
+        // Show the popup if no consent has been given
+        showCookieConsentPopup();
+    });
 })();
