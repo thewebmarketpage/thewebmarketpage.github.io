@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Posts - Websites Explorer</title>
+    <meta name="description" content="View your saved posts on Websites Explorer.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f8f9fa; }
+        .nav-footer { background: #05325e; color: white; }
+        .card { 
+            background: white; 
+            border-radius: 0; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            width: calc(100% - 16px);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .card img { border-radius: 8px; margin-bottom: 8px; }
+        .card-content { display: flex; flex-direction: column; gap: 8px; }
+        .card-source { color: #05325e; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .card-source img { width: 20px; height: 20px; }
+
+        /* Copy Icon Styling */
+        .copy-icon {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            margin-left: 8px;
+            transition: transform 0.2s;
+        }
+
+        .copy-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .copy-icon:active {
+            transform: scale(0.9);
+        }
+
+        .copied-message {
+            font-size: 14px;
+            color: green;
+            margin-left: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-footer p-4 flex justify-between items-center">
+        <a href="/index.html" class="flex items-center">
+            <img src="https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/websites-explorer/websites-explorer-logo1.png" 
+                alt="Websites Explorer Logo" class="h-16 w-auto mr-2">
+        </a>
+        <div class="flex space-x-6">
+            <a href="https://giantwebmarket.com/websites-explorer/index.html" class="text-white font-bold">Home</a>
+            <a href="https://giantwebmarket.com/websites-explorer/explore.html" class="text-white font-bold">Explore</a>
+             <a href="https://giantwebmarket.com/websites-explorer/saved.html" class="text-white font-bold">Saved</a>
+            <a href="https://giantwebmarket.com/websites-explorer/about.html" class="text-white font-bold">About</a>
+        </div>
+    </nav>
+
+    <div class="text-center mt-4">
+        <p class="text-xl font-bold text-[#05325e]">Your Saved Posts</p>
+    </div>
+
+    <div id="saved-posts-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6"></div>
+
+    <footer class="nav-footer p-6 text-center">
+        <img src="https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/websites-explorer/websites-explorer-logo1.png" 
+            alt="Websites Explorer Logo" class="h-16 mx-auto">
+        <p class="mt-4 text-lg">Websites Explorer allows anyone to explore websites in the wide web.</p>
+        <p class="text-sm mt-2">© 2025 Websites Explorer. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Function to load saved posts from localStorage
+        function loadSavedPosts() {
+            const savedPostsContainer = document.getElementById("saved-posts-container");
+            const savedPosts = JSON.parse(localStorage.getItem("savedPosts")) || [];
+
+            if (savedPosts.length === 0) {
+                savedPostsContainer.innerHTML = `<p class="text-center text-gray-500">No saved posts found.</p>`;
+                return;
+            }
+
+            savedPostsContainer.innerHTML = "";
+            savedPosts.forEach(post => {
+                const card = document.createElement("div");
+                card.className = "card p-4";
+                
+                const iconUrl = `https://www.google.com/s2/favicons?domain=${post.url}`;
+                const domain = new URL(post.url).hostname.replace('www.', '');
+                
+                card.innerHTML = `
+                    <a href="post.html?id=${post.id}" target="_blank">
+                        <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover">
+                        <h2 class="text-lg font-bold mt-2">${post.title}</h2>
+                    </a>
+                    <div class="card-content">
+                        <div class="card-source">
+                            <img src="${iconUrl}" alt="${post.url} icon">
+                            <span>${domain}</span>
+                        </div>
+                        <!-- Copy Icon and Message -->
+                        <div class="flex items-center">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1621/1621635.png" class="copy-icon" onclick="copyUrl('${post.id}')" alt="Copy">
+                            <span class="copied-message" id="copied-message-${post.id}">Copied!</span>
+                        </div>
+                    </div>
+                `;
+                savedPostsContainer.appendChild(card);
+            });
+        }
+
+        // Function to copy URL to clipboard
+        function copyUrl(postId) {
+            const postUrl = window.location.origin + `/post.html?id=${postId}`;
+            navigator.clipboard.writeText(postUrl)
+                .then(() => {
+                    const messageElement = document.getElementById(`copied-message-${postId}`);
+                    messageElement.style.display = "inline";
+                    setTimeout(() => {
+                        messageElement.style.display = "none";
+                    }, 3000); // Hide message after 3 seconds
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+        }
+
+        // Load saved posts when the page loads
+        loadSavedPosts();
+        <script src="https://giantwebmarket.com/cookie-consent.js"></script>
+    </script>
+</body>
+</html>
