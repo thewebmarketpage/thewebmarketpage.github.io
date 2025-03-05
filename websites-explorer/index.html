@@ -1,1 +1,81 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A website that allows anyone to explore the websites in the wide web.">
+    <title>Websites Explorer</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #05325e;
+            padding: 10px 20px;
+            color: white;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .logo {
+            height: 40px;
+        }
+        .search-bar {
+            padding: 5px;
+            width: 200px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .footer {
+            background: #05325e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .footer img {
+            height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#"><img src="https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/websites-explorer/websites-explorer-logo.png" alt="Websites Explorer Logo" class="logo"></a>
+        <input type="text" class="search-bar" placeholder="Search...">
+        <div>
+            <a href="#">Home</a>
+            <a href="#">Explore</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">Website 1</div>
+        <div class="card">Website 2</div>
+        <div class="card">Website 3</div>
+        <div class="card">Website 4</div>
+        <div class="card">Website 5</div>
+    </div>
+    <footer class="footer">
+        <img src="https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/refs/heads/root/websites-explorer/websites-explorer-logo.png" alt="Websites Explorer Logo">
+        <p>Websites Explorer - A platform for discovering websites across the internet.</p>
+        <p>&copy; 2025 Websites Explorer. All rights reserved.</p>
+    </footer>
+</body>
+</html>
