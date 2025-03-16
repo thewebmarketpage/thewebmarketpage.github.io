@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+  <head>
+    <title>json repair tool by giantwebmarket.com</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="json repair free cloud tool">
+    <meta name="keywords" content="json, format json, repair tool">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="style.css"> 
+    <!--[if IE 6]>
+    <style type="text/css">
+        * html .group {
+            height: 1%;
+        }
+    </style>
+    <![endif]--> 
+    <!--[if IE 7]>
+    <style type="text/css">
+        *:first-child+html .group {
+            min-height: 1px;
+        }
+    </style>
+    <![endif]--> 
+    <!--[if lt IE 9]> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script> 
+    <![endif]--> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/json-parse-even-better-errors@2.3.1/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/json-stringify-pretty-compact@1.0.3/index.js"></script>
+
+    <script>
+      // Function to repair invalid JSON
+      function repairJSON() {
+        const input = document.getElementById('json-input').value;
+        try {
+          // Try parsing the invalid JSON using json-parse-even-better-errors
+          const parsedJson = JSON.parse(input);
+          const repairedJson = JSON.stringify(parsedJson, null, 2);
+          document.getElementById('json-input').value = repairedJson;
+        } catch (e) {
+          // If the JSON is invalid, try to repair it using json-stringify-pretty-compact
+          try {
+            const repairedJson = JSON.stringifyPrettyCompact(input);
+            document.getElementById('json-input').value = repairedJson;
+          } catch (e) {
+            alert('Failed to repair JSON: ' + e.message);
+          }
+        }
+      }
+
+      // Function to copy the repaired JSON to clipboard
+      function copyToClipboard() {
+        const output = document.getElementById('json-input');
+        output.select();
+        document.execCommand('copy');
+      }
+    </script>
+
+    <style>
+     
+      #json-input {
+        width: 517px;
+        height: 430px;
+        resize: none;
+        overflow: auto;
+        padding-top: 10px;
+        padding-left: 30px;
+        font-size: 15px;
+      }
+            .text, .text-2, .text-3, .text-4 {
+        font-size: 22px;
+        color: white;
+      }
+
+      /* Make logo text much bigger */
+      .pdf-to-image-by-giantwebmarket-com_logo_text {
+        font-size: 32px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 10px;
+        color: white;
+      }
+
+      /* Footer text a little bigger */
+      .pdf-to-image-by-giantwebmarket-com_logo_text-footer {
+        font-size: 18px;
+        display: block;
+        margin-top: 20px;
+        color: white;
+      }
+      .small-footer-text {
+      font-size: 20px;
+      color: white;
+      
+      }
+    </style>
+
+  </head>
+  <body>
+    <div class="global_container_">
+      <div class="l-constrained">
+        <header class="header group">
+          <div class="col-2">
+            <img class="pdf-to-image-by-giantwebmarket-com_logo_text" src="images/pdf_to_image_by_giantwebm.png" alt="json repair by giantwebmarket.com" width="397" height="37" title="json repair by giantwebmarket.com">
+                      <div class="text" style="margin-left: 55px;">
+            paste the invalid json in the box blow. press repair button to fix the json format.
+          </div>
+          </div>
+          
+        </header>
+        <div class="main-content-wrapper group">
+          <div class="row match-height group">
+            <!-- Repair Button with image -->
+            <div class="repair_button_shape-holder" onclick="repairJSON()">
+              <img class="repair_button_text" src="images/repair_button_text.png" alt="repair" width="59" height="22" title="repair">
+            </div>
+            <!-- Copy Button with image -->
+            <div class="copy_repiared_json_button_shape-holder" onclick="copyToClipboard()">
+              <img class="copy_repaired_json_text" src="images/copy_repaired_json_text.png" alt="copy" width="47" height="18" title="copy">
+            </div>
+          </div>
+          
+          <!-- Text above the input box -->
+          <div style="margin-top: 10px;">
+              <div class="text" style="margin-left: -70px;">
+            don't worry the cloud auto repair tool will make it valid again.
+          </div>
+            <br>
+          </div>
+          
+          <!-- Single editable text area with fixed size -->
+          <textarea id="json-input" placeholder="Paste your invalid JSON here or it will show repaired JSON after pressing Repair"></textarea>
+        </div>
+        <div>
+<div class="text" style="margin-left: 60px;">
+  <a href="giantwebmarket.com/cloud-free-online-tools" target="_blank" style="text-decoration: none; color: inherit;">
+    more tools
+  </a>
+</div>
+
+ <footer class="footer">
+          <div class="pdf-to-image-by-giantwebmarket-com_logo_text-footer">
+            json repair tool by
+          </div>
+          <p class="small-footer-text">
+            <a href="https://giantwebmarket.com" target="_blank" style="color: inherit;">
+              giantwebmarket.com
+            </a>
+          </p>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
+

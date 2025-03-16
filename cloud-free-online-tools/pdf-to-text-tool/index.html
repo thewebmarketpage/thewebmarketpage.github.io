@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+  <head>
+    <title>PDF to Text Converter</title>
+    <meta charset="UTF-8">
+    <!-- Updated description to match your PDF to Text tool -->
+    <meta name="description" content="PDF to Text Converter is a fast and free cloud tool to convert PDF files to plain text online. Quickly extract text from PDFs without the need for any software installation.">
+    <meta name="keywords" content="PDF, text, converter, free, cloud tool, online">
+    <meta name="google-adsense-account" content="ca-pub-4307722391842007">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="style.css">
+    <style>
+      /* Make all text bigger */
+      .text, .text-2, .text-3, .text-4 {
+        font-size: 22px;
+        color: white;
+      }
+
+      /* Make logo text much bigger */
+      .pdf-to-image-by-giantwebmarket-com_logo_text {
+        font-size: 32px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 10px;
+        color: white;
+      }
+
+      /* Footer text a little bigger */
+      .pdf-to-image-by-giantwebmarket-com_logo_text-footer {
+        font-size: 18px;
+        display: block;
+        margin-top: 20px;
+        color: white;
+      }
+      .small-footer-text {
+      font-size: 20px;
+      color: white;
+      
+      }
+    </style>
+    <!-- PDF.js CDN -->
+    <script src="https://giantwebmarket.com/js/pdf.min.js"></script>
+    <script>
+      function triggerFileUpload() {
+        document.getElementById('file-upload-input').click();
+      }
+
+      function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (file && file.type === 'application/pdf') {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const arrayBuffer = e.target.result;
+            extractTextFromPDF(arrayBuffer);
+          };
+          reader.readAsArrayBuffer(file);
+        } else {
+          alert('Please upload a valid PDF file.');
+        }
+      }
+
+      function extractTextFromPDF(arrayBuffer) {
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        loadingTask.promise.then(function(pdf) {
+          let textContent = '';
+          const numPages = pdf.numPages;
+          let pagePromises = [];
+          for (let i = 1; i <= numPages; i++) {
+            pagePromises.push(pdf.getPage(i).then(function(page) {
+              return page.getTextContent().then(function(text) {
+                text.items.forEach(function(item) {
+                  textContent += item.str + '\n';
+                });
+              });
+            }));
+          }
+          Promise.all(pagePromises).then(function() {
+            window.pdfTextContent = textContent;
+            displayTextInBox(window.pdfTextContent);
+            alert('PDF loaded successfully. You can now download the extracted text.');
+          });
+        }, function(error) {
+          alert('Error extracting text from PDF: ' + error.message);
+        });
+      }
+
+      function displayTextInBox(text) {
+        const box = document.querySelector('.preview-uploaded-pdf-file-as-image-box');
+        box.textContent = text;
+        box.style.overflowY = 'auto';
+        box.style.padding = '10px';
+      }
+
+      function downloadTextFile() {
+        if (window.pdfTextContent) {
+          const blob = new Blob([window.pdfTextContent], { type: 'text/plain' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'extracted_text.txt';
+          link.click();
+        } else {
+          alert('No text available to download. Please upload a PDF first.');
+        }
+      }
+    </script>
+
+    <!-- Google AdSense and Google Analytics -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5FB2YTV3KP');
+    </script>
+
+  </head>
+  <body>
+    <div class="global_container_">
+      <div class="l-constrained">
+        <header class="header">
+          <!-- Logo text -->
+          <div class="pdf-to-image-by-giantwebmarket-com_logo_text">
+  <img src="https://giantwebmarket.com/logo_giantwebmarket.com.png" alt="Giant Web Market Logo" style="height: 30px; margin-right: 20px; vertical-align: middle;">
+  PDF to Text Converter
+</div>
+
+          <!-- Subtitle -->
+          <div class="text" style="margin-left: 55px;">
+            Useful cloud tool to turn PDF files into text.
+          </div>
+        </header>
+
+        <div class="main-content-wrapper">
+          <div class="text-2">
+            Upload PDF file to start the process.
+          </div>
+
+          <div class="row match-height group">
+            <div class="upload_button_text-holder">
+              <!-- Upload button image -->
+              <img class="upload_button" src="images/upload_button.png" alt="Upload" width="67" height="23" title="Upload" onclick="triggerFileUpload()">
+            </div>
+            <div class="shape_button_download-holder">
+              <!-- Download button image -->
+              <img class="download_button_text" src="images/download_button_text.png" alt="Download" width="92" height="17" title="Download" onclick="downloadTextFile()">
+            </div>
+          </div>
+          <br>
+          <!-- Fixed-size box for extracted text -->
+          <div class="preview-uploaded-pdf-file-as-image-box" style="width: 517px; height: 430px; border: 1px solid #ccc; background-color: #f9f9f9; overflow-y: auto; padding: 10px;"></div>
+
+          <div class="row-2 group">
+            <div class="text-3">
+              Download the PDF file as text.
+            </div>
+            <div class="text-4">
+              <a href="giantwebmarket.com/cloud-free-online-tools" style="text-decoration: none; color: inherit;">
+                More tools
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="pdf-to-image-by-giantwebmarket-com_logo_text-footer">
+            PDF to Text Converter by
+          </div>
+          <p class="small-footer-text">
+            <a href="https://giantwebmarket.com" target="_blank" style="text-decoration: none; color: inherit;">
+              giantwebmarket.com
+            </a>
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="file-upload-input" style="display: none;" accept=".pdf" onchange="handleFileUpload(event)">
+  </body>
+</html>
+

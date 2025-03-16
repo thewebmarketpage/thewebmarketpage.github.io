@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Your site's title should be here</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Your site's description should be here">
+    <meta name="keywords" content="Your site's keywords should be here">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/match-height.js"></script> 
+    <script>
+      $(function () {
+        $('.match-height-bootstrap-row > * > *').matchHeight();
+        $('.match-height > *').matchHeight();
+      })
+    </script>
+    <!-- PDF.js CDN for rendering PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <!-- FileSaver.js CDN for downloading files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+      /* Adjust the position of the .text image to match the alignment of the other image */
+      .text {
+        position: relative;
+        left: -170px; /* Adjust this value as needed */
+      }
+
+      /* Custom styles for the buttons (images) */
+      .upload-button, .download-button {
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      /* Ensure the container div does not hide the buttons */
+      .upload-button-holder, .download-button-holder {
+        display: inline-block;
+      }
+
+      /* Text Box Styling */
+      #pdf-text-box {
+        width: 100%;
+        height: 150px;
+        overflow: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="global_container_">
+      <div class="l-constrained">
+        <header class="header">
+          <img class="pdf-to-image-by-giantwebmarket-com_logo_text" src="images/pdf_to_image_by_giantwebm.png" alt="pdf to text by giantwebmarket.com" width="386" height="37" title="pdf to text by giantwebmarket.com">
+          <img class="text" src="images/useful_cloud_tool_to_turn.png" alt="useful cloud tool to turn pdf files into row of text." width="578" height="26" title="useful cloud tool to turn pdf files into row of text.">
+        </header>
+        <div class="main-content-wrapper">
+          <img class="text-2" src="images/upload_pdf_file_to_start_.png" alt="upload pdf file to start the process." width="412" height="26" title="upload pdf file to start the process.">
+          <div class="row match-height group">
+            <!-- Image now acts as the file upload button -->
+            <div class="upload-button-holder">
+              <img class="upload-button" src="images/upload_button.png" alt="upload" width="67" height="23" title="upload" id="upload-image" />
+              <input type="file" id="pdf-upload" accept=".pdf" style="display:none;" />
+            </div>
+            <!-- Image now acts as the download button, initially hidden -->
+            <div class="download-button-holder" id="download-holder" style="display:none;">
+              <img class="download-button" src="images/download_button_text.png" alt="download" width="92" height="17" title="download" id="download-image" />
+            </div>
+          </div>
+          <div class="prevew-uploded-pdf-file-as-image-box" id="pdf-text-box"></div>
+          <div class="row-2 group">
+            <img class="text-3" src="images/download_the_pdf_file_as_.png" alt="download the pdf file as text." width="293" height="23" title="download the pdf file as text.">
+            <img class="text-4" src="images/more_tools.png" alt="more tools" width="108" height="18" title="more tools">
+          </div>
+        </div>
+        <footer class="footer">
+          <img class="pdf-to-image-by-giantwebmarket-com_logo_text-footer" src="images/pdf_to_image_by_giantwebm_2.png" alt="pdf to text by giantwebmarket.com" width="361" height="23" title="pdf to text by giantwebmarket.com">
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      // Function to extract text from PDF and display it in the text box
+      function extractTextFromPDF(file) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const pdfData = new Uint8Array(e.target.result);
+          
+          // Using PDF.js to extract text
+          pdfjsLib.getDocument(pdfData).promise.then(pdf => {
+            let text = '';
+            const totalPages = pdf.numPages;
+
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+              pdf.getPage(pageNum).then(page => {
+                page.getTextContent().then(content => {
+                  content.items.forEach(item => {
+                    text += item.str + ' ';
+                  });
+
+                  // After text is extracted from the last page, show it and enable download
+                  if (pageNum === totalPages) {
+                    document.getElementById('pdf-text-box').innerText = text;
+                    document.getElementById('download-holder').style.display = 'inline-block'; // Show download button
+                    document.getElementById('download-image').onclick = function() {
+                      const blob = new Blob([text], { type: 'text/plain' });
+                      saveAs(blob, 'converted_text.txt');
+                    };
+                  }
+                });
+              });
+            }
+          }).catch(err => {
+            console.error('Error extracting text from PDF: ', err);
+          });
+        };
+
+        reader.readAsArrayBuffer(file);
+      }
+
+      // Event listener for file input
+      document.getElementById('upload-image').addEventListener('click', function() {
+        document.getElementById('pdf-upload').click();
+      });
+
+      document.getElementById('pdf-upload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          extractTextFromPDF(file);
+        }
+      });
+    </script>
+  </body>
+</html>
+
