@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Image Format Converter offers a fast and free solution to effortlessly convert your images into different formats like JPEG, PNG, WebP, TIFF, SVG, and more. Upload and convert images in seconds without the need for software installation.">
+<meta name="keywords" content="image conversion, online image tool, convert images, JPEG, PNG, WebP, TIFF, SVG, free converter, image formats, upload images">
+
+<link rel="icon" href="https://giantwebmarket.com/logo_giantwebmarket.com.png" type="image/png">
+<meta property="og:image" content="https://giantwebmarket.com/logo_giantwebmarket.com.png">
+
+
+<meta name="google-adsense-account" content="ca-pub-4307722391842007">
+
+  <title>Image Format Converter free tool</title>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/webp-converter@1.0.0/webpconverter.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-to-blob/3.0.0/canvas-to-blob.min.js"></script>
+
+  </script>
+
+  <style>
+       html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video, input, textarea {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font: inherit;
+      font-size: 100%;
+      vertical-align: baseline;
+    }
+
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure,
+    footer, header, menu, nav, section, time {
+      display: block;
+    }
+
+    body {
+      line-height: 1;
+      color: black;
+      background: white;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ol, ul {
+      list-style: none;
+    }
+
+    blockquote, q {
+      quotes: none;
+    }
+
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+      content: '';
+      content: none;
+    }
+
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    textarea:focus, input:focus {
+      outline: 0;
+    }
+
+    input {
+      border-width: 0;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 0;
+      font-size: 20px;
+    }
+
+    .group:before,
+    .group:after {
+      content: " ";
+      display: table;
+    }
+
+    .group:after {
+      clear: both;
+    }
+
+    .group {
+      zoom: 1; /* ie 6/7 */
+    }
+
+    html {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    *,
+    *:after,
+    *:before {
+      -webkit-box-sizing: inherit;
+      -moz-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      min-width: 1159px;
+      color: #000000;
+      font-size: 0.75rem; /* 12px / 16px = 0.75rem */
+      font-style: normal;
+      font-weight: normal;
+      letter-spacing: 0;
+      text-decoration: none;
+    }
+
+    .global_container_ {
+      float: none;
+      height: auto;
+      margin: 0 auto;
+      padding: 22px 0 8px;
+      position: relative;
+      width: 100%;
+      background: #000000;
+    }
+
+    .l-constrained {
+      margin: 0 auto;
+      position: relative;
+      width: 1159px;
+    }
+
+    .header {
+      margin: 0 0 0 10px;
+      position: relative;
+    }
+
+    .pdf-to-image-by-giantwebmarket-com_logo_text {
+      display: block;
+      position: relative;
+      font-size: 20px;
+      color: white;
+    }
+
+    .text {
+      display: block;
+      left: 58.5px;
+      margin: 43px auto 0;
+      position: relative;
+      color: white;
+      font-size: 20px;
+    }
+
+    .main-content-wrapper {
+      margin: 4px 127px 0;
+      position: relative;
+    }
+
+    .text-2 {
+      display: block;
+      position: relative;
+      color: white;
+      font-size: 20px;
+    }
+
+    .row {
+      margin: 30px 0 0 4px;
+      position: relative;
+    }
+
+    .upload_button_text-holder {
+      float: left;
+      margin: 0 286px 0 0;
+      padding: 6px 0 4px;
+      position: relative;
+      width: 113px;
+      background: #ffffff;
+    }
+
+    .upload_button {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .shape_button_download-holder {
+      float: left;
+      padding: 7px 0 9px;
+      position: relative;
+      width: 113px;
+      background: #ffffff;
+    }
+
+    .download_button_text {
+      display: block;
+      margin: 0 auto;
+      
+    }
+
+    .preview-uploaded-image-box {
+      height: 395px;
+      margin: 12px 0 0 3px;
+      position: relative;
+      width: 513px;
+      background: #ffffff;
+    }
+
+    .row-2 {
+      margin: 9px 0 0;
+      position: relative;
+    }
+
+    .text-3 {
+      float: left;
+      margin: 0 115px 0 0;
+      color: white;
+      font-size: 20px;
+    }
+
+    .text-4 {
+      float: left;
+      color: white;
+      font-size: 20px;
+    }
+
+    .footer {
+      left: 399px;
+      margin: 29px auto 0;
+      position: relative;
+      width: 361px;
+      color: white;
+      font-size: 20px;
+    }
+
+    .pdf-to-image-by-giantwebmarket-com_logo_text-footer {
+      display: block;
+      color: white;
+      font-size: 20px;
+    }
+
+    .radio-group {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      color: white;
+      font-size: 20px;
+    }
+
+    .radio-group label {
+      margin-right: 20px;
+    }
+  </style>
+  
+    <!-- Google AdSense and Google Analytics -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5FB2YTV3KP');
+    </script>
+
+</head>
+<body>
+  <div class="global_container_">
+    <div class="l-constrained">
+      <header class="header">
+        <div class="pdf-to-image-by-giantwebmarket-com_logo_text">
+          <img src="https://giantwebmarket.com/logo_giantwebmarket.com.png" alt="Giant Web Market Logo" style="height: 30px; margin-right: 20px; vertical-align: middle;">
+          Image Format Converter
+        </div>
+
+        <div class="text" style="margin-left: 55px;">
+          Convert images between different formats ( PNG,
+ WebP,
+ GIF,
+ BMP, etc.)
+        </div>
+      </header>
+
+      <div class="main-content-wrapper">
+        <div class="text-2">
+          Upload an image to start the conversion process.
+        </div>
+
+        <div class="row match-height group">
+          <div class="upload_button_text-holder">
+            <img class="upload_button" src="images/upload_button.png" alt="Upload" width="67" height="23" title="Upload" onclick="triggerFileUpload()">
+          </div>
+          <div class="shape_button_download-holder">
+            <img class="download_button_text" src="images/download_button_text.png" alt="Download" width="92" height="17" title="Download" onclick="downloadConvertedImage()">
+          </div>
+        </div>
+
+        <br>
+        <div class="preview-uploaded-image-box" style="width: 517px; height: 430px; border: 1px solid #ccc; background-color: #f9f9f9; overflow-y: auto; padding: 10px;"></div>
+
+        <div class="radio-group">
+          <div class="text-4">
+            Choose format
+          </div>
+          
+          <label><input type="radio" name="format" value="jpg"> JPG</label>
+          <label><input type="radio" name="format" value="png"> PNG</label>
+          <label><input type="radio" name="format" value="webp"> WebP</label>
+          <label><input type="radio" name="format" value="gif"> GIF</label>
+          <label><input type="radio" name="format" value="bmp"> BMP</label>
+        </div>
+
+      </div>
+
+      <footer class="footer">
+        <div class="pdf-to-image-by-giantwebmarket-com_logo_text-footer">
+          Image Format Converter by GiantWebMarket.com
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    let uploadedImage = null;
+
+    // Function to trigger the file upload
+    function triggerFileUpload() {
+        let input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.onchange = function(event) {
+            let file = event.target.files[0];
+            if (file) {
+                uploadedImage = file;
+                displayImagePreview(file);
+            }
+        };
+        input.click();
+    }
+
+    // Display the image preview after upload
+    function displayImagePreview(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewBox = document.querySelector('.preview-uploaded-image-box');
+            previewBox.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 100%;">`;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Function to handle image conversion and download
+    function downloadConvertedImage() {
+        let selectedFormat = document.querySelector('input[name="format"]:checked');
+        if (!selectedFormat) {
+            alert("Please select a format first.");
+            return;
+        }
+
+        if (!uploadedImage) {
+            alert("Please upload an image first.");
+            return;
+        }
+
+        let fileFormat = selectedFormat.value;
+
+        // Use FileReader to convert image to selected format
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            let imgData = e.target.result;
+            let convertedImageUrl = '';
+
+            if (fileFormat === "jpg" || fileFormat === "png" || fileFormat === "gif" || fileFormat === "bmp") {
+                let canvas = document.createElement('canvas');
+                let ctx = canvas.getContext('2d');
+                let img = new Image();
+
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    // Convert the image to the selected format
+                    convertedImageUrl = canvas.toDataURL('image/' + fileFormat);
+                    downloadImage(convertedImageUrl, fileFormat);
+                };
+
+                img.src = imgData;
+            } else if (fileFormat === "webp") {
+                // WebP conversion using canvas (native support in browsers)
+                let canvas = document.createElement('canvas');
+                let ctx = canvas.getContext('2d');
+                let img = new Image();
+
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    // Convert to WebP format using canvas
+                    convertedImageUrl = canvas.toDataURL('image/webp');
+                    downloadImage(convertedImageUrl, fileFormat);
+                };
+
+                img.src = imgData;
+            } else if (fileFormat === "ico") {
+                // ICO conversion (basic approach)
+                alert("ICO format is a complex format and requires specialized libraries or handling.");
+            } else if (fileFormat === "tiff") {
+                // TIFF conversion using TIFF.js
+                const tiffReader = new FileReader();
+                tiffReader.onload = function(e) {
+                    let arrayBuffer = e.target.result;
+                    let tiff = new Tiff({ buffer: arrayBuffer });
+                    let canvas = tiff.toCanvas();
+                    convertedImageUrl = canvas.toDataURL("image/png");  
+                    downloadImage(convertedImageUrl, 'png');  
+                };
+                tiffReader.readAsArrayBuffer(uploadedImage);
+            }
+        };
+        reader.readAsDataURL(uploadedImage);
+    }
+
+    // Function to handle the image download
+    function downloadImage(url, format) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `converted_image.${format}`;
+        link.click();
+    }
+  </script>
+</body>
+</html>
+
