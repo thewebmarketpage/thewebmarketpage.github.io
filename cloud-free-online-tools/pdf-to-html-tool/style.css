@@ -1,0 +1,237 @@
+@charset "UTF-8";
+/**
+* Eric Meyer's Reset CSS v2.0
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, input, textarea {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, menu, nav, section, time {
+  display: block;
+}
+
+body {
+  line-height: 1;
+  color: black;
+  background: white;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* meyerweb css reset end */
+
+textarea:focus, input:focus {
+  outline: 0;
+}
+
+input {
+  border-width: 0;
+}
+
+em {
+  font-style: italic;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.group:before,
+.group:after {
+  content: " ";
+  display: table;
+}
+
+.group:after {
+  clear: both;
+}
+
+.group {
+  zoom: 1; /* ie 6/7 */
+}
+
+embed,
+img,
+object,
+video {
+  max-width: 100%;
+}
+sup {
+  font-size: 58.3%;
+  vertical-align: text-top;
+}
+sub {
+  font-size: 58.3%;
+  vertical-align: text-bottom;
+}
+.no-space-between-inline-blocks {
+  *letter-spacing: normal; /*reset IE < 8*/
+  letter-spacing: -0.31em; /*webkit*/
+  word-spacing: -0.43em; /*IE < 8 && gecko*/
+}
+/*restore spacing on inner elements*/
+.no-space-between-inline-blocks > * {
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+.displace {
+  left: -5000px;
+  position: absolute;
+}
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*,
+*:after,
+*:before {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+html {
+  font-size: 16px;
+}
+body {
+  min-width: 1159px;
+  color: #000000;
+  font-size: 0.75rem; /* 12px / 16px = 0.75rem */
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+.global_container_ {
+  float: none;
+  height: auto;
+  margin: 0 auto;
+  padding: 22px 0 8px;
+  position: relative;
+  width: 100%; /* 1193px / 1193px = 100% */
+  background: #000000;
+}
+.l-constrained {
+  margin: 0 auto;
+  position: relative;
+  width: 1159px;
+}
+.header {
+  margin: 0 0 0 10px;
+  position: relative;
+}
+.pdf-to-image-by-giantwebmarket-com_logo_text {
+  display: block;
+  position: relative;
+}
+.text {
+  display: block;
+  left: 58.5px;
+  margin: 43px auto 0;
+  position: relative;
+}
+.main-content-wrapper {
+  margin: 4px 127px 0;
+  position: relative;
+}
+.text-2 {
+  display: block;
+  position: relative;
+}
+.row {
+  margin: 30px 0 0 4px;
+  position: relative;
+}
+.upload_button_text-holder {
+  float: left;
+  margin: 0 286px 0 0;
+  padding: 6px 0 4px;
+  position: relative;
+  width: 113px;
+  background: #ffffff;
+}
+.upload_button {
+  display: block;
+  margin: 0 auto;
+}
+.shape_button_download-holder {
+  float: left;
+  padding: 7px 0 9px;
+  position: relative;
+  width: 113px;
+  background: #ffffff;
+}
+.download_button_text {
+  display: block;
+  margin: 0 auto;
+}
+.prevew-uploded-pdf-file-as-image-box {
+  height: 395px;
+  margin: 12px 0 0 3px;
+  position: relative;
+  width: 513px;
+  background: #ffffff;
+}
+.row-2 {
+  margin: 9px 0 0;
+  position: relative;
+}
+.text-3 {
+  float: left;
+  margin: 0 115px 0 0;
+}
+.text-4 {
+  float: left;
+}
+.footer {
+  left: 399px;
+  margin: 29px auto 0;
+  position: relative;
+  width: 361px;
+}
+.pdf-to-image-by-giantwebmarket-com_logo_text-footer {
+  display: block;
+}
