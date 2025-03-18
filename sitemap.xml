@@ -7,66 +7,6 @@
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://giantwebmarket.com/urnews/index.html</loc>
-        <lastmod>2025-02-19T12:00:00+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/Business.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/Europe.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/MiddleEast.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/MoneyMoves.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/RealTimeMarket.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/Science.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/Technology.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>http://giantwebmarket.com/urnews/index.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://giantwebmarket.com/urnews/stock.html</loc>
-        <lastmod>2025-02-25T14:13:49+00:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
         <loc>https://giantwebmarket.com/product.html?id=0</loc>
         <lastmod>2025-02-25T14:13:49+00:00</lastmod>
         <changefreq>daily</changefreq>
