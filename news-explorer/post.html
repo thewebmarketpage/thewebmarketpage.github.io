@@ -152,7 +152,7 @@
         return;
       }
 
-      fetch('/data.json')
+      fetch('/newsy.json')
         .then(response => response.json())
         .then(posts => {
           const post = posts.find(p => p.id === postId);
