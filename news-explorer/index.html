@@ -152,7 +152,7 @@
     const postsPerPage = 20;
 
     function loadPosts() {
-      fetch('/newsy.json')
+      fetch('newsy.json')
         .then(response => response.json())
         .then(posts => {
           allPosts = posts;
