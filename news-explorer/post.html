@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Stay informed with News Explorer, your go-to source for the latest news, updates, and in-depth analysis on global events, technology, politics, and more. Explore breaking stories and trending topics today!">
+<meta name="keywords" content="News Explorer, latest news, breaking news, global news, technology news, politics, trending topics, news updates, in-depth analysis, current events">
+
+    <meta name="google-adsense-account" content="ca-pub-4307722391842007">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007"
+     crossorigin="anonymous"></script>
+  <title>News Explorer - Latest Breaking News, Global Updates, and In-Depth Analysis</title>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5FB2YTV3KP');
+</script>
+
+
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background-color: #fff;
+      margin: 0;
+      color: #222;
+    }
+    header {
+      background-color: #fff;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #000;
+    }
+    header h1 {
+      font-size: 48px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    nav {
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+    /* Reusable link style */
+    .link-style {
+      color: black;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .link-style:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+    .post-title {
+      font-size: 36px;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .post-meta {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+    .post-body {
+      font-size: 18px;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+    .post-image {
+      width: 100%;
+      height: 300px;
+      object-fit: contain;
+      margin-bottom: 20px;
+    }
+    .share-link {
+      display: block;
+      text-align: left;
+      margin: 20px 0;
+    }
+
+    footer {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>news explorer</h1>
+  </header>
+
+  <nav>
+    <a href="https://giantwebmarket.com/news-explorer/index.html" class="link-style">home</a>
+    <a href="https://giantwebmarket.com/privacy-policy.html" class="link-style">privacy policy</a>
+  </nav>
+
+  <div class="content">
+    <div id="post" class="post">
+      <h2 id="postTitle" class="post-title"></h2>
+      <div id="postMeta" class="post-meta"></div>
+      <div id="postBody" class="post-body">
+        <p></p>
+      </div>
+
+      <!-- Share Link -->
+      <div class="share-link">
+        <a onclick="copyShareLink()" class="link-style">Share This Post</a>
+      </div>
+
+      <!-- Back to Home Link -->
+      <div class="share-link">
+        <a href="https://giantwebmarket.com/news-explorer/index.html" class="link-style">Back to Home</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 news explorer by giantwebmarket.com . All Rights Reserved.
+  </footer>
+
+   <script>
+    let currentTitle = '';
+
+    function fetchPost() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const postId = urlParams.get('id');
+      
+      if (!postId) {
+        document.getElementById('post').innerHTML = '<p>Post not found!</p>';
+        return;
+      }
+
+      fetch('/data.json')
+        .then(response => response.json())
+        .then(posts => {
+          const post = posts.find(p => p.id === postId);
+
+          if (post) {
+            document.getElementById('postTitle').textContent = post.title;
+            currentTitle = post.title;
+            document.getElementById('postMeta').textContent = `By alex mark | March 23, 2025`;
+
+            if (post.image) {
+              const imageElement = document.createElement('img');
+              imageElement.src = post.image;
+              imageElement.alt = post.title;
+              imageElement.classList.add('post-image');
+              document.getElementById('postBody').prepend(imageElement);
+            }
+
+            document.getElementById('postBody').innerHTML += post.content || '<p>No content available.</p>';
+
+            // Update the document title dynamically
+            document.title = `${post.title} - news explorer`;
+          } else {
+            document.getElementById('post').innerHTML = '<p>Post not found!</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          document.getElementById('post').innerHTML = '<p>Error loading post!</p>';
+        });
+    }
+
+    // Copy to clipboard function
+    function copyShareLink() {
+      const shareText = `${currentTitle} - ${window.location.href}`;
+      navigator.clipboard.writeText(shareText).then(() => {
+        alert('Post link copied to clipboard!');
+      }).catch(err => {
+        alert('Failed to copy link!');
+        console.error(err);
+      });
+    }
+
+    window.onload = fetchPost;
+  </script>
+<script async type="application/javascript"
+        src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
+<script>
+  (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+    basicSubscriptions.init({
+      type: "NewsArticle",
+      isPartOfType: ["Product"],
+      isPartOfProductId: "CAow3fK4DA:openaccess",
+      clientOptions: { theme: "light", lang: "en" },
+    });
+  });
+</script>
+</body>
+</html>
+

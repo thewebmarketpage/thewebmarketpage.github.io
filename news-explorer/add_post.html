@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 1rem;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Add New Post</h1>
+
+    <form id="addPostForm">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="image">Image URL</label>
+        <input type="url" id="image" name="image" required>
+
+        <label for="content">Content</label>
+        <textarea id="content" name="content" required></textarea>
+
+        <button type="submit">Save Post</button>
+    </form>
+
+    <p id="responseMessage"></p>
+
+    <script>
+        document.getElementById('addPostForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {
+                title: formData.get('title'),
+                image: formData.get('image'),
+                content: formData.get('content')  // Ensure content is included
+            };
+
+            fetch('/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('responseMessage').textContent = 'Success: ' + text;
+                document.getElementById('addPostForm').reset(); // Reset form after submit
+            })
+            .catch(error => {
+                document.getElementById('responseMessage').textContent = 'Error: ' + error;
+            });
+        });
+    </script>
+
+</body>
+</html>
+
