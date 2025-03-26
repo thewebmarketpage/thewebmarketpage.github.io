@@ -125,13 +125,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .search-result-icon img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 8px;
         }
 
         .search-result-icon .material-icons {
@@ -258,7 +258,7 @@
         .app-icon img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .app-icon .material-icons {
@@ -466,6 +466,7 @@
                 img.alt = app.title;
                 img.onerror = function() {
                     iconDiv.innerHTML = '<i class="material-icons">android</i>';
+                    img.style.display = 'none';
                 };
                 iconDiv.appendChild(img);
             } else {
@@ -523,6 +524,7 @@
                 img.alt = app.title;
                 img.onerror = function() {
                     iconDiv.innerHTML = '<i class="material-icons">android</i>';
+                    img.style.display = 'none';
                 };
                 iconDiv.appendChild(img);
             } else {
@@ -653,7 +655,7 @@
                     article: app.article,
                     version: app.version,
                     download_url: app.download_url,
-                    icon: app.icon || null
+                    icon: app.icon || app.url // Use direct icon URL from JSON or fallback to URL
                 };
             });
             
