@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Loading...</title>  <!-- Default title while loading -->
+    <title id="page-title">Loading...</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,6 +18,8 @@
             width: 100px;
             height: auto;
             display: block;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
         .download-btn {
             display: inline-block;
@@ -61,35 +63,60 @@
             }
         }
 
-        // Add unique IDs to each app in the JSON data
         function assignUniqueIds(data) {
             return data.map((app, index) => {
-                app.id = `app-${index + 1}`;  // Assign app-1, app-2, etc.
+                app.id = `app-${index + 1}`;
                 return app;
             });
         }
 
         function displayAppDetails(app) {
             document.getElementById('app-title').textContent = app.title || 'No title available';
-            document.getElementById('app-icon').src = app.app_icon || '';
             document.getElementById('app-version').textContent = app.version || 'No version available';
             document.getElementById('app-author').textContent = app.author || 'No author available';
             document.getElementById('app-header').textContent = app.header || 'No description available';
             document.getElementById('app-article').textContent = app.article || 'No article available';
             document.getElementById('download-btn').href = app.download_url || '#';
-            document.getElementById('loading').style.display = 'none';  // Hide loading indicator
 
-            // ** Update the page title dynamically **
+            // ** Update Page Title **
             document.title = app.title || 'App Details';
+
+            // ** Fetch & Replace the App Icon from the URL **
+            fetchAppIcon(app.url);
+        }
+
+        async function fetchAppIcon(url) {
+            try {
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+
+                // Create a temporary DOM parser
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+
+                // Find the image inside the specified selector
+                const imgElement = doc.querySelector('#main > div.container > div > div.column.is-main > div.app_header.mt-14 > div.avatar > img');
+                
+                if (imgElement) {
+                    let imgUrl = imgElement.getAttribute('src') || imgElement.getAttribute('data-src');
+                    if (imgUrl) {
+                        document.getElementById('app-icon').src = imgUrl;
+                    }
+                } else {
+                    console.error("App icon not found in the page.");
+                }
+            } catch (error) {
+                console.error('Error fetching app icon:', error);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const appId = new URLSearchParams(window.location.search).get('id'); // Get the app ID from URL
+            const appId = new URLSearchParams(window.location.search).get('id');
             if (appId) {
                 const allApps = await fetchData();
-                const appsWithIds = assignUniqueIds(allApps); // Assign IDs to the apps
-                
-                const app = appsWithIds.find(a => a.id === appId); // Find the app by its unique ID
+                const appsWithIds = assignUniqueIds(allApps);
+                const app = appsWithIds.find(a => a.id === appId);
 
                 if (app) {
                     displayAppDetails(app);
