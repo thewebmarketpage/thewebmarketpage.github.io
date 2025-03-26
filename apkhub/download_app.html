@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">App Details</title>
+    <title id="page-title">Loading...</title>  <!-- Default title while loading -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -78,6 +78,9 @@
             document.getElementById('app-article').textContent = app.article || 'No article available';
             document.getElementById('download-btn').href = app.download_url || '#';
             document.getElementById('loading').style.display = 'none';  // Hide loading indicator
+
+            // ** Update the page title dynamically **
+            document.title = app.title || 'App Details';
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
