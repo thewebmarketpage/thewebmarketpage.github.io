@@ -61,6 +61,14 @@
             }
         }
 
+        // Add unique IDs to each app in the JSON data
+        function assignUniqueIds(data) {
+            return data.map((app, index) => {
+                app.id = `app-${index + 1}`;  // Assign app-1, app-2, etc.
+                return app;
+            });
+        }
+
         function displayAppDetails(app) {
             document.getElementById('app-title').textContent = app.title || 'No title available';
             document.getElementById('app-icon').src = app.app_icon || '';
@@ -76,7 +84,9 @@
             const appId = new URLSearchParams(window.location.search).get('id'); // Get the app ID from URL
             if (appId) {
                 const allApps = await fetchData();
-                const app = allApps.find(a => a.id === appId); // Find the app by its ID
+                const appsWithIds = assignUniqueIds(allApps); // Assign IDs to the apps
+                
+                const app = appsWithIds.find(a => a.id === appId); // Find the app by its unique ID
 
                 if (app) {
                     displayAppDetails(app);
