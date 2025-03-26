@@ -18,7 +18,6 @@
             width: 100px;
             height: auto;
             display: block;
-            margin-top: 10px;
         }
         .download-btn {
             display: inline-block;
@@ -34,26 +33,30 @@
             font-size: 18px;
             color: #888;
         }
+        #app-image-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
     <h1 id="app-title">Loading...</h1>
-    
     <p><strong>Version:</strong> <span id="app-version">Loading...</span></p>
     <p><strong>Author:</strong> <span id="app-author">Loading...</span></p>
     <p><strong>About:</strong> <span id="app-header">Loading...</span></p>
     <p id="app-article">Loading...</p>
-    <img id="app-image" src="" alt="App Image" style="display:none;">
-    
+
     <a id="download-btn" class="download-btn" href="#" target="_blank">Download App</a>
 
     <div id="loading">Loading apps...</div>
 
+    <!-- Container for the app's image -->
+    <div id="app-image-container"></div>
+
     <script>
         async function fetchData() {
             try {
-                const response = await fetch('apkhubdata.json');
+                const response = await fetch('https://giantwebmarket.com/apkhub/apkhubdata.json');
                 const data = await response.json();
                 return data;
             } catch (error) {
@@ -63,53 +66,61 @@
             }
         }
 
+        // Add unique IDs to each app in the JSON data
         function assignUniqueIds(data) {
             return data.map((app, index) => {
-                app.id = `app-${index + 1}`;
+                app.id = `app-${index + 1}`;  // Assign app-1, app-2, etc.
                 return app;
             });
         }
 
-        async function fetchAppImage(url) {
-            try {
-                const response = await fetch(url);
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const imgElement = doc.querySelector('#main > div.container > div > div.column.is-main > div.app_header.mt-14 > div.avatar > img');
-                return imgElement ? imgElement.src : null;
-            } catch (error) {
-                console.error('Error fetching app image:', error);
-                return null;
-            }
-        }
-
-        async function displayAppDetails(app) {
+        function displayAppDetails(app) {
             document.getElementById('app-title').textContent = app.title || 'No title available';
             document.getElementById('app-version').textContent = app.version || 'No version available';
             document.getElementById('app-author').textContent = app.author || 'No author available';
             document.getElementById('app-header').textContent = app.header || 'No description available';
             document.getElementById('app-article').textContent = app.article || 'No article available';
             document.getElementById('download-btn').href = app.download_url || '#';
-            document.getElementById('loading').style.display = 'none';
-            document.title = app.title || 'App Details';
+            document.getElementById('loading').style.display = 'none';  // Hide loading indicator
 
+            // Fetch and display app image using CORS proxy
             if (app.url) {
-                const imageUrl = await fetchAppImage(app.url);
-                if (imageUrl) {
-                    const imgElement = document.getElementById('app-image');
-                    imgElement.src = imageUrl;
-                    imgElement.style.display = 'block';
-                }
+                fetchImage(app.url);
+            }
+
+            // ** Update the page title dynamically **
+            document.title = app.title || 'App Details';
+        }
+
+        async function fetchImage(appUrl) {
+            try {
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                const imageUrl = `${proxyUrl}${appUrl}`; // Adding the proxy URL before the target URL
+
+                const response = await fetch(imageUrl);
+                const imageBlob = await response.blob();
+                const imageObjectURL = URL.createObjectURL(imageBlob);
+
+                // Now, we append the image to the page
+                const imageElement = document.createElement('img');
+                imageElement.src = imageObjectURL;
+                imageElement.alt = 'App Image';
+                imageElement.style.width = '100px'; // Set your desired size
+                document.getElementById('app-image-container').appendChild(imageElement);
+
+            } catch (error) {
+                console.error('Error fetching image:', error);
             }
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const appId = new URLSearchParams(window.location.search).get('id');
+            const appId = new URLSearchParams(window.location.search).get('id'); // Get the app ID from URL
             if (appId) {
                 const allApps = await fetchData();
-                const appsWithIds = assignUniqueIds(allApps);
-                const app = appsWithIds.find(a => a.id === appId);
+                const appsWithIds = assignUniqueIds(allApps); // Assign IDs to the apps
+                
+                const app = appsWithIds.find(a => a.id === appId); // Find the app by its unique ID
+
                 if (app) {
                     displayAppDetails(app);
                 } else {
@@ -120,5 +131,6 @@
             }
         });
     </script>
+
 </body>
 </html>
