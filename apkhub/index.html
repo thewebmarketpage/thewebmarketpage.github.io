@@ -125,13 +125,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-        }
-
-        .search-result-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .search-result-icon .material-icons {
@@ -246,24 +239,18 @@
 
         .app-icon {
             width: 100%;
-            height: 180px;
-            background-color: var(--surface);
+            aspect-ratio: 1;
+            object-fit: cover;
             border-radius: 8px;
+            background-color: var(--surface);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-        }
-
-        .app-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            color: var(--text-secondary);
         }
 
         .app-icon .material-icons {
             font-size: 40px;
-            color: var(--text-secondary);
         }
 
         .app-info {
@@ -452,6 +439,50 @@
             }
         }
 
+        async function extractIconUrl(appPageUrl) {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(appPageUrl));
+                const html = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const selectors = [
+                    '.avatar img', 
+                    'img[alt*="icon"]', 
+                    'img[alt*="logo"]',
+                    'img[src*="icon"]',
+                    'img[src*="logo"]',
+                    'meta[property="og:image"]',
+                    'meta[name="twitter:image"]'
+                ];
+                
+                let iconUrl = null;
+                for (const selector of selectors) {
+                    const element = doc.querySelector(selector);
+                    if (element) {
+                        if (element.tagName.toLowerCase() === 'meta') {
+                            iconUrl = element.getAttribute('content');
+                        } else {
+                            iconUrl = element.getAttribute('data-src') || element.src;
+                        }
+                        if (iconUrl) break;
+                    }
+                }
+                
+                if (iconUrl && !iconUrl.startsWith('http')) {
+                    const urlObj = new URL(appPageUrl);
+                    iconUrl = urlObj.origin + (iconUrl.startsWith('/') ? iconUrl : `/${iconUrl}`);
+                }
+                
+                return iconUrl;
+            } catch (error) {
+                console.error('Error extracting icon:', error);
+                return null;
+            }
+        }
+
         function createAppCard(app) {
             const card = document.createElement('a');
             card.className = 'app-card';
@@ -460,13 +491,12 @@
             const iconDiv = document.createElement('div');
             iconDiv.className = 'app-icon';
             
-            if (app.icon) {
+            if (app.iconUrl) {
                 const img = document.createElement('img');
-                img.src = app.icon;
+                img.src = app.iconUrl;
                 img.alt = app.title;
                 img.onerror = function() {
                     iconDiv.innerHTML = '<i class="material-icons">android</i>';
-                    img.style.display = 'none';
                 };
                 iconDiv.appendChild(img);
             } else {
@@ -518,13 +548,15 @@
             const iconDiv = document.createElement('div');
             iconDiv.className = 'search-result-icon';
             
-            if (app.icon) {
+            if (app.iconUrl) {
                 const img = document.createElement('img');
-                img.src = app.icon;
+                img.src = app.iconUrl;
                 img.alt = app.title;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
                 img.onerror = function() {
                     iconDiv.innerHTML = '<i class="material-icons">android</i>';
-                    img.style.display = 'none';
                 };
                 iconDiv.appendChild(img);
             } else {
@@ -551,17 +583,36 @@
             return item;
         }
 
+        function searchAllFields(app, searchTerm) {
+            const lowerTerm = searchTerm.toLowerCase();
+            
+            // Search in basic fields
+            if ((app.title && app.title.toLowerCase().includes(lowerTerm)) ||
+                (app.author && app.author.toLowerCase().includes(lowerTerm)) ||
+                (app.version && app.version.toLowerCase().includes(lowerTerm)) ||
+                (app.header && app.header.toLowerCase().includes(lowerTerm)) ||
+                (app.article && app.article.toLowerCase().includes(lowerTerm))) {
+                return true;
+            }
+            
+            // Search in all string fields of the app object
+            for (const key in app) {
+                if (typeof app[key] === 'string' && app[key].toLowerCase().includes(lowerTerm)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
         function filterApps(searchTerm) {
             if (!searchTerm) {
                 document.getElementById('search-results').style.display = 'none';
                 return;
             }
             
-            const lowerCaseTerm = searchTerm.toLowerCase();
             const filteredApps = allApps.filter(function(app) {
-                return (app.title && app.title.toLowerCase().includes(lowerCaseTerm)) ||
-                       (app.author && app.author.toLowerCase().includes(lowerCaseTerm)) ||
-                       (app.article && app.article.toLowerCase().includes(lowerCaseTerm));
+                return searchAllFields(app, searchTerm);
             });
             
             const resultsContainer = document.getElementById('search-results');
@@ -648,15 +699,8 @@
         async function displayApps() {
             const data = await fetchData();
             allApps = data.map(function(app, index) {
-                return {
-                    id: 'app-' + (index + 1),
-                    title: app.title,
-                    author: app.author,
-                    article: app.article,
-                    version: app.version,
-                    download_url: app.download_url,
-                    icon: app.icon || app.url // Use direct icon URL from JSON or fallback to URL
-                };
+                app.id = 'app-' + (index + 1);
+                return app;
             });
             
             // Get random apps for different sections
@@ -665,6 +709,19 @@
                 topFree: [...allApps].sort(function() { return 0.5 - Math.random() }).slice(0, 6),
                 trending: [...allApps].sort(function() { return 0.5 - Math.random() }).slice(0, 6)
             };
+            
+            // Load all icons upfront (no lazy loading)
+            for (const section in appSections) {
+                for (const app of appSections[section]) {
+                    if (app.url) {
+                        try {
+                            app.iconUrl = await extractIconUrl(app.url);
+                        } catch (error) {
+                            console.error('Error loading icon for ' + app.title + ':', error);
+                        }
+                    }
+                }
+            }
             
             // Display apps in each section
             const recommendedContainer = document.getElementById('recommended-apps');
@@ -736,13 +793,9 @@
             // Handle Enter key in search
             searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    const searchTerm = searchInput.value.toLowerCase();
-                    const filteredApps = allApps.filter(function(app) {
-                        return (app.title && app.title.toLowerCase().includes(searchTerm)) ||
-                               (app.author && app.author.toLowerCase().includes(searchTerm)) ||
-                               (app.article && app.article.toLowerCase().includes(searchTerm));
-                    });
-                    showSearchResultsPage(searchInput.value, filteredApps);
+                    showSearchResultsPage(searchInput.value, allApps.filter(function(app) {
+                        return searchAllFields(app, searchInput.value);
+                    }));
                 }
             });
         });
