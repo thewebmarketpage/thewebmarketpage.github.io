@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title> <!-- Title will update in real-time -->
+    <title>Loading...</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,7 +34,7 @@
 <body>
 
     <h1 id="app-title">Loading...</h1>
-    <img id="app-icon" src="default-icon.png" alt="App Icon"> <!-- Default icon -->
+    <img id="app-icon" src="default-icon.png" alt="App Icon"> 
     <p><strong>Version:</strong> <span id="app-version">Loading...</span></p>
     <p><strong>Author:</strong> <span id="app-author">Loading...</span></p>
     <p><strong>About:</strong> <span id="app-header">Loading...</span></p>
@@ -43,9 +43,8 @@
     <a id="download-btn" class="download-btn" href="#" target="_blank">Download App</a>
 
     <script>
-        const jsonUrl = "apkhubdata.json"; // JSON file URL
+        const jsonUrl = "apkhubdata.json"; 
 
-        // Function to get query parameters from URL
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
@@ -53,72 +52,45 @@
 
         async function fetchAppData() {
             try {
+                console.log("📡 Fetching JSON data...");
                 const response = await fetch(jsonUrl);
+                if (!response.ok) throw new Error("Failed to load JSON.");
                 const apps = await response.json();
                 
+                console.log("✅ JSON data loaded:", apps);
+
                 const appId = getQueryParam("id");
                 if (!appId) {
                     document.body.innerHTML = "<h2>Error: No app ID provided.</h2>";
                     return;
                 }
 
-                // Find the app data by ID
-                const app = apps.find(a => a.id === appId);
+                console.log(`🔍 Searching for app with ID: ${appId}`);
+
+                const app = apps.find(a => a.id.toString() === appId.toString());
                 if (!app) {
-                    document.body.innerHTML = "<h2>Error: App not found.</h2>";
+                    document.body.innerHTML = `<h2>Error: App with ID ${appId} not found.</h2>`;
+                    console.error("❌ App ID not found in JSON:", appId);
                     return;
                 }
 
-                // Update page title & content
+                console.log("🎯 App found:", app);
+
                 document.title = app.title;
                 document.getElementById("app-title").textContent = app.title;
-                document.getElementById("app-icon").src = app.app_icon; // Default from JSON
+                document.getElementById("app-icon").src = app.app_icon || "default-icon.png";
                 document.getElementById("app-version").textContent = app.version;
                 document.getElementById("app-author").textContent = app.author;
                 document.getElementById("app-header").textContent = app.header;
                 document.getElementById("app-article").textContent = app.article;
                 document.getElementById("download-btn").href = app.download_url;
 
-                // Fetch the real app icon
-                fetchAppIcon(app.url);
             } catch (error) {
                 console.error("❌ Error loading app data:", error);
                 document.body.innerHTML = "<h2>Error loading app. Please try again later.</h2>";
             }
         }
 
-        async function fetchAppIcon(url) {
-            try {
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                const response = await fetch(proxyUrl);
-                const data = await response.json();
-
-                // Parse the HTML content
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data.contents, 'text/html');
-
-                // Try to find the image inside the app's page
-                const imgElement = doc.querySelector("#main .container .column.is-main .app_header .avatar img");
-
-                if (imgElement) {
-                    let imgUrl = imgElement.getAttribute('src') || imgElement.getAttribute('data-src');
-
-                    if (imgUrl) {
-                        // Replace default app icon with the new image
-                        document.getElementById('app-icon').src = imgUrl;
-                        console.log("✅ Found and updated app icon:", imgUrl);
-                    } else {
-                        console.warn("⚠ Image URL not found in data-src.");
-                    }
-                } else {
-                    console.warn("⚠ No matching image element found.");
-                }
-            } catch (error) {
-                console.error('❌ Error fetching app icon:', error);
-            }
-        }
-
-        // Load the app data when the page is ready
         document.addEventListener("DOMContentLoaded", fetchAppData);
     </script>
 
