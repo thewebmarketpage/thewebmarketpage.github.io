@@ -84,17 +84,17 @@
             document.getElementById('download-btn').href = app.download_url || '#';
             document.getElementById('loading').style.display = 'none';  // Hide loading indicator
 
-            // Fetch and display app image using CORS proxy
+            // Fetch and display app image using link tag
             if (app.url) {
-                fetchImage(app.url);
+                fetchImageFromLinkTag(app.url);
             }
 
             // ** Update the page title dynamically **
             document.title = app.title || 'App Details';
         }
 
-        // Fetch the image URL from the app's page using a CORS proxy and display it
-        async function fetchImage(appUrl) {
+        // Fetch the image URL from the link tag with rel="preload" and display it
+        async function fetchImageFromLinkTag(appUrl) {
             try {
                 const proxyUrl = 'https://api.allorigins.win/raw?url='; // CORS proxy URL
                 const imageUrl = `${proxyUrl}${encodeURIComponent(appUrl)}`; // Append the target URL
@@ -102,22 +102,25 @@
                 const response = await fetch(imageUrl);
                 const text = await response.text();
 
-                // Find the image URL (it should start with 'https://play-lh.googleusercontent.com/')
-                const imageRegex = /https:\/\/play-lh\.googleusercontent\.com\/.*?\.jpg/;
-                const match = text.match(imageRegex);
+                // Extract the image URL from the <link> tag with rel="preload"
+                const linkTagRegex = /<link[^>]*rel=["']preload["'][^>]*href=["'](https:\/\/play-lh\.googleusercontent\.com\/[^"']+\.jpg)["'][^>]*>/;
+                const match = text.match(linkTagRegex);
 
-                if (match && match[0]) {
+                if (match && match[1]) {
+                    // Extracted image URL
+                    const imageUrl = match[1];
+                    
                     // Display the extracted image
                     const imageElement = document.createElement('img');
-                    imageElement.src = match[0];  // Use the matched image URL
+                    imageElement.src = imageUrl;  // Use the matched image URL
                     imageElement.alt = 'App Image';
                     imageElement.style.width = '100px'; // Set your desired size
                     document.getElementById('app-image-container').appendChild(imageElement);
                 } else {
-                    console.error('No image found.');
+                    console.error('No image found in link tag.');
                 }
             } catch (error) {
-                console.error('Error fetching image:', error);
+                console.error('Error fetching image from link tag:', error);
             }
         }
 
