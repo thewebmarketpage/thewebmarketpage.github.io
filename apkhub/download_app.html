@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        img {
+            width: 100px;
+            height: auto;
+            display: block;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="app-title"></h1>
+    <img id="app-icon" src="" alt="App Icon">
+    <p><strong>Version:</strong> <span id="app-version"></span></p>
+    <p><strong>Author:</strong> <span id="app-author"></span></p>
+    <p><strong>About:</strong> <span id="app-header"></span></p>
+    <p id="app-article"></p>
+
+    <a id="download-btn" class="download-btn" href="" target="_blank">Download App</a>
+
+    <script>
+        // Fetch app data from the JSON file on GitHub
+        async function fetchAppData(appId) {
+            const url = 'https://raw.githubusercontent.com/yourusername/yourrepo/main/apkhubdata.json'; // Change this URL to your actual GitHub raw URL
+            
+            try {
+                // Fetch the JSON data from the server
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // Find the app data by ID (assuming the data has an 'id' field)
+                const app = data.find(item => item.id === appId); // Use the app's ID for the selection
+
+                if (app) {
+                    // Populate the page with the app data
+                    document.getElementById('app-title').textContent = app.title;
+                    document.getElementById('app-icon').src = app.app_icon;
+                    document.getElementById('app-version').textContent = app.version;
+                    document.getElementById('app-author').textContent = app.author;
+                    document.getElementById('app-header').textContent = app.header;
+                    document.getElementById('app-article').textContent = app.article;
+                    document.getElementById('download-btn').href = app.download_url;
+
+                    // Set the page title to match the app title
+                    document.title = app.title;
+
+                    // Fetch the app icon (optional, if needed)
+                    fetchAppIcon(app.url);
+                } else {
+                    console.error("App not found");
+                }
+            } catch (error) {
+                console.error('Error fetching app data:', error);
+            }
+        }
+
+        // Function to fetch app icon from the URL
+        async function fetchAppIcon(url) {
+            try {
+                // Create an iframe to load the external URL
+                let iframe = document.createElement('iframe');
+                iframe.style.display = 'none';  // Hide the iframe
+                document.body.appendChild(iframe);
+
+                // Listen for iframe load event
+                iframe.onload = function() {
+                    let iframeDoc = iframe.contentWindow.document;
+
+                    // Find the avatar image in the iframe's document
+                    let imgElement = iframeDoc.querySelector('.avatar img');
+                    if (imgElement) {
+                        let imgUrl = imgElement.getAttribute('src') || imgElement.getAttribute('data-src');
+                        if (imgUrl) {
+                            // Set the app icon to the fetched image URL
+                            document.getElementById('app-icon').src = imgUrl;
+                        }
+                    }
+
+                    // Clean up the iframe
+                    document.body.removeChild(iframe);
+                };
+
+                // Set the iframe's src to the app URL
+                iframe.src = url;
+            } catch (error) {
+                console.error('Error fetching app icon:', error);
+            }
+        }
+
+        // Get the app ID from the URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const appId = urlParams.get('id');  // Example: ?id=app-30
+
+        // Fetch the app data for the given ID
+        if (appId) {
+            fetchAppData(appId);
+        } else {
+            console.error('App ID not found in URL');
+        }
+    </script>
+
+</body>
+</html>
+
