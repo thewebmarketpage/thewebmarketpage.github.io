@@ -151,12 +151,21 @@
             font-size: 20px;
         }
 
+        .screenshots-container {
+            margin: 24px 0;
+        }
+
+        .screenshots-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
         .screenshots {
             display: flex;
             overflow-x: auto;
-            gap: 8px;
+            gap: 12px;
             padding: 8px 0;
-            margin: 16px 0;
             scrollbar-width: none;
         }
 
@@ -168,6 +177,11 @@
             height: 180px;
             border-radius: 8px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .screenshot:hover {
+            transform: scale(1.02);
         }
 
         .section {
@@ -245,30 +259,6 @@
             margin-right: 24px;
         }
 
-        .title-placeholder {
-            width: 200px;
-            height: 24px;
-            background-color: var(--surface);
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
-
-        .text-placeholder {
-            width: 150px;
-            height: 16px;
-            background-color: var(--surface);
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
-
-        .btn-placeholder {
-            width: 120px;
-            height: 40px;
-            background-color: var(--surface);
-            border-radius: 4px;
-            margin-top: 8px;
-        }
-
         @media (max-width: 600px) {
             .app-header {
                 flex-direction: column;
@@ -322,8 +312,11 @@
             </div>
         </div>
 
-        <div class="screenshots">
-            <!-- Screenshots would be added dynamically -->
+        <div class="screenshots-container" id="screenshots-container">
+            <h2 class="screenshots-title">Screenshots</h2>
+            <div class="screenshots" id="screenshots-gallery">
+                <!-- Screenshots will be added here dynamically -->
+            </div>
         </div>
 
         <div class="section">
@@ -384,6 +377,32 @@
             }
         }
 
+        async function extractScreenshots(appPageUrl) {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(appPageUrl));
+                const html = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Find the screenshot gallery div
+                const gallery = doc.querySelector('.gallery.beauty-scroll');
+                if (!gallery) return [];
+                
+                // Extract all screenshot image URLs
+                const screenshotLinks = gallery.querySelectorAll('a[data-href]');
+                const screenshots = Array.from(screenshotLinks).map(link => {
+                    return link.getAttribute('data-href');
+                });
+                
+                return screenshots;
+            } catch (error) {
+                console.error('Error extracting screenshots:', error);
+                return [];
+            }
+        }
+
         async function extractIconUrl(appPageUrl) {
             try {
                 const proxyUrl = 'https://api.allorigins.win/raw?url=';
@@ -435,20 +454,22 @@
             });
         }
 
-        function simulateScreenshots() {
-            const screenshotsContainer = document.querySelector('.screenshots');
-            // Add some placeholder screenshots (in a real app, these would come from your data)
-            for (let i = 0; i < 3; i++) {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'screenshot';
-                placeholder.style.backgroundColor = '#f1f1f1';
-                placeholder.style.width = '100px';
-                placeholder.style.display = 'flex';
-                placeholder.style.alignItems = 'center';
-                placeholder.style.justifyContent = 'center';
-                placeholder.innerHTML = `<span style="color: #999;">Screenshot ${i+1}</span>`;
-                screenshotsContainer.appendChild(placeholder);
+        function displayScreenshots(screenshots) {
+            const gallery = document.getElementById('screenshots-gallery');
+            
+            if (screenshots.length === 0) {
+                document.getElementById('screenshots-container').style.display = 'none';
+                return;
             }
+            
+            screenshots.forEach((url, index) => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `Screenshot ${index + 1}`;
+                img.className = 'screenshot';
+                img.loading = 'lazy';
+                gallery.appendChild(img);
+            });
         }
 
         function handleDownload(event, downloadUrl) {
@@ -513,8 +534,18 @@
                 document.getElementById('app-icon-container').innerHTML = '<div class="icon-placeholder"><i class="material-icons">android</i></div>';
             }
 
-            // Add some sample screenshots
-            simulateScreenshots();
+            // Extract and display screenshots if URL is available
+            if (app.url) {
+                try {
+                    const screenshots = await extractScreenshots(app.url);
+                    displayScreenshots(screenshots);
+                } catch (error) {
+                    console.error('Error loading screenshots:', error);
+                    document.getElementById('screenshots-container').style.display = 'none';
+                }
+            } else {
+                document.getElementById('screenshots-container').style.display = 'none';
+            }
 
             document.getElementById('loading').style.display = 'none';
         }
