@@ -3,162 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Details</title>
+    <title>App Listings</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .app-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .app-logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 16px;
-            object-fit: cover;
-        }
-        .app-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0;
-            color: #333;
-        }
-        .app-meta {
-            font-size: 14px;
-            color: #777;
-        }
-        .app-description {
-            margin-top: 15px;
-            font-size: 16px;
-            line-height: 1.6;
-            color: #555;
-        }
-        .download-btn {
-            display: block;
-            width: 100%;
-            text-align: center;
-            background: #007bff;
-            color: white;
-            padding: 12px;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .download-btn:hover {
-            background: #0056b3;
-        }
-        .error-message {
-            color: red;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .loading {
-            text-align: center;
-            font-size: 18px;
-            color: #333;
-            margin-top: 20px;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        .container { width: 90%; max-width: 800px; margin: auto; padding: 10px; background: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        .app-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .app { display: flex; align-items: center; background: #fff; padding: 10px; border-radius: 5px; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        .app img { width: 50px; height: 50px; border-radius: 10px; margin-right: 10px; }
+        .app-info { flex: 1; }
+        .app-title { font-size: 16px; font-weight: bold; }
+        .app-size { font-size: 12px; color: #777; }
+        .download-btn { background: #007bff; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="loading">Loading app details...</div>
+<div class="container">
+    <h2>App Listings</h2>
+    <div id="app-list" class="app-list"></div>
+</div>
 
-    <div id="app-container" class="container" style="display: none;">
-        <div class="app-header">
-            <img id="app-logo" class="app-logo" src="" alt="App Logo">
-            <div>
-                <h1 id="app-title" class="app-title">App Name</h1>
-                <p id="app-meta" class="app-meta">Version: <span id="app-version"></span> • By <span id="app-author"></span></p>
-            </div>
-        </div>
-        <p id="app-description" class="app-description"></p>
-        <a id="download-btn" class="download-btn" href="#" onclick="return false;">Download</a>
-    </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const appListContainer = document.getElementById("app-list");
 
-    <script>
-        async function fetchAppData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const appId = urlParams.get("id");
+    // Lazy image loading
+    function lazyLoadImages() {
+        const lazyImages = document.querySelectorAll("img[data-src]");
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute("data-src");
+                    observer.unobserve(img);
+                }
+            });
+        });
 
-            if (!appId) {
-                document.getElementById("loading").innerHTML = "<div class='error-message'>App not found.</div>";
-                return;
-            }
+        lazyImages.forEach(img => observer.observe(img));
+    }
 
-            // Check localStorage cache
-            const cachedData = localStorage.getItem(`app_${appId}`);
-            if (cachedData) {
-                displayAppDetails(JSON.parse(cachedData));
-                return;
-            }
+    // Fetch & render apps
+    fetch("apps.json")
+        .then(response => response.json())
+        .then(apps => {
+            const fragment = document.createDocumentFragment();
 
-            try {
-                const response = await fetch("https://giantwebmarket.com/apkhub/apkhubdata.json");
-                const apps = await response.json();
+            apps.forEach(app => {
+                const appDiv = document.createElement("div");
+                appDiv.className = "app";
+                appDiv.innerHTML = `
+                    <img data-src="${app.icon}" alt="${app.name}" class="lazy">
+                    <div class="app-info">
+                        <div class="app-title">${app.name}</div>
+                        <div class="app-size">${app.size}</div>
+                    </div>
+                    <button class="download-btn" data-url="${app.download}">Download</button>
+                `;
+                fragment.appendChild(appDiv);
+            });
 
-                const app = apps.find(a => a.id === appId);
-                if (!app) throw new Error("App not found");
+            appListContainer.appendChild(fragment);
+            lazyLoadImages();
+        });
 
-                // Cache the app data
-                localStorage.setItem(`app_${appId}`, JSON.stringify(app));
-
-                displayAppDetails(app);
-            } catch (error) {
-                console.error("Error loading app:", error);
-                document.getElementById("loading").innerHTML = "<div class='error-message'>Failed to load app details.</div>";
-            }
-        }
-
-        function displayAppDetails(app) {
-            document.getElementById("app-title").textContent = app.title || "Unknown";
-            document.getElementById("app-version").textContent = app.version || "Unknown";
-            document.getElementById("app-author").textContent = app.author || "Unknown";
-            document.getElementById("app-description").textContent = app.article || "No details available";
-
-            // Set App Logo (Fallback if no image available)
-            document.getElementById("app-logo").src = app.logo_url || "https://via.placeholder.com/80";
-
-            document.title = app.title || "App";
-
-            if (app.download_url) {
-                const downloadBtn = document.getElementById("download-btn");
-                downloadBtn.href = app.download_url;
-                downloadBtn.onclick = (e) => handleDownload(e, app.download_url);
-            }
-
-            document.getElementById("loading").style.display = "none";
-            document.getElementById("app-container").style.display = "block";
-        }
-
-        function handleDownload(event, url) {
-            event.preventDefault();
-            if (!url) {
-                alert("Download link unavailable");
-                return;
-            }
+    // Event Delegation for Download Button
+    appListContainer.addEventListener("click", event => {
+        if (event.target.classList.contains("download-btn")) {
+            const url = event.target.dataset.url;
             window.location.href = url;
         }
-
-        document.addEventListener("DOMContentLoaded", fetchAppData);
-    </script>
+    });
+});
+</script>
 
 </body>
 </html>
