@@ -96,7 +96,8 @@
         // Fetch the image URL from the link tag with rel="preload" and display it
         async function fetchImageFromLinkTag(appUrl) {
             try {
-                const response = await fetch(appUrl);  // Directly fetch the HTML content from the app URL
+                const proxyUrl = 'https://api.allorigins.win/raw?url='; // CORS proxy URL
+                const response = await fetch(proxyUrl + encodeURIComponent(appUrl));  // Fetch HTML content using CORS proxy
                 const text = await response.text();
 
                 // Extract the image URL from the <link> tag with rel="preload"
