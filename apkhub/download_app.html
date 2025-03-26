@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Details</title>
+    <title id="page-title">App Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,156 +28,63 @@
             border-radius: 5px;
             margin-top: 10px;
         }
+        #loading {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
 
-    <h1 id="app-title"></h1>
+    <h1 id="app-title">Loading...</h1>
     <img id="app-icon" src="" alt="App Icon">
-    <p><strong>Version:</strong> <span id="app-version"></span></p>
-    <p><strong>Author:</strong> <span id="app-author"></span></p>
-    <p><strong>About:</strong> <span id="app-header"></span></p>
-    <p id="app-article"></p>
+    <p><strong>Version:</strong> <span id="app-version">Loading...</span></p>
+    <p><strong>Author:</strong> <span id="app-author">Loading...</span></p>
+    <p><strong>About:</strong> <span id="app-header">Loading...</span></p>
+    <p id="app-article">Loading...</p>
 
-    <a id="download-btn" class="download-btn" href="" target="_blank">Download App</a>
+    <a id="download-btn" class="download-btn" href="#" target="_blank">Download App</a>
 
-    <div id="cardsContainer"></div> <!-- Container to load app cards -->
+    <div id="loading">Loading apps...</div>
 
     <script>
-        // Function to fetch app data
         async function fetchData() {
-            const response = await fetch('apkhubdata.json');
-            return response.json();
-        }
-
-        // Global variable to store all app data
-        let allApps = [];
-        // Number of items to load initially and each time more are loaded
-        const itemsPerLoad = 9;
-        // Track how many items are currently displayed
-        let currentlyLoaded = 0;
-
-        function lazyLoadCards(data, searchQuery = '') {
-            const cardsContainer = document.getElementById('cardsContainer');
-            
-            // Filter data based on search query
-            const filteredData = data.filter(item => 
-                item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.description.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            
-            // Clear container on new search
-            if (searchQuery !== '' || currentlyLoaded === 0) {
-                cardsContainer.innerHTML = '';
-                currentlyLoaded = 0;
-            }
-            
-            // Calculate end index for current batch
-            const endIndex = Math.min(currentlyLoaded + itemsPerLoad, filteredData.length);
-            
-            // Get the current batch of items to display
-            const itemsToShow = filteredData.slice(currentlyLoaded, endIndex);
-            
-            // Create and append cards for each item in the current batch
-            itemsToShow.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl";
-                card.innerHTML = `
-                    <div class="zoom-effect overflow-hidden">
-                        <a href="download_app.html?id=${item.id}">
-                            <img src="${item.app_icon}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy">
-                        </a>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex space-x-2 mb-4">
-                            <a href="category.html?category=${encodeURIComponent(item.category)}" class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full hover:bg-blue-600">
-                                ${item.category}
-                            </a>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">
-                            <a href="download_app.html?id=${item.id}" class="hover:text-blue-400">${item.title}</a>
-                        </h3>
-                        <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
-                        <a href="download_app.html?id=${item.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View App</a>
-                    </div>
-                `;
-                cardsContainer.appendChild(card);
-            });
-            
-            // Update the count of loaded items
-            currentlyLoaded = endIndex;
-            
-            // Show or hide the load more button based on whether there are more items
-            updateLoadMoreButton(currentlyLoaded < filteredData.length);
-        }
-
-        function updateLoadMoreButton(show) {
-            let loadMoreButton = document.getElementById('loadMoreButton');
-            
-            if (!loadMoreButton && show) {
-                // Create the button if it doesn't exist and needs to be shown
-                loadMoreButton = document.createElement('button');
-                loadMoreButton.id = 'loadMoreButton';
-                loadMoreButton.className = 'mt-8 mx-auto block bg-blue-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-blue-600 transition duration-300';
-                loadMoreButton.textContent = 'Load More Apps';
-                loadMoreButton.addEventListener('click', () => lazyLoadCards(allApps, document.getElementById('searchBox').value));
-                
-                const container = document.querySelector('.max-w-7xl');
-                container.appendChild(loadMoreButton);
-            } else if (loadMoreButton) {
-                // Update existing button visibility
-                loadMoreButton.style.display = show ? 'block' : 'none';
+            try {
+                const response = await fetch('apkhubdata.json');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error loading apps:', error);
+                document.getElementById('loading').innerHTML = 'Error loading apps. Please try again later.';
+                return [];
             }
         }
 
-        // Intersection Observer to detect when user scrolls near the bottom
-        function setupIntersectionObserver() {
-            const options = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Load more apps when the sentinel is visible
-                        lazyLoadCards(allApps, document.getElementById('searchBox').value);
-                    }
-                });
-            }, options);
-            
-            // Create and observe a sentinel element at the bottom of the cards container
-            const sentinel = document.createElement('div');
-            sentinel.id = 'sentinel';
-            sentinel.style.height = '10px';
-            document.getElementById('cardsContainer').after(sentinel);
-            observer.observe(sentinel);
+        function displayAppDetails(app) {
+            document.getElementById('app-title').textContent = app.title || 'No title available';
+            document.getElementById('app-icon').src = app.app_icon || '';
+            document.getElementById('app-version').textContent = app.version || 'No version available';
+            document.getElementById('app-author').textContent = app.author || 'No author available';
+            document.getElementById('app-header').textContent = app.header || 'No description available';
+            document.getElementById('app-article').textContent = app.article || 'No article available';
+            document.getElementById('download-btn').href = app.download_url || '#';
+            document.getElementById('loading').style.display = 'none';  // Hide loading indicator
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Add loading indicator
-                const cardsContainer = document.getElementById('cardsContainer');
-                cardsContainer.innerHTML = '<div class="col-span-3 text-center py-10"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div><p class="mt-3">Loading apps...</p></div>';
-                
-                // Fetch app data
-                allApps = await fetchData();
-                
-                // Initial load of app cards
-                lazyLoadCards(allApps);
-                
-                // Setup search functionality
-                document.getElementById('searchBox').addEventListener('input', (e) => {
-                    lazyLoadCards(allApps, e.target.value);
-                });
-                
-                // Setup intersection observer for automatic loading
-                setupIntersectionObserver();
-            } catch (error) {
-                console.error('Error loading apps:', error);
-                document.getElementById('cardsContainer').innerHTML = '<div class="col-span-3 text-center py-10 text-red-500">Error loading apps. Please try again later.</div>';
+            const appId = new URLSearchParams(window.location.search).get('id'); // Get the app ID from URL
+            if (appId) {
+                const allApps = await fetchData();
+                const app = allApps.find(a => a.id === appId); // Find the app by its ID
+
+                if (app) {
+                    displayAppDetails(app);
+                } else {
+                    document.getElementById('loading').innerHTML = 'App not found.';
+                }
+            } else {
+                document.getElementById('loading').innerHTML = 'No app ID provided.';
             }
         });
     </script>
