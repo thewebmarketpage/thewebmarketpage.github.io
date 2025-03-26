@@ -94,8 +94,8 @@
 
         async function fetchImage(appUrl) {
             try {
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                const imageUrl = `${proxyUrl}${appUrl}`; // Adding the proxy URL before the target URL
+                const proxyUrl = 'https://api.allorigins.win/raw?url='; // CORS proxy URL
+                const imageUrl = `${proxyUrl}${encodeURIComponent(appUrl)}`; // Append the target URL
 
                 const response = await fetch(imageUrl);
                 const imageBlob = await response.blob();
