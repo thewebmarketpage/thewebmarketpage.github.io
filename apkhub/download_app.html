@@ -139,6 +139,7 @@
             letter-spacing: 0.5px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             transition: background-color 0.2s;
+            text-decoration: none;
         }
 
         .download-btn:hover {
@@ -314,10 +315,10 @@
                     </div>
                     <div id="app-installs">10M+ downloads</div>
                 </div>
-                <button id="download-btn" class="download-btn">
+                <a id="download-btn" class="download-btn" href="#" download>
                     <i class="material-icons">file_download</i>
                     Install
-                </button>
+                </a>
             </div>
         </div>
 
@@ -450,13 +451,49 @@
             }
         }
 
+        function handleDownload(event, downloadUrl) {
+            event.preventDefault();
+            
+            if (!downloadUrl || downloadUrl === '#') {
+                alert('Download URL not available');
+                return;
+            }
+
+            // Create a temporary anchor element to trigger the download
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = downloadUrl.split('/').pop() || 'app_download';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            // Optional: Track download event
+            console.log('Download initiated:', downloadUrl);
+        }
+
         async function displayAppDetails(app) {
             document.getElementById('app-title').textContent = app.title || 'No title available';
             document.getElementById('app-version').textContent = app.version || 'No version available';
             document.getElementById('app-author').textContent = app.author || 'No author available';
             document.getElementById('app-article').textContent = app.article || 'No additional information available';
-            document.getElementById('download-btn').href = app.download_url || '#';
             document.title = `${app.title || 'App'} - Google Play Store`;
+
+            // Set up the download button
+            const downloadBtn = document.getElementById('download-btn');
+            if (app.download_url) {
+                downloadBtn.href = app.download_url;
+                downloadBtn.onclick = (e) => handleDownload(e, app.download_url);
+                downloadBtn.style.pointerEvents = 'auto';
+                downloadBtn.style.opacity = '1';
+            } else {
+                downloadBtn.href = '#';
+                downloadBtn.onclick = (e) => {
+                    e.preventDefault();
+                    alert('Download URL not available for this app');
+                };
+                downloadBtn.style.opacity = '0.7';
+                downloadBtn.style.cursor = 'not-allowed';
+            }
 
             // Extract and display the icon from the app's URL
             if (app.url) {
