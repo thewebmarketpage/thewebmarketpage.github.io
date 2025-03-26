@@ -259,6 +259,71 @@
             margin-right: 24px;
         }
 
+        /* Similar Apps Section Styles */
+        .similar-apps-container {
+            margin: 24px 0;
+        }
+
+        .similar-apps-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .similar-apps {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 8px 0;
+            scrollbar-width: none;
+        }
+
+        .similar-apps::-webkit-scrollbar {
+            display: none;
+        }
+
+        .similar-app {
+            min-width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .similar-app:hover {
+            transform: scale(1.05);
+        }
+
+        .similar-app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 8px;
+        }
+
+        .similar-app-name {
+            font-size: 13px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inline-block;
+        }
+
+        .icon-placeholder-small {
+            width: 64px;
+            height: 64px;
+            background-color: var(--surface);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            margin: 0 auto 8px auto;
+        }
+
         @media (max-width: 600px) {
             .app-header {
                 flex-direction: column;
@@ -272,6 +337,10 @@
             
             .details-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .similar-app {
+                min-width: 100px;
             }
         }
     </style>
@@ -355,6 +424,14 @@
                         <div id="app-updated" class="detail-value">May 15, 2023</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Similar Apps Section -->
+        <div class="similar-apps-container" id="similar-apps-container">
+            <h2 class="similar-apps-title">Similar apps</h2>
+            <div class="similar-apps" id="similar-apps-list">
+                <!-- Similar apps will be added here dynamically -->
             </div>
         </div>
     </div>
@@ -491,7 +568,62 @@
             console.log('Download initiated:', downloadUrl);
         }
 
-        async function displayAppDetails(app) {
+        async function displaySimilarApps(currentApp, allApps) {
+            const similarAppsContainer = document.getElementById('similar-apps-container');
+            const similarAppsList = document.getElementById('similar-apps-list');
+            
+            // Hide the section if no similar apps found
+            if (!allApps || allApps.length === 0) {
+                similarAppsContainer.style.display = 'none';
+                return;
+            }
+            
+            // Filter out the current app and get up to 10 similar apps
+            const similarApps = allApps
+                .filter(app => app.id !== currentApp.id)
+                .slice(0, 10);
+            
+            if (similarApps.length === 0) {
+                similarAppsContainer.style.display = 'none';
+                return;
+            }
+            
+            // Display each similar app
+            for (const app of similarApps) {
+                const appElement = document.createElement('div');
+                appElement.className = 'similar-app';
+                appElement.onclick = () => {
+                    window.location.href = `?id=${app.id}`;
+                };
+                
+                // Create icon placeholder
+                const iconPlaceholder = document.createElement('div');
+                iconPlaceholder.className = 'icon-placeholder-small';
+                iconPlaceholder.innerHTML = '<i class="material-icons">android</i>';
+                
+                // Try to load the actual icon
+                if (app.url) {
+                    try {
+                        const iconUrl = await extractIconUrl(app.url);
+                        if (iconUrl) {
+                            iconPlaceholder.innerHTML = `<img src="${iconUrl}" class="similar-app-icon" alt="${app.title} icon" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\'icon-placeholder-small\'><i class=\'material-icons\'>broken_image</i></div>'">`;
+                        }
+                    } catch (error) {
+                        console.error('Error loading icon for similar app:', error);
+                    }
+                }
+                
+                const nameElement = document.createElement('div');
+                nameElement.className = 'similar-app-name';
+                nameElement.textContent = app.title || 'Unknown App';
+                
+                appElement.appendChild(iconPlaceholder);
+                appElement.appendChild(nameElement);
+                similarAppsList.appendChild(appElement);
+            }
+        }
+
+        async function displayAppDetails(app, allApps) {
             document.getElementById('app-title').textContent = app.title || 'No title available';
             document.getElementById('app-version').textContent = app.version || 'No version available';
             document.getElementById('app-author').textContent = app.author || 'No author available';
@@ -546,6 +678,9 @@
                 document.getElementById('screenshots-container').style.display = 'none';
             }
 
+            // Display similar apps
+            await displaySimilarApps(app, allApps);
+
             document.getElementById('loading').style.display = 'none';
         }
 
@@ -557,7 +692,7 @@
                 const app = appsWithIds.find(a => a.id === appId);
 
                 if (app) {
-                    await displayAppDetails(app);
+                    await displayAppDetails(app, appsWithIds);
                 } else {
                     document.getElementById('loading').innerHTML = '<div class="error-message">App not found.</div>';
                 }
