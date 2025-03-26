@@ -14,10 +14,12 @@
         h1 {
             color: #333;
         }
-        img {
-            width: 100px;
-            height: auto;
-            display: block;
+        .app-icon {
+            width: 75px;
+            height: 75px;
+            border-radius: 15px;
+            object-fit: cover;
+            margin: 10px 0;
         }
         .download-btn {
             display: inline-block;
@@ -33,14 +35,26 @@
             font-size: 18px;
             color: #888;
         }
-        #app-image-container {
-            margin-top: 20px;
+        .icon-loading {
+            width: 75px;
+            height: 75px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 12px;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
 
     <h1 id="app-title">Loading...</h1>
+    <div id="app-icon-container">
+        <div class="icon-loading">Loading icon...</div>
+    </div>
     <p><strong>Version:</strong> <span id="app-version">Loading...</span></p>
     <p><strong>Author:</strong> <span id="app-author">Loading...</span></p>
     <p><strong>About:</strong> <span id="app-header">Loading...</span></p>
@@ -49,9 +63,6 @@
     <a id="download-btn" class="download-btn" href="#" target="_blank">Download App</a>
 
     <div id="loading">Loading apps...</div>
-
-    <!-- Container for the app's image -->
-    <div id="app-image-container"></div>
 
     <script>
         async function fetchData() {
@@ -66,73 +77,73 @@
             }
         }
 
-        // Add unique IDs to each app in the JSON data
+        // Function to extract icon URL from app page
+        async function extractIconUrl(appPageUrl) {
+            try {
+                // Use a CORS proxy if needed (many app stores block direct fetching)
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                const response = await fetch(proxyUrl + appPageUrl);
+                const html = await response.text();
+                
+                // Create a DOM parser to extract the icon
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Find the avatar div and extract the image URL
+                const avatarDiv = doc.querySelector('.avatar img');
+                if (avatarDiv) {
+                    // Prefer data-src if available (common with lazy loading)
+                    return avatarDiv.getAttribute('data-src') || avatarDiv.src;
+                }
+                return null;
+            } catch (error) {
+                console.error('Error extracting icon:', error);
+                return null;
+            }
+        }
+
         function assignUniqueIds(data) {
             return data.map((app, index) => {
-                app.id = `app-${index + 1}`;  // Assign app-1, app-2, etc.
+                app.id = `app-${index + 1}`;
                 return app;
             });
         }
 
-        // Display app details
-        function displayAppDetails(app) {
+        async function displayAppDetails(app) {
             document.getElementById('app-title').textContent = app.title || 'No title available';
             document.getElementById('app-version').textContent = app.version || 'No version available';
             document.getElementById('app-author').textContent = app.author || 'No author available';
             document.getElementById('app-header').textContent = app.header || 'No description available';
             document.getElementById('app-article').textContent = app.article || 'No article available';
             document.getElementById('download-btn').href = app.download_url || '#';
-            document.getElementById('loading').style.display = 'none';  // Hide loading indicator
-
-            // Fetch and display app image using link tag
-            if (app.url) {
-                fetchImageFromLinkTag(app.url);
-            }
-
-            // ** Update the page title dynamically **
             document.title = app.title || 'App Details';
-        }
 
-        // Fetch the image URL from the link tag with rel="preload" and display it
-        async function fetchImageFromLinkTag(appUrl) {
-            try {
-                const proxyUrl = 'https://api.allorigins.win/raw?url='; // CORS proxy URL
-                const response = await fetch(proxyUrl + encodeURIComponent(appUrl));  // Fetch HTML content using CORS proxy
-                const text = await response.text();
-
-                // Extract the image URL from the <link> tag with rel="preload"
-                const linkTagRegex = /<link[^>]*rel=["']preload["'][^>]*href=["'](https:\/\/play-lh\.googleusercontent\.com\/[^"']+\.jpg)["'][^>]*>/;
-                const match = text.match(linkTagRegex);
-
-                if (match && match[1]) {
-                    // Extracted image URL
-                    const imageUrl = match[1];
-
-                    // Display the extracted image
-                    const imageElement = document.createElement('img');
-                    imageElement.src = imageUrl;  // Use the matched image URL
-                    imageElement.alt = 'App Image';
-                    imageElement.style.width = '100px'; // Set your desired size
-                    document.getElementById('app-image-container').appendChild(imageElement);
+            // Extract and display the icon
+            if (app.source_url) {
+                const iconUrl = await extractIconUrl(app.source_url);
+                const iconContainer = document.getElementById('app-icon-container');
+                
+                if (iconUrl) {
+                    iconContainer.innerHTML = `<img src="${iconUrl}" class="app-icon" alt="${app.title} icon">`;
                 } else {
-                    console.error('No image found in link tag.');
+                    iconContainer.innerHTML = '<div class="icon-loading">Icon not available</div>';
                 }
-            } catch (error) {
-                console.error('Error fetching image from link tag:', error);
+            } else {
+                document.getElementById('app-icon-container').innerHTML = '<div class="icon-loading">No source URL provided</div>';
             }
+
+            document.getElementById('loading').style.display = 'none';
         }
 
-        // Event listener to fetch and display app details after the page loads
         document.addEventListener('DOMContentLoaded', async () => {
-            const appId = new URLSearchParams(window.location.search).get('id'); // Get the app ID from URL
+            const appId = new URLSearchParams(window.location.search).get('id');
             if (appId) {
                 const allApps = await fetchData();
-                const appsWithIds = assignUniqueIds(allApps); // Assign IDs to the apps
-                
-                const app = appsWithIds.find(a => a.id === appId); // Find the app by its unique ID
+                const appsWithIds = assignUniqueIds(allApps);
+                const app = appsWithIds.find(a => a.id === appId);
 
                 if (app) {
-                    displayAppDetails(app);
+                    await displayAppDetails(app);
                 } else {
                     document.getElementById('loading').innerHTML = 'App not found.';
                 }
