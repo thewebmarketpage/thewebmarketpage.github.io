@@ -3,742 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Loading...</title>
-    <!-- Preconnect to external domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" as="style">
-    <link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style">
-    <!-- Load fonts with media query to prevent render blocking -->
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" media="print" onload="this.media='all'">
-    <!-- Inline critical CSS -->
+    <title>Loading App...</title>
     <style>
-        :root {
-            --play-red: #ea4335;
-            --play-blue: #4285f4;
-            --play-green: #34a853;
-            --play-yellow: #fbbc04;
-            --text-primary: #3c4043;
-            --text-secondary: #5f6368;
-            --background: #ffffff;
-            --surface: #f8f9fa;
-            --border: #dadce0;
-            --rating: #ffb400;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            color: var(--text-primary);
-            background-color: var(--background);
-            line-height: 1.5;
-        }
-
-        /* Only critical above-the-fold styles here */
-        header {
-            background-color: var(--background);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            padding: 12px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-        }
-
-        .header-title {
-            font-size: 20px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-left: 8px;
-        }
-
-        .back-button {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-        }
-
-        .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 60vh;
-        }
-
-        .loading-spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid rgba(0,0,0,0.1);
-            border-left-color: var(--play-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        .hidden { display: none; }
+        .error-message { color: red; }
+        #loading { text-align: center; font-size: 18px; }
+        .app-container { display: none; }
+        .download-btn { display: inline-block; padding: 10px 20px; background: blue; color: white; text-decoration: none; border-radius: 5px; }
     </style>
-    <!-- Defer non-critical CSS -->
-    <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="styles.css"></noscript>
 </head>
 <body>
-    <header>
-        <button class="back-button" onclick="window.history.back()">
-            <i class="material-icons">arrow_back</i>
-        </button>
-        <div class="header-title">Google Play Store</div>
-    </header>
-
+    <div id="loading">Loading...</div>
     <div class="app-container">
-        <div class="app-header">
-            <div id="app-icon-container" class="icon-placeholder">
-                <i class="material-icons">android</i>
-            </div>
-            <div class="app-info">
-                <h1 id="app-title" class="app-title">Loading...</h1>
-                <a id="app-author" class="app-developer" href="#">Loading...</a>
-                <div class="app-meta">
-                    <div class="app-rating">
-                        <div class="stars">
-                            <i class="material-icons">star</i>
-                            <i class="material-icons">star</i>
-                            <i class="material-icons">star</i>
-                            <i class="material-icons">star_half</i>
-                            <i class="material-icons">star_border</i>
-                        </div>
-                        <span>4.2</span>
-                    </div>
-                    <div id="app-installs">10M+ downloads</div>
-                </div>
-                <a id="download-btn" class="download-btn" href="#" download>
-                    <i class="material-icons">file_download</i>
-                    Install
-                </a>
-            </div>
-        </div>
-
-        <div class="screenshots-container" id="screenshots-container">
-            <h2 class="screenshots-title">Screenshots</h2>
-            <div class="screenshots" id="screenshots-gallery">
-                <!-- Screenshots will be added here dynamically -->
-            </div>
-        </div>
-
-        <div class="section">
-            <h2 class="section-title">About this app</h2>
-            <p id="app-article" class="about-content">Loading...</p>
-        </div>
-
-        <div class="section">
-            <h2 class="section-title">App details</h2>
-            <div class="details-grid">
-                <div class="detail-item">
-                    <i class="material-icons">info</i>
-                    <div>
-                        <div>Version</div>
-                        <div id="app-version" class="detail-value">Loading...</div>
-                    </div>
-                </div>
-                <div class="detail-item">
-                    <i class="material-icons">storage</i>
-                    <div>
-                        <div>Size</div>
-                        <div id="app-size" class="detail-value">Varies with device</div>
-                    </div>
-                </div>
-                <div class="detail-item">
-                    <i class="material-icons">android</i>
-                    <div>
-                        <div>Requires Android</div>
-                        <div id="app-android-version" class="detail-value">5.0 and up</div>
-                    </div>
-                </div>
-                <div class="detail-item">
-                    <i class="material-icons">calendar_today</i>
-                    <div>
-                        <div>Updated</div>
-                        <div id="app-updated" class="detail-value">May 15, 2023</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Similar Apps Section -->
-        <div class="similar-apps-container" id="similar-apps-container">
-            <h2 class="similar-apps-title">Similar apps</h2>
-            <div class="similar-apps" id="similar-apps-list">
-                <!-- Similar apps will be added here dynamically -->
-            </div>
-        </div>
+        <h1 id="app-title">App Name</h1>
+        <p><strong>Version:</strong> <span id="app-version"></span></p>
+        <p><strong>Author:</strong> <span id="app-author"></span></p>
+        <p id="app-article"></p>
+        <a id="download-btn" class="download-btn" href="#">Download</a>
     </div>
 
-    <div id="loading" class="loading-container">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading app details...</div>
-    </div>
-
-    <!-- Defer non-critical JavaScript -->
     <script>
-        // Cache DOM elements
-        const domCache = {
-            loading: document.getElementById('loading'),
-            appTitle: document.getElementById('app-title'),
-            appVersion: document.getElementById('app-version'),
-            appAuthor: document.getElementById('app-author'),
-            appArticle: document.getElementById('app-article'),
-            appIconContainer: document.getElementById('app-icon-container'),
-            screenshotsContainer: document.getElementById('screenshots-container'),
-            screenshotsGallery: document.getElementById('screenshots-gallery'),
-            similarAppsContainer: document.getElementById('similar-apps-container'),
-            similarAppsList: document.getElementById('similar-apps-list'),
-            downloadBtn: document.getElementById('download-btn')
-        };
-
-        // Simple cache implementation
-        const appCache = {
-            data: null,
-            lastFetch: 0,
-            cacheDuration: 15 * 60 * 1000, // 15 minutes
-            get: async function() {
-                const now = Date.now();
-                if (!this.data || now - this.lastFetch > this.cacheDuration) {
-                    try {
-                        const response = await fetch('https://giantwebmarket.com/apkhub/apkhubdata.json', {
-                            cache: 'force-cache'
-                        });
-                        this.data = await response.json();
-                        this.lastFetch = now;
-                    } catch (error) {
-                        console.error('Error loading apps:', error);
-                        domCache.loading.innerHTML = '<div class="error-message">Error loading apps. Please try again later.</div>';
-                        return [];
-                    }
-                }
-                return this.data;
-            }
-        };
-
-        // Optimized screenshot extraction with timeout
-        async function extractScreenshots(appPageUrl) {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-            
-            try {
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const response = await fetch(proxyUrl + encodeURIComponent(appPageUrl), {
-                    signal: controller.signal
-                });
-                const html = await response.text();
-                
-                // Use lighter-weight parsing for just the screenshots
-                const galleryMatch = html.match(/<div[^>]*class=["'][^"']*gallery[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
-                if (!galleryMatch) return [];
-                
-                const screenshotMatches = galleryMatch[0].match(/data-href=["']([^"']+)["']/gi) || [];
-                return screenshotMatches.map(match => {
-                    return match.replace(/data-href=["']|["']/g, '');
-                }).filter(url => url);
-            } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error('Error extracting screenshots:', error);
-                }
-                return [];
-            } finally {
-                clearTimeout(timeout);
-            }
-        }
-
-        // Optimized icon extraction
-        async function extractIconUrl(appPageUrl) {
-            try {
-                // First try to get just the head section to find meta tags
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(appPageUrl)}&headers=true`;
-                const response = await fetch(proxyUrl);
-                const { contents } = await response.json();
-                
-                // Check for meta tags first (og:image, twitter:image)
-                const metaMatch = contents.match(/<meta[^>]*(property|name)=["'](og:image|twitter:image)["'][^>]*content=["']([^"']+)["']/i);
-                if (metaMatch && metaMatch[3]) {
-                    return metaMatch[3];
-                }
-                
-                // If no meta tags, look for favicon or apple-touch-icon
-                const iconMatch = contents.match(/<link[^>]*(rel=["'](icon|shortcut icon|apple-touch-icon)["'][^>]*href=["']([^"']+)["']/i);
-                if (iconMatch && iconMatch[3]) {
-                    return iconMatch[3];
-                }
-                
-                return null;
-            } catch (error) {
-                console.error('Error extracting icon:', error);
-                return null;
-            }
-        }
-
-        function assignUniqueIds(data) {
-            return data.map((app, index) => {
-                app.id = `app-${index + 1}`;
-                return app;
-            });
-        }
-
-        function displayScreenshots(screenshots) {
-            if (screenshots.length === 0) {
-                domCache.screenshotsContainer.style.display = 'none';
-                return;
-            }
-            
-            // Use requestIdleCallback for non-critical rendering
-            requestIdleCallback(() => {
-                const fragment = document.createDocumentFragment();
-                screenshots.forEach((url, index) => {
-                    const img = document.createElement('img');
-                    img.loading = 'lazy';
-                    img.decoding = 'async';
-                    img.src = url;
-                    img.alt = `Screenshot ${index + 1}`;
-                    img.className = 'screenshot';
-                    fragment.appendChild(img);
-                });
-                domCache.screenshotsGallery.appendChild(fragment);
-            }, { timeout: 1000 });
-        }
-
-        function handleDownload(event, downloadUrl) {
-            event.preventDefault();
-            
-            if (!downloadUrl || downloadUrl === '#') {
-                alert('Download URL not available');
+        async function fetchAppData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const appId = urlParams.get("id");
+            if (!appId) {
+                document.getElementById("loading").innerHTML = "<div class='error-message'>App not found.</div>";
                 return;
             }
 
-            // Create a temporary anchor element to trigger the download
-            const a = document.createElement('a');
-            a.href = downloadUrl;
-            a.download = downloadUrl.split('/').pop() || 'app_download';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            // Check cache first
+            const cachedData = localStorage.getItem(`app_${appId}`);
+            if (cachedData) {
+                displayAppDetails(JSON.parse(cachedData));
+                return;
+            }
+
+            try {
+                const response = await fetch("https://giantwebmarket.com/apkhub/apkhubdata.json");
+                const apps = await response.json();
+                const app = apps.find(a => a.id === appId);
+                if (!app) throw new Error("App not found");
+
+                localStorage.setItem(`app_${appId}`, JSON.stringify(app));
+                displayAppDetails(app);
+            } catch (error) {
+                console.error("Error loading app:", error);
+                document.getElementById("loading").innerHTML = "<div class='error-message'>Failed to load app details.</div>";
+            }
         }
 
-        async function displaySimilarApps(currentApp, allApps) {
-            // Hide the section initially
-            domCache.similarAppsContainer.style.display = 'none';
-            
-            // Filter out the current app and get up to 10 similar apps
-            const similarApps = allApps
-                .filter(app => app.id !== currentApp.id)
-                .slice(0, 10);
-            
-            if (similarApps.length === 0) return;
-            
-            // Use requestIdleCallback for non-critical rendering
-            requestIdleCallback(async () => {
-                const fragment = document.createDocumentFragment();
-                
-                for (const app of similarApps) {
-                    const appElement = document.createElement('div');
-                    appElement.className = 'similar-app';
-                    appElement.onclick = () => {
-                        window.location.href = `?id=${app.id}`;
-                    };
-                    
-                    // Create icon placeholder
-                    const iconPlaceholder = document.createElement('div');
-                    iconPlaceholder.className = 'icon-placeholder-small';
-                    iconPlaceholder.innerHTML = '<i class="material-icons">android</i>';
-                    
-                    // Try to load the actual icon
-                    if (app.url) {
-                        try {
-                            const iconUrl = await extractIconUrl(app.url);
-                            if (iconUrl) {
-                                const img = document.createElement('img');
-                                img.loading = 'lazy';
-                                img.src = iconUrl;
-                                img.className = 'similar-app-icon';
-                                img.alt = `${app.title} icon`;
-                                img.onerror = () => {
-                                    iconPlaceholder.innerHTML = '<i class="material-icons">broken_image</i>';
-                                };
-                                iconPlaceholder.innerHTML = '';
-                                iconPlaceholder.appendChild(img);
-                            }
-                        } catch (error) {
-                            console.error('Error loading icon for similar app:', error);
-                        }
-                    }
-                    
-                    const nameElement = document.createElement('div');
-                    nameElement.className = 'similar-app-name';
-                    nameElement.textContent = app.title || 'Unknown App';
-                    
-                    appElement.appendChild(iconPlaceholder);
-                    appElement.appendChild(nameElement);
-                    fragment.appendChild(appElement);
-                }
-                
-                domCache.similarAppsList.appendChild(fragment);
-                domCache.similarAppsContainer.style.display = 'block';
-            }, { timeout: 2000 });
-        }
+        function displayAppDetails(app) {
+            document.getElementById("app-title").textContent = app.title || "Unknown";
+            document.getElementById("app-version").textContent = app.version || "Unknown";
+            document.getElementById("app-author").textContent = app.author || "Unknown";
+            document.getElementById("app-article").textContent = app.article || "No details available";
+            document.title = app.title || "App";
 
-        async function displayAppDetails(app, allApps) {
-            // Update basic info immediately
-            domCache.appTitle.textContent = app.title || 'No title available';
-            domCache.appVersion.textContent = app.version || 'No version available';
-            domCache.appAuthor.textContent = app.author || 'No author available';
-            domCache.appArticle.textContent = app.article || 'No additional information available';
-            document.title = `${app.title || 'App'} - Google Play Store`;
-
-            // Set up the download button
             if (app.download_url) {
-                domCache.downloadBtn.href = app.download_url;
-                domCache.downloadBtn.onclick = (e) => handleDownload(e, app.download_url);
-                domCache.downloadBtn.style.pointerEvents = 'auto';
-                domCache.downloadBtn.style.opacity = '1';
-            } else {
-                domCache.downloadBtn.href = '#';
-                domCache.downloadBtn.onclick = (e) => {
-                    e.preventDefault();
-                    alert('Download URL not available for this app');
-                };
-                domCache.downloadBtn.style.opacity = '0.7';
-                domCache.downloadBtn.style.cursor = 'not-allowed';
+                const downloadBtn = document.getElementById("download-btn");
+                downloadBtn.href = app.download_url;
+                downloadBtn.onclick = (e) => handleDownload(e, app.download_url);
             }
 
-            // Load icon and screenshots in parallel
-            const [iconUrl, screenshots] = await Promise.all([
-                app.url ? extractIconUrl(app.url).catch(() => null) : null,
-                app.url ? extractScreenshots(app.url).catch(() => []) : []
-            ]);
-
-            // Update icon
-            if (iconUrl) {
-                const img = document.createElement('img');
-                img.loading = 'lazy';
-                img.src = iconUrl;
-                img.className = 'app-icon';
-                img.alt = `${app.title} icon`;
-                img.onerror = () => {
-                    domCache.appIconContainer.innerHTML = '<div class="icon-placeholder"><i class="material-icons">broken_image</i></div>';
-                };
-                domCache.appIconContainer.innerHTML = '';
-                domCache.appIconContainer.appendChild(img);
-            }
-
-            // Display screenshots
-            displayScreenshots(screenshots);
-
-            // Display similar apps (non-blocking)
-            displaySimilarApps(app, allApps);
-
-            // Hide loading spinner
-            domCache.loading.style.display = 'none';
+            document.getElementById("loading").style.display = "none";
+            document.querySelector(".app-container").style.display = "block";
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Load non-critical CSS
-            const nonCriticalCSS = document.createElement('link');
-            nonCriticalCSS.rel = 'stylesheet';
-            nonCriticalCSS.href = 'styles.css';
-            document.head.appendChild(nonCriticalCSS);
-
-            const appId = new URLSearchParams(window.location.search).get('id');
-            if (appId) {
-                try {
-                    const allApps = await appCache.get();
-                    const appsWithIds = assignUniqueIds(allApps);
-                    const app = appsWithIds.find(a => a.id === appId);
-
-                    if (app) {
-                        await displayAppDetails(app, appsWithIds);
-                    } else {
-                        domCache.loading.innerHTML = '<div class="error-message">App not found.</div>';
-                    }
-                } catch (error) {
-                    domCache.loading.innerHTML = '<div class="error-message">Error loading app details.</div>';
-                }
-            } else {
-                domCache.loading.innerHTML = '<div class="error-message">No app ID provided.</div>';
+        function handleDownload(event, url) {
+            event.preventDefault();
+            if (!url) {
+                alert("Download link unavailable");
+                return;
             }
-        });
+            window.location.href = url;
+        }
 
-        // Load the rest of the CSS (should be in a separate file)
-        const style = document.createElement('style');
-        style.textContent = `
-            .app-container {
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 16px;
-            }
-
-            .app-header {
-                display: flex;
-                margin-bottom: 24px;
-            }
-
-            .app-icon {
-                width: 96px;
-                height: 96px;
-                border-radius: 16px;
-                object-fit: cover;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-                margin-right: 24px;
-            }
-
-            .app-info {
-                flex: 1;
-            }
-
-            .app-title {
-                font-size: 22px;
-                font-weight: 500;
-                margin-bottom: 4px;
-            }
-
-            .app-developer {
-                color: var(--play-blue);
-                font-size: 14px;
-                margin-bottom: 8px;
-                display: inline-block;
-            }
-
-            .app-developer:hover {
-                text-decoration: underline;
-            }
-
-            .app-meta {
-                display: flex;
-                align-items: center;
-                margin-bottom: 8px;
-                font-size: 14px;
-            }
-
-            .app-rating {
-                display: flex;
-                align-items: center;
-                margin-right: 16px;
-            }
-
-            .stars {
-                color: var(--rating);
-                margin-right: 4px;
-            }
-
-            .download-btn {
-                background-color: var(--play-blue);
-                color: white;
-                border: none;
-                border-radius: 4px;
-                padding: 8px 24px;
-                font-size: 16px;
-                font-weight: 500;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-                transition: background-color 0.2s;
-                text-decoration: none;
-            }
-
-            .download-btn:hover {
-                background-color: #3367d6;
-            }
-
-            .download-btn .material-icons {
-                margin-right: 8px;
-                font-size: 20px;
-            }
-
-            .screenshots-container {
-                margin: 24px 0;
-            }
-
-            .screenshots-title {
-                font-size: 18px;
-                font-weight: 500;
-                margin-bottom: 12px;
-            }
-
-            .screenshots {
-                display: flex;
-                overflow-x: auto;
-                gap: 12px;
-                padding: 8px 0;
-                scrollbar-width: none;
-            }
-
-            .screenshots::-webkit-scrollbar {
-                display: none;
-            }
-
-            .screenshot {
-                height: 180px;
-                border-radius: 8px;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-                transition: transform 0.2s;
-            }
-
-            .screenshot:hover {
-                transform: scale(1.02);
-            }
-
-            .section {
-                margin-bottom: 24px;
-            }
-
-            .section-title {
-                font-size: 18px;
-                font-weight: 500;
-                margin-bottom: 12px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .about-content {
-                white-space: pre-line;
-                color: var(--text-secondary);
-                font-size: 14px;
-            }
-
-            .details-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-                font-size: 14px;
-            }
-
-            .detail-item {
-                display: flex;
-                align-items: center;
-            }
-
-            .detail-item .material-icons {
-                margin-right: 8px;
-                color: var(--text-secondary);
-                font-size: 18px;
-            }
-
-            .loading-text {
-                color: var(--text-secondary);
-                font-size: 16px;
-            }
-
-            .icon-placeholder {
-                width: 96px;
-                height: 96px;
-                background-color: var(--surface);
-                border-radius: 16px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--text-secondary);
-                margin-right: 24px;
-            }
-
-            .icon-placeholder-small {
-                width: 64px;
-                height: 64px;
-                background-color: var(--surface);
-                border-radius: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--text-secondary);
-                margin: 0 auto 8px auto;
-            }
-
-            .similar-apps-container {
-                margin: 24px 0;
-            }
-
-            .similar-apps-title {
-                font-size: 18px;
-                font-weight: 500;
-                margin-bottom: 12px;
-            }
-
-            .similar-apps {
-                display: flex;
-                overflow-x: auto;
-                gap: 16px;
-                padding: 8px 0;
-                scrollbar-width: none;
-            }
-
-            .similar-apps::-webkit-scrollbar {
-                display: none;
-            }
-
-            .similar-app {
-                min-width: 120px;
-                text-align: center;
-                cursor: pointer;
-                transition: transform 0.2s;
-            }
-
-            .similar-app:hover {
-                transform: scale(1.05);
-            }
-
-            .similar-app-icon {
-                width: 64px;
-                height: 64px;
-                border-radius: 12px;
-                object-fit: cover;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-                margin-bottom: 8px;
-            }
-
-            .similar-app-name {
-                font-size: 13px;
-                color: var(--text-primary);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-                display: inline-block;
-            }
-
-            @media (max-width: 600px) {
-                .app-header {
-                    flex-direction: column;
-                }
-                
-                .app-icon, .icon-placeholder {
-                    margin-right: 0;
-                    margin-bottom: 16px;
-                    align-self: center;
-                }
-                
-                .details-grid {
-                    grid-template-columns: 1fr;
-                }
-
-                .similar-app {
-                    min-width: 100px;
-                }
-            }
-        `;
-        document.head.appendChild(style);
+        document.addEventListener("DOMContentLoaded", fetchAppData);
     </script>
 </body>
 </html>
