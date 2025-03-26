@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APK Hub - Google Play Store Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        :root {
+            --play-red: #ea4335;
+            --play-blue: #4285f4;
+            --play-green: #34a853;
+            --play-yellow: #fbbc04;
+            --text-primary: #3c4043;
+            --text-secondary: #5f6368;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --border: #dadce0;
+            --rating: #ffb400;
+            --card-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Google Sans', Arial, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--background);
+            line-height: 1.5;
+        }
+
+        header {
+            background-color: var(--background);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-title .material-icons {
+            color: var(--play-green);
+            margin-right: 8px;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            font-family: 'Google Sans', Arial, sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-bar .material-icons {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .nav-container {
+            display: flex;
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            padding: 16px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--play-blue);
+        }
+
+        .nav-item.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 3px;
+            background-color: var(--play-blue);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .see-all {
+            color: var(--play-blue);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .see-all .material-icons {
+            font-size: 18px;
+            margin-left: 4px;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .app-card {
+            background-color: var(--background);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .app-icon {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .app-icon .material-icons {
+            font-size: 40px;
+        }
+
+        .app-info {
+            padding: 12px 8px;
+        }
+
+        .app-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 40px;
+        }
+
+        .app-developer {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-rating {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stars {
+            color: var(--rating);
+            margin-right: 4px;
+            display: flex;
+        }
+
+        .stars .material-icons {
+            font-size: 16px;
+        }
+
+        .app-price {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-left-color: var(--play-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .header-title span {
+                display: none;
+            }
+            
+            .search-bar {
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+            
+            .app-name {
+                font-size: 13px;
+                height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title">
+            <i class="material-icons">android</i>
+            <span>APK Hub</span>
+        </div>
+        <div class="search-bar">
+            <i class="material-icons">search</i>
+            <input type="text" placeholder="Search apps...">
+        </div>
+        <div style="width: 40px;"></div> <!-- Spacer for alignment -->
+    </header>
+
+    <div class="nav-container">
+        <div class="nav-item active">For you</div>
+        <div class="nav-item">Top charts</div>
+        <div class="nav-item">Categories</div>
+        <div class="nav-item">Editor's Choice</div>
+        <div class="nav-item">Family</div>
+        <div class="nav-item">Games</div>
+        <div class="nav-item">Apps</div>
+    </div>
+
+    <div class="main-container">
+        <div class="section-header">
+            <h2 class="section-title">Recommended for you</h2>
+            <a href="#" class="see-all">See all <i class="material-icons">chevron_right</i></a>
+        </div>
+        <div class="apps-grid" id="recommended-apps">
+            <!-- Recommended apps will be loaded here -->
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">Top free apps</h2>
+            <a href="#" class="see-all">See all <i class="material-icons">chevron_right</i></a>
+        </div>
+        <div class="apps-grid" id="top-free-apps">
+            <!-- Top free apps will be loaded here -->
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">Trending apps</h2>
+            <a href="#" class="see-all">See all <i class="material-icons">chevron_right</i></a>
+        </div>
+        <div class="apps-grid" id="trending-apps">
+            <!-- Trending apps will be loaded here -->
+        </div>
+    </div>
+
+    <div id="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading apps...</div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('https://giantwebmarket.com/apkhub/apkhubdata.json');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error loading apps:', error);
+                document.getElementById('loading').innerHTML = '<div class="error-message">Error loading apps. Please try again later.</div>';
+                return [];
+            }
+        }
+
+        async function extractIconUrl(appPageUrl) {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(appPageUrl));
+                const html = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const selectors = [
+                    '.avatar img', 
+                    'img[alt*="icon"]', 
+                    'img[alt*="logo"]',
+                    'img[src*="icon"]',
+                    'img[src*="logo"]',
+                    'meta[property="og:image"]',
+                    'meta[name="twitter:image"]'
+                ];
+                
+                let iconUrl = null;
+                for (const selector of selectors) {
+                    const element = doc.querySelector(selector);
+                    if (element) {
+                        if (element.tagName.toLowerCase() === 'meta') {
+                            iconUrl = element.getAttribute('content');
+                        } else {
+                            iconUrl = element.getAttribute('data-src') || element.src;
+                        }
+                        if (iconUrl) break;
+                    }
+                }
+                
+                if (iconUrl && !iconUrl.startsWith('http')) {
+                    const urlObj = new URL(appPageUrl);
+                    iconUrl = urlObj.origin + (iconUrl.startsWith('/') ? iconUrl : `/${iconUrl}`);
+                }
+                
+                return iconUrl;
+            } catch (error) {
+                console.error('Error extracting icon:', error);
+                return null;
+            }
+        }
+
+        function createAppCard(app) {
+            const card = document.createElement('a');
+            card.className = 'app-card';
+            card.href = `detail.html?id=${app.id}`;
+            
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'app-icon';
+            
+            if (app.iconUrl) {
+                const img = document.createElement('img');
+                img.src = app.iconUrl;
+                img.alt = app.title;
+                img.onerror = () => {
+                    iconDiv.innerHTML = '<i class="material-icons">android</i>';
+                };
+                iconDiv.appendChild(img);
+            } else {
+                iconDiv.innerHTML = '<i class="material-icons">android</i>';
+            }
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'app-info';
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'app-name';
+            nameDiv.textContent = app.title || 'App Name';
+            
+            const devDiv = document.createElement('div');
+            devDiv.className = 'app-developer';
+            devDiv.textContent = app.author || 'Developer';
+            
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'app-meta';
+            
+            const ratingDiv = document.createElement('div');
+            ratingDiv.className = 'app-rating';
+            ratingDiv.innerHTML = `
+                <div class="stars">
+                    <i class="material-icons">star</i>
+                    <i class="material-icons">star</i>
+                    <i class="material-icons">star</i>
+                    <i class="material-icons">star_half</i>
+                    <i class="material-icons">star_border</i>
+                </div>
+                <span>4.2</span>
+            `;
+            
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'app-price';
+            priceDiv.textContent = 'FREE';
+            
+            metaDiv.appendChild(ratingDiv);
+            metaDiv.appendChild(priceDiv);
+            
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(devDiv);
+            infoDiv.appendChild(metaDiv);
+            
+            card.appendChild(iconDiv);
+            card.appendChild(infoDiv);
+            
+            return card;
+        }
+
+        async function displayApps() {
+            const allApps = await fetchData();
+            const appsWithIds = allApps.map((app, index) => {
+                app.id = `app-${index + 1}`;
+                return app;
+            });
+            
+            // Get random apps for different sections
+            const recommendedApps = [...appsWithIds].sort(() => 0.5 - Math.random()).slice(0, 6);
+            const topFreeApps = [...appsWithIds].sort(() => 0.5 - Math.random()).slice(0, 6);
+            const trendingApps = [...appsWithIds].sort(() => 0.5 - Math.random()).slice(0, 6);
+            
+            // Load icons for each app
+            const loadIcons = async (apps) => {
+                for (const app of apps) {
+                    if (app.url) {
+                        try {
+                            app.iconUrl = await extractIconUrl(app.url);
+                        } catch (error) {
+                            console.error(`Error loading icon for ${app.title}:`, error);
+                        }
+                    }
+                }
+            };
+            
+            await Promise.all([
+                loadIcons(recommendedApps),
+                loadIcons(topFreeApps),
+                loadIcons(trendingApps)
+            ]);
+            
+            // Display apps in each section
+            const recommendedContainer = document.getElementById('recommended-apps');
+            recommendedApps.forEach(app => {
+                recommendedContainer.appendChild(createAppCard(app));
+            });
+            
+            const topFreeContainer = document.getElementById('top-free-apps');
+            topFreeApps.forEach(app => {
+                topFreeContainer.appendChild(createAppCard(app));
+            });
+            
+            const trendingContainer = document.getElementById('trending-apps');
+            trendingApps.forEach(app => {
+                trendingContainer.appendChild(createAppCard(app));
+            });
+            
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayApps();
+            
+            // Add click handlers for navigation items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    // In a real app, you would load different content here
+                });
+            });
+        });
+    </script>
+</body>
+</html>
