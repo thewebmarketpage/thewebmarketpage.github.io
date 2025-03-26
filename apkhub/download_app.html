@@ -80,22 +80,40 @@
         // Function to extract icon URL from app page
         async function extractIconUrl(appPageUrl) {
             try {
-                // Use a CORS proxy if needed (many app stores block direct fetching)
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                const response = await fetch(proxyUrl + appPageUrl);
+                // Use a CORS proxy if needed
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(appPageUrl));
                 const html = await response.text();
                 
                 // Create a DOM parser to extract the icon
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 
-                // Find the avatar div and extract the image URL
-                const avatarDiv = doc.querySelector('.avatar img');
-                if (avatarDiv) {
-                    // Prefer data-src if available (common with lazy loading)
-                    return avatarDiv.getAttribute('data-src') || avatarDiv.src;
+                // Try multiple selectors to find the icon
+                const selectors = [
+                    '.avatar img', 
+                    'img[alt*="icon"]', 
+                    'img[alt*="logo"]',
+                    'img[src*="icon"]',
+                    'img[src*="logo"]'
+                ];
+                
+                let iconUrl = null;
+                for (const selector of selectors) {
+                    const img = doc.querySelector(selector);
+                    if (img) {
+                        iconUrl = img.getAttribute('data-src') || img.src;
+                        if (iconUrl) break;
+                    }
                 }
-                return null;
+                
+                // Ensure URL is absolute
+                if (iconUrl && !iconUrl.startsWith('http')) {
+                    const urlObj = new URL(appPageUrl);
+                    iconUrl = urlObj.origin + (iconUrl.startsWith('/') ? iconUrl : `/${iconUrl}`);
+                }
+                
+                return iconUrl;
             } catch (error) {
                 console.error('Error extracting icon:', error);
                 return null;
@@ -118,18 +136,22 @@
             document.getElementById('download-btn').href = app.download_url || '#';
             document.title = app.title || 'App Details';
 
-            // Extract and display the icon
-            if (app.source_url) {
-                const iconUrl = await extractIconUrl(app.source_url);
-                const iconContainer = document.getElementById('app-icon-container');
-                
-                if (iconUrl) {
-                    iconContainer.innerHTML = `<img src="${iconUrl}" class="app-icon" alt="${app.title} icon">`;
-                } else {
-                    iconContainer.innerHTML = '<div class="icon-loading">Icon not available</div>';
+            // Extract and display the icon from the app's URL
+            if (app.url) {
+                try {
+                    const iconUrl = await extractIconUrl(app.url);
+                    const iconContainer = document.getElementById('app-icon-container');
+                    
+                    if (iconUrl) {
+                        iconContainer.innerHTML = `<img src="${iconUrl}" class="app-icon" alt="${app.title} icon" onerror="this.parentElement.innerHTML='<div class=\'icon-loading\'>Icon failed to load</div>'">`;
+                    } else {
+                        iconContainer.innerHTML = '<div class="icon-loading">Icon not found on page</div>';
+                    }
+                } catch (error) {
+                    document.getElementById('app-icon-container').innerHTML = '<div class="icon-loading">Error loading icon</div>';
                 }
             } else {
-                document.getElementById('app-icon-container').innerHTML = '<div class="icon-loading">No source URL provided</div>';
+                document.getElementById('app-icon-container').innerHTML = '<div class="icon-loading">No URL provided</div>';
             }
 
             document.getElementById('loading').style.display = 'none';
