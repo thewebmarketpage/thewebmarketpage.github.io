@@ -439,50 +439,6 @@
             }
         }
 
-        async function extractIconUrl(appPageUrl) {
-            try {
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const response = await fetch(proxyUrl + encodeURIComponent(appPageUrl));
-                const html = await response.text();
-                
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                const selectors = [
-                    '.avatar img', 
-                    'img[alt*="icon"]', 
-                    'img[alt*="logo"]',
-                    'img[src*="icon"]',
-                    'img[src*="logo"]',
-                    'meta[property="og:image"]',
-                    'meta[name="twitter:image"]'
-                ];
-                
-                let iconUrl = null;
-                for (const selector of selectors) {
-                    const element = doc.querySelector(selector);
-                    if (element) {
-                        if (element.tagName.toLowerCase() === 'meta') {
-                            iconUrl = element.getAttribute('content');
-                        } else {
-                            iconUrl = element.getAttribute('data-src') || element.src;
-                        }
-                        if (iconUrl) break;
-                    }
-                }
-                
-                if (iconUrl && !iconUrl.startsWith('http')) {
-                    const urlObj = new URL(appPageUrl);
-                    iconUrl = urlObj.origin + (iconUrl.startsWith('/') ? iconUrl : `/${iconUrl}`);
-                }
-                
-                return iconUrl;
-            } catch (error) {
-                console.error('Error extracting icon:', error);
-                return null;
-            }
-        }
-
         function createAppCard(app) {
             const card = document.createElement('a');
             card.className = 'app-card';
@@ -591,8 +547,10 @@
             
             const lowerCaseTerm = searchTerm.toLowerCase();
             const filteredApps = allApps.filter(function(app) {
+                // Search in title, author, and description
                 return (app.title && app.title.toLowerCase().includes(lowerCaseTerm)) ||
-                       (app.author && app.author.toLowerCase().includes(lowerCaseTerm));
+                       (app.author && app.author.toLowerCase().includes(lowerCaseTerm)) ||
+                       (app.article && app.article.toLowerCase().includes(lowerCaseTerm));
             });
             
             const resultsContainer = document.getElementById('search-results');
@@ -679,8 +637,15 @@
         async function displayApps() {
             const data = await fetchData();
             allApps = data.map(function(app, index) {
-                app.id = 'app-' + (index + 1);
-                return app;
+                return {
+                    id: 'app-' + (index + 1),
+                    title: app.title,
+                    author: app.author,
+                    article: app.article,
+                    version: app.version,
+                    download_url: app.download_url,
+                    iconUrl: app.icon || null // Use direct icon URL from JSON if available
+                };
             });
             
             // Get random apps for different sections
@@ -689,25 +654,6 @@
                 topFree: [...allApps].sort(function() { return 0.5 - Math.random() }).slice(0, 6),
                 trending: [...allApps].sort(function() { return 0.5 - Math.random() }).slice(0, 6)
             };
-            
-            // Load icons for each app in each section
-            const loadIcons = async function(apps) {
-                for (const app of apps) {
-                    if (app.url) {
-                        try {
-                            app.iconUrl = await extractIconUrl(app.url);
-                        } catch (error) {
-                            console.error('Error loading icon for ' + app.title + ':', error);
-                        }
-                    }
-                }
-            };
-            
-            await Promise.all([
-                loadIcons(appSections.recommended),
-                loadIcons(appSections.topFree),
-                loadIcons(appSections.trending)
-            ]);
             
             // Display apps in each section
             const recommendedContainer = document.getElementById('recommended-apps');
@@ -779,10 +725,13 @@
             // Handle Enter key in search
             searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    showSearchResultsPage(searchInput.value, allApps.filter(function(app) {
-                        return (app.title && app.title.toLowerCase().includes(searchInput.value.toLowerCase())) ||
-                               (app.author && app.author.toLowerCase().includes(searchInput.value.toLowerCase()));
-                    }));
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const filteredApps = allApps.filter(function(app) {
+                        return (app.title && app.title.toLowerCase().includes(searchTerm)) ||
+                               (app.author && app.author.toLowerCase().includes(searchTerm)) ||
+                               (app.article && app.article.toLowerCase().includes(searchTerm));
+                    });
+                    showSearchResultsPage(searchInput.value, filteredApps);
                 }
             });
         });
