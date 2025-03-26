@@ -127,6 +127,13 @@
             justify-content: center;
         }
 
+        .search-result-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
         .search-result-icon .material-icons {
             color: var(--text-secondary);
         }
@@ -239,18 +246,24 @@
 
         .app-icon {
             width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border-radius: 8px;
+            height: 180px;
             background-color: var(--surface);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
+            overflow: hidden;
+        }
+
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .app-icon .material-icons {
             font-size: 40px;
+            color: var(--text-secondary);
         }
 
         .app-info {
@@ -447,9 +460,9 @@
             const iconDiv = document.createElement('div');
             iconDiv.className = 'app-icon';
             
-            if (app.iconUrl) {
+            if (app.icon) {
                 const img = document.createElement('img');
-                img.src = app.iconUrl;
+                img.src = app.icon;
                 img.alt = app.title;
                 img.onerror = function() {
                     iconDiv.innerHTML = '<i class="material-icons">android</i>';
@@ -504,13 +517,10 @@
             const iconDiv = document.createElement('div');
             iconDiv.className = 'search-result-icon';
             
-            if (app.iconUrl) {
+            if (app.icon) {
                 const img = document.createElement('img');
-                img.src = app.iconUrl;
+                img.src = app.icon;
                 img.alt = app.title;
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
                 img.onerror = function() {
                     iconDiv.innerHTML = '<i class="material-icons">android</i>';
                 };
@@ -547,7 +557,6 @@
             
             const lowerCaseTerm = searchTerm.toLowerCase();
             const filteredApps = allApps.filter(function(app) {
-                // Search in title, author, and description
                 return (app.title && app.title.toLowerCase().includes(lowerCaseTerm)) ||
                        (app.author && app.author.toLowerCase().includes(lowerCaseTerm)) ||
                        (app.article && app.article.toLowerCase().includes(lowerCaseTerm));
@@ -644,7 +653,7 @@
                     article: app.article,
                     version: app.version,
                     download_url: app.download_url,
-                    iconUrl: app.icon || null // Use direct icon URL from JSON if available
+                    icon: app.icon || null
                 };
             });
             
