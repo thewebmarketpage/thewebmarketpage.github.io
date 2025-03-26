@@ -41,85 +41,145 @@
 
     <a id="download-btn" class="download-btn" href="" target="_blank">Download App</a>
 
+    <div id="cardsContainer"></div> <!-- Container to load app cards -->
+
     <script>
-        // Fetch app data from the JSON file on GitHub
-        async function fetchAppData(appId) {
-            const url = 'https://raw.githubusercontent.com/thewebmarketpage/thewebmarketpage.github.io/root/apkhub/apkhubdata.json'; // GitHub raw URL
+        // Function to fetch app data
+        async function fetchData() {
+            const response = await fetch('apkhubdata.json');
+            return response.json();
+        }
+
+        // Global variable to store all app data
+        let allApps = [];
+        // Number of items to load initially and each time more are loaded
+        const itemsPerLoad = 9;
+        // Track how many items are currently displayed
+        let currentlyLoaded = 0;
+
+        function lazyLoadCards(data, searchQuery = '') {
+            const cardsContainer = document.getElementById('cardsContainer');
             
-            try {
-                // Fetch the JSON data from the server
-                const response = await fetch(url);
-                const data = await response.json();
+            // Filter data based on search query
+            const filteredData = data.filter(item => 
+                item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.description.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            
+            // Clear container on new search
+            if (searchQuery !== '' || currentlyLoaded === 0) {
+                cardsContainer.innerHTML = '';
+                currentlyLoaded = 0;
+            }
+            
+            // Calculate end index for current batch
+            const endIndex = Math.min(currentlyLoaded + itemsPerLoad, filteredData.length);
+            
+            // Get the current batch of items to display
+            const itemsToShow = filteredData.slice(currentlyLoaded, endIndex);
+            
+            // Create and append cards for each item in the current batch
+            itemsToShow.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-800 rounded-lg shadow-lg border-b-4 border-blue-500 transform transition duration-300 hover:scale-105 hover:shadow-xl";
+                card.innerHTML = `
+                    <div class="zoom-effect overflow-hidden">
+                        <a href="download_app.html?id=${item.id}">
+                            <img src="${item.app_icon}" alt="${item.title}" class="w-full h-48 object-cover" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex space-x-2 mb-4">
+                            <a href="category.html?category=${encodeURIComponent(item.category)}" class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full hover:bg-blue-600">
+                                ${item.category}
+                            </a>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">
+                            <a href="download_app.html?id=${item.id}" class="hover:text-blue-400">${item.title}</a>
+                        </h3>
+                        <p class="text-gray-400">${item.description.substring(0, 100)}...</p>
+                        <a href="download_app.html?id=${item.id}" class="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded-full font-semibold hover:bg-blue-600 transition duration-300">View App</a>
+                    </div>
+                `;
+                cardsContainer.appendChild(card);
+            });
+            
+            // Update the count of loaded items
+            currentlyLoaded = endIndex;
+            
+            // Show or hide the load more button based on whether there are more items
+            updateLoadMoreButton(currentlyLoaded < filteredData.length);
+        }
 
-                // Find the app data by ID (assuming the data has an 'id' field)
-                const app = data.find(item => item.id === appId); // Use the app's ID for the selection
-
-                if (app) {
-                    // Populate the page with the app data
-                    document.getElementById('app-title').textContent = app.title;
-                    document.getElementById('app-icon').src = app.app_icon;
-                    document.getElementById('app-version').textContent = app.version;
-                    document.getElementById('app-author').textContent = app.author;
-                    document.getElementById('app-header').textContent = app.header;
-                    document.getElementById('app-article').textContent = app.article;
-                    document.getElementById('download-btn').href = app.download_url;
-
-                    // Set the page title to match the app title
-                    document.title = app.title;
-
-                    // Fetch the app icon (optional, if needed)
-                    fetchAppIcon(app.url);
-                } else {
-                    console.error("App not found");
-                }
-            } catch (error) {
-                console.error('Error fetching app data:', error);
+        function updateLoadMoreButton(show) {
+            let loadMoreButton = document.getElementById('loadMoreButton');
+            
+            if (!loadMoreButton && show) {
+                // Create the button if it doesn't exist and needs to be shown
+                loadMoreButton = document.createElement('button');
+                loadMoreButton.id = 'loadMoreButton';
+                loadMoreButton.className = 'mt-8 mx-auto block bg-blue-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-blue-600 transition duration-300';
+                loadMoreButton.textContent = 'Load More Apps';
+                loadMoreButton.addEventListener('click', () => lazyLoadCards(allApps, document.getElementById('searchBox').value));
+                
+                const container = document.querySelector('.max-w-7xl');
+                container.appendChild(loadMoreButton);
+            } else if (loadMoreButton) {
+                // Update existing button visibility
+                loadMoreButton.style.display = show ? 'block' : 'none';
             }
         }
 
-        // Function to fetch app icon from the URL
-        async function fetchAppIcon(url) {
-            try {
-                // Create an iframe to load the external URL
-                let iframe = document.createElement('iframe');
-                iframe.style.display = 'none';  // Hide the iframe
-                document.body.appendChild(iframe);
-
-                // Listen for iframe load event
-                iframe.onload = function() {
-                    let iframeDoc = iframe.contentWindow.document;
-
-                    // Find the avatar image in the iframe's document
-                    let imgElement = iframeDoc.querySelector('.avatar img');
-                    if (imgElement) {
-                        let imgUrl = imgElement.getAttribute('src') || imgElement.getAttribute('data-src');
-                        if (imgUrl) {
-                            // Set the app icon to the fetched image URL
-                            document.getElementById('app-icon').src = imgUrl;
-                        }
+        // Intersection Observer to detect when user scrolls near the bottom
+        function setupIntersectionObserver() {
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Load more apps when the sentinel is visible
+                        lazyLoadCards(allApps, document.getElementById('searchBox').value);
                     }
+                });
+            }, options);
+            
+            // Create and observe a sentinel element at the bottom of the cards container
+            const sentinel = document.createElement('div');
+            sentinel.id = 'sentinel';
+            sentinel.style.height = '10px';
+            document.getElementById('cardsContainer').after(sentinel);
+            observer.observe(sentinel);
+        }
 
-                    // Clean up the iframe
-                    document.body.removeChild(iframe);
-                };
-
-                // Set the iframe's src to the app URL
-                iframe.src = url;
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Add loading indicator
+                const cardsContainer = document.getElementById('cardsContainer');
+                cardsContainer.innerHTML = '<div class="col-span-3 text-center py-10"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div><p class="mt-3">Loading apps...</p></div>';
+                
+                // Fetch app data
+                allApps = await fetchData();
+                
+                // Initial load of app cards
+                lazyLoadCards(allApps);
+                
+                // Setup search functionality
+                document.getElementById('searchBox').addEventListener('input', (e) => {
+                    lazyLoadCards(allApps, e.target.value);
+                });
+                
+                // Setup intersection observer for automatic loading
+                setupIntersectionObserver();
             } catch (error) {
-                console.error('Error fetching app icon:', error);
+                console.error('Error loading apps:', error);
+                document.getElementById('cardsContainer').innerHTML = '<div class="col-span-3 text-center py-10 text-red-500">Error loading apps. Please try again later.</div>';
             }
-        }
-
-        // Get the app ID from the URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const appId = urlParams.get('id');  // Example: ?id=app-30
-
-        // Fetch the app data for the given ID
-        if (appId) {
-            fetchAppData(appId);
-        } else {
-            console.error('App ID not found in URL');
-        }
+        });
     </script>
 
 </body>
