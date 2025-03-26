@@ -78,16 +78,51 @@
 
                 document.title = app.title;
                 document.getElementById("app-title").textContent = app.title;
-                document.getElementById("app-icon").src = app.app_icon || "default-icon.png";
                 document.getElementById("app-version").textContent = app.version;
                 document.getElementById("app-author").textContent = app.author;
                 document.getElementById("app-header").textContent = app.header;
                 document.getElementById("app-article").textContent = app.article;
                 document.getElementById("download-btn").href = app.download_url;
 
+                // Fetch the real app icon from the app's URL
+                fetchAppIcon(app.url);
             } catch (error) {
                 console.error("❌ Error loading app data:", error);
                 document.body.innerHTML = "<h2>Error loading app. Please try again later.</h2>";
+            }
+        }
+
+        async function fetchAppIcon(url) {
+            try {
+                console.log("🔄 Fetching app icon from:", url);
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error("Failed to fetch app page.");
+                
+                const data = await response.json();
+
+                // Parse the HTML content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+
+                // Try to find the image inside the app's page
+                const imgElement = doc.querySelector("#main .container .column.is-main .app_header .avatar img");
+
+                if (imgElement) {
+                    let imgUrl = imgElement.getAttribute('src') || imgElement.getAttribute('data-src');
+
+                    if (imgUrl) {
+                        // Set the app icon dynamically
+                        document.getElementById('app-icon').src = imgUrl;
+                        console.log("✅ Found and updated app icon:", imgUrl);
+                    } else {
+                        console.warn("⚠ Image URL not found in data-src.");
+                    }
+                } else {
+                    console.warn("⚠ No matching image element found.");
+                }
+            } catch (error) {
+                console.error('❌ Error fetching app icon:', error);
             }
         }
 
