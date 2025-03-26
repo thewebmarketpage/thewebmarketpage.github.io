@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="App Explorer - Download the best apps & games for Windows, Linux, Android & iOS. Discover free and premium apps, read reviews, and get the latest updates for all platforms.">
+<meta name="keywords" content="App Explorer, Windows apps, Linux apps, Android apps, iOS apps, download apps, free apps, paid apps, app store, PC software, mobile apps, cross-platform apps, app reviews">
+
+<meta name="google-adsense-account" content="ca-pub-4307722391842007">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007" crossorigin="anonymous"></script>
+
+<title>App Explorer - Download Apps for Windows, Linux, Android & iOS</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5FB2YTV3KP');
+</script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        :root {
+            --play-red: #ea4335;
+            --play-blue: #4285f4;
+            --play-green: #34a853;
+            --play-yellow: #fbbc04;
+            --text-primary: #3c4043;
+            --text-secondary: #5f6368;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --border: #dadce0;
+            --rating: #ffb400;
+            --card-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Google Sans', Arial, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--background);
+            line-height: 1.5;
+        }
+
+        header {
+            background-color: var(--background);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-title .material-icons {
+            color: var(--play-green);
+            margin-right: 8px;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            font-family: 'Google Sans', Arial, sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--play-blue);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+
+        .search-bar .material-icons {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-result-item:hover {
+            background-color: var(--surface);
+        }
+
+        .search-result-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 12px;
+            background-color: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-result-icon .material-icons {
+            color: var(--text-secondary);
+        }
+
+        .search-result-info {
+            flex: 1;
+        }
+
+        .search-result-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .search-result-developer {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .nav-container {
+            display: flex;
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            padding: 16px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--play-blue);
+        }
+
+        .nav-item.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 3px;
+            background-color: var(--play-blue);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .see-all {
+            color: var(--play-blue);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .see-all .material-icons {
+            font-size: 18px;
+            margin-left: 4px;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .app-card {
+            background-color: var(--background);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .app-icon {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .app-icon .material-icons {
+            font-size: 40px;
+        }
+
+        .app-info {
+            padding: 12px 8px;
+        }
+
+        .app-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 40px;
+        }
+
+        .app-developer {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-rating {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stars {
+            color: var(--rating);
+            margin-right: 4px;
+            display: flex;
+        }
+
+        .stars .material-icons {
+            font-size: 16px;
+        }
+
+        .app-price {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-left-color: var(--play-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .header-title span {
+                display: none;
+            }
+            
+            .search-bar {
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+            
+            .app-name {
+                font-size: 13px;
+                height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title">
+            <i class="material-icons">android</i>
+            <span>APK Hub</span>
+        </div>
+        <div class="search-bar">
+            <i class="material-icons">search</i>
+            <input type="text" id="search-input" placeholder="Search apps...">
+            <div class="search-results" id="search-results"></div>
+        </div>
+        <div style="width: 40px;"></div> <!-- Spacer for alignment -->
+    </header>
+
+    <div class="nav-container">
+        <div class="nav-item active">For you</div>
+        <div class="nav-item">Top charts</div>
+        <div class="nav-item">Categories</div>
+        <div class="nav-item">Editor's Choice</div>
+        <div class="nav-item">Family</div>
+        <div class="nav-item">Games</div>
+        <div class="nav-item">Apps</div>
+    </div>
+
+    <div class="main-container">
+        <div class="section-header">
+            <h2 class="section-title">Recommended for you</h2>
+            <a href="#" class="see-all">See all <i class="material-icons">chevron_right</i></a>
+        </div>
+        <div class="apps-grid" id="recommended-apps">
+            <!-- Recommended apps will be loaded here -->
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">Top free apps</h2>
+            <a href="#" class="see-all">See all <i class="material-icons">chevron_right</i></a>
+        </div>
+        <div class="apps-grid" id="top-free-apps">
+            <!-- Top free apps will be loaded here -->
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">Trending apps</h2>
+            <a href="#" class="see-all">See all <i class="material-icons">chevron_right</i></a>
+        </div>
+        <div class="apps-grid" id="trending-apps">
+            <!-- Trending apps will be loaded here -->
+        </div>
+    </div>
+
+    <div id="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading apps...</div>
+    </div>
+
+    <script>
+        // Global variable to store all apps
+        let allApps = [];
+        let appSections = {};
+
+        async function fetchData() {
+            try {
+                const response = await fetch('https://giantwebmarket.com/app-explorer/appexplorer.json');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error loading apps:', error);
+                document.getElementById('loading').innerHTML = '<div class="error-message">Error loading apps. Please try again later.</div>';
+                return [];
+            }
+        }
+
+        async function extractIconUrl(appPageUrl) {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(appPageUrl));
+                const html = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const selectors = [
+                    '.avatar img', 
+                    'img[alt*="icon"]', 
+                    'img[alt*="logo"]',
+                    'img[src*="icon"]',
+                    'img[src*="logo"]',
+                    'meta[property="og:image"]',
+                    'meta[name="twitter:image"]'
+                ];
+                
+                let iconUrl = null;
+                for (const selector of selectors) {
+                    const element = doc.querySelector(selector);
+                    if (element) {
+                        if (element.tagName.toLowerCase() === 'meta') {
+                            iconUrl = element.getAttribute('content');
+                        } else {
+                            iconUrl = element.getAttribute('data-src') || element.src;
+                        }
+                        if (iconUrl) break;
+                    }
+                }
+                
+                if (iconUrl && !iconUrl.startsWith('http')) {
+                    const urlObj = new URL(appPageUrl);
+                    iconUrl = urlObj.origin + (iconUrl.startsWith('/') ? iconUrl : `/${iconUrl}`);
+                }
+                
+                return iconUrl;
+            } catch (error) {
+                console.error('Error extracting icon:', error);
+                return null;
+            }
+        }
+
+        function createAppCard(app) {
+            const card = document.createElement('a');
+            card.className = 'app-card';
+            card.href = `download_app.html?id=${app.id}`;
+            
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'app-icon';
+            
+            if (app.iconUrl) {
+                const img = document.createElement('img');
+                img.src = app.iconUrl;
+                img.alt = app.title;
+                img.onerror = function() {
+                    iconDiv.innerHTML = '<i class="material-icons">android</i>';
+                };
+                iconDiv.appendChild(img);
+            } else {
+                iconDiv.innerHTML = '<i class="material-icons">android</i>';
+            }
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'app-info';
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'app-name';
+            nameDiv.textContent = app.title || 'App Name';
+            
+            const devDiv = document.createElement('div');
+            devDiv.className = 'app-developer';
+            devDiv.textContent = app.author || 'Developer';
+            
+            const metaDiv = document.createElement('div');
+            metaDiv.className = 'app-meta';
+            
+            const ratingDiv = document.createElement('div');
+            ratingDiv.className = 'app-rating';
+            ratingDiv.innerHTML = '<div class="stars"><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_half</i><i class="material-icons">star_border</i></div><span>4.2</span>';
+            
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'app-price';
+            priceDiv.textContent = 'FREE';
+            
+            metaDiv.appendChild(ratingDiv);
+            metaDiv.appendChild(priceDiv);
+            
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(devDiv);
+            infoDiv.appendChild(metaDiv);
+            
+            card.appendChild(iconDiv);
+            card.appendChild(infoDiv);
+            
+            return card;
+        }
+
+        function createSearchResultItem(app) {
+            const item = document.createElement('div');
+            item.className = 'search-result-item';
+            item.onclick = function() {
+                window.location.href = `download_app.html?id=${app.id}`;
+            };
+            
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'search-result-icon';
+            
+            if (app.iconUrl) {
+                const img = document.createElement('img');
+                img.src = app.iconUrl;
+                img.alt = app.title;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    iconDiv.innerHTML = '<i class="material-icons">android</i>';
+                };
+                iconDiv.appendChild(img);
+            } else {
+                iconDiv.innerHTML = '<i class="material-icons">android</i>';
+            }
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'search-result-info';
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'search-result-name';
+            nameDiv.textContent = app.title || 'App Name';
+            
+            const devDiv = document.createElement('div');
+            devDiv.className = 'search-result-developer';
+            devDiv.textContent = app.author || 'Developer';
+            
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(devDiv);
+            
+            item.appendChild(iconDiv);
+            item.appendChild(infoDiv);
+            
+            return item;
+        }
+
+        function searchAllFields(app, searchTerm) {
+            const lowerTerm = searchTerm.toLowerCase();
+            
+            // Search in basic fields
+            if ((app.title && app.title.toLowerCase().includes(lowerTerm)) ||
+                (app.author && app.author.toLowerCase().includes(lowerTerm)) ||
+                (app.version && app.version.toLowerCase().includes(lowerTerm)) ||
+                (app.header && app.header.toLowerCase().includes(lowerTerm)) ||
+                (app.article && app.article.toLowerCase().includes(lowerTerm))) {
+                return true;
+            }
+            
+            // Search in all string fields of the app object
+            for (const key in app) {
+                if (typeof app[key] === 'string' && app[key].toLowerCase().includes(lowerTerm)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        function filterApps(searchTerm) {
+            if (!searchTerm) {
+                document.getElementById('search-results').style.display = 'none';
+                return;
+            }
+            
+            const filteredApps = allApps.filter(function(app) {
+                return searchAllFields(app, searchTerm);
+            });
+            
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = '';
+            
+            if (filteredApps.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'search-result-item';
+                noResults.textContent = 'No apps found';
+                resultsContainer.appendChild(noResults);
+            } else {
+                filteredApps.slice(0, 5).forEach(function(app) {
+                    resultsContainer.appendChild(createSearchResultItem(app));
+                });
+                
+                if (filteredApps.length > 5) {
+                    const moreResults = document.createElement('div');
+                    moreResults.className = 'search-result-item';
+                    moreResults.textContent = 'View all ' + filteredApps.length + ' results...';
+                    moreResults.onclick = function() {
+                        showSearchResultsPage(searchTerm, filteredApps);
+                    };
+                    resultsContainer.appendChild(moreResults);
+                }
+            }
+            
+            resultsContainer.style.display = 'block';
+        }
+
+        function showSearchResultsPage(searchTerm, filteredApps) {
+            // Hide all sections
+            document.querySelectorAll('.section-header, .apps-grid').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            
+            // Create search results header
+            const mainContainer = document.querySelector('.main-container');
+            const existingSearchHeader = document.getElementById('search-results-header');
+            
+            if (existingSearchHeader) {
+                existingSearchHeader.remove();
+            }
+            
+            const searchHeader = document.createElement('div');
+            searchHeader.className = 'section-header';
+            searchHeader.id = 'search-results-header';
+            
+            const searchTitle = document.createElement('h2');
+            searchTitle.className = 'section-title';
+            searchTitle.textContent = 'Results for "' + searchTerm + '"';
+            
+            searchHeader.appendChild(searchTitle);
+            mainContainer.insertBefore(searchHeader, mainContainer.firstChild);
+            
+            // Create search results grid
+            const existingSearchGrid = document.getElementById('search-results-grid');
+            
+            if (existingSearchGrid) {
+                existingSearchGrid.innerHTML = '';
+            } else {
+                const searchGrid = document.createElement('div');
+                searchGrid.className = 'apps-grid';
+                searchGrid.id = 'search-results-grid';
+                mainContainer.insertBefore(searchGrid, mainContainer.children[1]);
+            }
+            
+            const searchGrid = document.getElementById('search-results-grid');
+            
+            if (filteredApps.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = 'No apps found matching your search';
+                searchGrid.appendChild(noResults);
+            } else {
+                filteredApps.forEach(function(app) {
+                    searchGrid.appendChild(createAppCard(app));
+                });
+            }
+            
+            // Hide the dropdown results
+            document.getElementById('search-results').style.display = 'none';
+        }
+
+        async function displayApps() {
+            const data = await fetchData();
+            allApps = data.map(function(app, index) {
+                app.id = 'app-' + (index + 1);
+                return app;
+            });
+            
+            // Get random apps for different sections
+            appSections = {
+                recommended: [...allApps].sort(function() { return 0.5 - Math.random() }).slice(0, 6),
+                topFree: [...allApps].sort(function() { return 0.5 - Math.random() }).slice(0, 6),
+                trending: [...allApps].sort(function() { return 0.5 - Math.random() }).slice(0, 6)
+            };
+            
+            // Load all icons upfront (no lazy loading)
+            for (const section in appSections) {
+                for (const app of appSections[section]) {
+                    if (app.url) {
+                        try {
+                            app.iconUrl = await extractIconUrl(app.url);
+                        } catch (error) {
+                            console.error('Error loading icon for ' + app.title + ':', error);
+                        }
+                    }
+                }
+            }
+            
+            // Display apps in each section
+            const recommendedContainer = document.getElementById('recommended-apps');
+            appSections.recommended.forEach(function(app) {
+                recommendedContainer.appendChild(createAppCard(app));
+            });
+            
+            const topFreeContainer = document.getElementById('top-free-apps');
+            appSections.topFree.forEach(function(app) {
+                topFreeContainer.appendChild(createAppCard(app));
+            });
+            
+            const trendingContainer = document.getElementById('trending-apps');
+            appSections.trending.forEach(function(app) {
+                trendingContainer.appendChild(createAppCard(app));
+            });
+            
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            displayApps();
+            
+            // Add click handlers for navigation items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    navItems.forEach(function(i) {
+                        i.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    
+                    // Hide search results if showing
+                    const searchResultsHeader = document.getElementById('search-results-header');
+                    const searchResultsGrid = document.getElementById('search-results-grid');
+                    
+                    if (searchResultsHeader && searchResultsGrid) {
+                        searchResultsHeader.remove();
+                        searchResultsGrid.remove();
+                    }
+                    
+                    // Show all sections
+                    document.querySelectorAll('.section-header, .apps-grid').forEach(function(el) {
+                        el.style.display = '';
+                    });
+                });
+            });
+            
+            // Setup search functionality
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            searchInput.addEventListener('input', function(e) {
+                filterApps(e.target.value);
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (searchInput.value) {
+                    searchResults.style.display = 'block';
+                }
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!searchResults.contains(e.target) && e.target !== searchInput) {
+                    searchResults.style.display = 'none';
+                }
+            });
+            
+            // Handle Enter key in search
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    showSearchResultsPage(searchInput.value, allApps.filter(function(app) {
+                        return searchAllFields(app, searchInput.value);
+                    }));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
