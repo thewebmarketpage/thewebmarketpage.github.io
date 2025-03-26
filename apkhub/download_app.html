@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Loading...</title>
+    <title>App Image Fetcher</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,27 +11,10 @@
             max-width: 600px;
             margin: auto;
         }
-        h1 {
-            color: #333;
-        }
         img {
             width: 100px;
             height: auto;
             display: block;
-        }
-        .download-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            background: #28a745;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        #loading {
-            text-align: center;
-            font-size: 18px;
-            color: #888;
         }
         #app-image-container {
             margin-top: 20px;
@@ -39,21 +22,36 @@
     </style>
 </head>
 <body>
-
-    <h1 id="app-title">Loading...</h1>
-    <p><strong>Version:</strong> <span id="app-version">Loading...</span></p>
-    <p><strong>Author:</strong> <span id="app-author">Loading...</span></p>
-    <p><strong>About:</strong> <span id="app-header">Loading...</span></p>
-    <p id="app-article">Loading...</p>
-
-    <a id="download-btn" class="download-btn" href="#" target="_blank">Download App</a>
-
-    <div id="loading">Loading apps...</div>
-
-    <!-- Container for the app's image -->
+    <h1>App Details</h1>
     <div id="app-image-container"></div>
 
     <script>
+        async function fetchImageFromApp(appUrl) {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url='; // CORS proxy URL
+                const imageUrl = `${proxyUrl}${encodeURIComponent(appUrl)}`; // Append the target URL
+
+                const response = await fetch(imageUrl);
+                const text = await response.text();
+
+                // Find the image URL (it should start with 'https://play-lh.googleusercontent.com/')
+                const imageRegex = /https:\/\/play-lh\.googleusercontent\.com\/.*?\.jpg/;
+                const match = text.match(imageRegex);
+
+                if (match && match[0]) {
+                    const imageElement = document.createElement('img');
+                    imageElement.src = match[0];  // Use the matched image URL
+                    imageElement.alt = 'App Image';
+                    imageElement.style.width = '100px'; // Set your desired size
+                    document.getElementById('app-image-container').appendChild(imageElement);
+                } else {
+                    console.error('No image found.');
+                }
+            } catch (error) {
+                console.error('Error fetching image:', error);
+            }
+        }
+
         async function fetchData() {
             try {
                 const response = await fetch('https://giantwebmarket.com/apkhub/apkhubdata.json');
@@ -61,55 +59,7 @@
                 return data;
             } catch (error) {
                 console.error('Error loading apps:', error);
-                document.getElementById('loading').innerHTML = 'Error loading apps. Please try again later.';
                 return [];
-            }
-        }
-
-        // Add unique IDs to each app in the JSON data
-        function assignUniqueIds(data) {
-            return data.map((app, index) => {
-                app.id = `app-${index + 1}`;  // Assign app-1, app-2, etc.
-                return app;
-            });
-        }
-
-        function displayAppDetails(app) {
-            document.getElementById('app-title').textContent = app.title || 'No title available';
-            document.getElementById('app-version').textContent = app.version || 'No version available';
-            document.getElementById('app-author').textContent = app.author || 'No author available';
-            document.getElementById('app-header').textContent = app.header || 'No description available';
-            document.getElementById('app-article').textContent = app.article || 'No article available';
-            document.getElementById('download-btn').href = app.download_url || '#';
-            document.getElementById('loading').style.display = 'none';  // Hide loading indicator
-
-            // Fetch and display app image using CORS proxy
-            if (app.url) {
-                fetchImage(app.url);
-            }
-
-            // ** Update the page title dynamically **
-            document.title = app.title || 'App Details';
-        }
-
-        async function fetchImage(appUrl) {
-            try {
-                const proxyUrl = 'https://api.allorigins.win/raw?url='; // CORS proxy URL
-                const imageUrl = `${proxyUrl}${encodeURIComponent(appUrl)}`; // Append the target URL
-
-                const response = await fetch(imageUrl);
-                const imageBlob = await response.blob();
-                const imageObjectURL = URL.createObjectURL(imageBlob);
-
-                // Now, we append the image to the page
-                const imageElement = document.createElement('img');
-                imageElement.src = imageObjectURL;
-                imageElement.alt = 'App Image';
-                imageElement.style.width = '100px'; // Set your desired size
-                document.getElementById('app-image-container').appendChild(imageElement);
-
-            } catch (error) {
-                console.error('Error fetching image:', error);
             }
         }
 
@@ -117,20 +67,18 @@
             const appId = new URLSearchParams(window.location.search).get('id'); // Get the app ID from URL
             if (appId) {
                 const allApps = await fetchData();
-                const appsWithIds = assignUniqueIds(allApps); // Assign IDs to the apps
-                
-                const app = appsWithIds.find(a => a.id === appId); // Find the app by its unique ID
+                const app = allApps.find(a => a.id === appId); // Find the app by its unique ID
 
-                if (app) {
-                    displayAppDetails(app);
+                if (app && app.url) {
+                    // Send the app URL to fetch the image
+                    fetchImageFromApp(app.url);
                 } else {
-                    document.getElementById('loading').innerHTML = 'App not found.';
+                    console.error('App not found or URL missing.');
                 }
             } else {
-                document.getElementById('loading').innerHTML = 'No app ID provided.';
+                console.error('No app ID provided.');
             }
         });
     </script>
-
 </body>
 </html>
