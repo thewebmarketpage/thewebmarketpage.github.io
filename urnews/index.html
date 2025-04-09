@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=https://tip-dakota-gamma-evidence.trycloudflare.com/">
-  <title>Redirecting...</title>
+  <meta charset="UTF-8" />
+  <title>URNEWS - Integrated View</title>
 </head>
 <body>
-  <p>If you are not redirected automatically, follow this <a href="https://tip-dakota-gamma-evidence.trycloudflare.com/">link to WordPress</a>.</p>
+  <div id="wp-content">Loading WordPress content...</div>
+
+  <script>
+    fetch("https://tip-dakota-gamma-evidence.trycloudflare.com/")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("wp-content").innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById("wp-content").innerHTML = "Failed to load content.";
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
