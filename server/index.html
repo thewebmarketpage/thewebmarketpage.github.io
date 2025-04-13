@@ -6,6 +6,25 @@
     body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
     h1 { color: #0ff; }
     .info { margin-bottom: 10px; }
+    pre { white-space: pre-wrap; }
+    #terminal {
+      background: #000;
+      color: #0f0;
+      padding: 10px;
+      margin-top: 20px;
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #0f0;
+    }
+    #terminal-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 1em;
+      outline: none;
+    }
   </style>
 </head>
 <body>
@@ -16,6 +35,11 @@
   <div class="info">🧠 OS & Browser: <pre id="ua"></pre></div>
   <div class="info">🚪 Open Ports on localhost:</div>
   <pre id="port-scan">Scanning...</pre>
+
+  <h2>💻 Browser Terminal</h2>
+  <div id="terminal">
+    <div>> <input type="text" id="terminal-input" autofocus></div>
+  </div>
 
   <script>
     // User Agent
@@ -50,7 +74,7 @@
       document.getElementById('local-ip').textContent = ip;
     });
 
-    // Port Scan (localhost)
+    // Port Scan
     const ports = [21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 445, 3306, 8080];
     const results = [];
 
@@ -61,7 +85,7 @@
         img.onerror = () => resolve({ port, open: false });
 
         img.src = `http://giantwebmarket.com:${port}/favicon.ico?` + new Date().getTime();
-        setTimeout(() => resolve({ port, open: false }), 1000); // timeout
+        setTimeout(() => resolve({ port, open: false }), 1000);
       });
     }
 
@@ -73,6 +97,49 @@
         output.textContent += `Port ${res.port}: ${res.open ? '✅ OPEN' : '❌ closed'}\n`;
       }
     })();
+
+    // Terminal Input
+    const terminal = document.getElementById('terminal');
+    const input = document.getElementById('terminal-input');
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const cmd = input.value.trim();
+        const output = document.createElement('div');
+        output.innerHTML = `> ${cmd}`;
+
+        const result = document.createElement('div');
+        result.innerHTML = handleCommand(cmd);
+
+        terminal.insertBefore(output, input.parentElement);
+        terminal.insertBefore(result, input.parentElement);
+
+        input.value = '';
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+    });
+
+    function handleCommand(cmd) {
+      switch (cmd) {
+        case 'help':
+          return 'Available commands: help, ip, ua, ports, clear, whoami';
+        case 'ip':
+          return `Local IP: ${document.getElementById('local-ip').textContent}<br>Public IP: ${document.getElementById('public-ip').textContent}`;
+        case 'ua':
+          return navigator.userAgent;
+        case 'ports':
+          return document.getElementById('port-scan').textContent.replace(/\n/g, '<br>');
+        case 'whoami':
+          return 'You are a browser-based user running in a sandbox 😄';
+        case 'clear':
+          const inputContainer = input.parentElement;
+          terminal.innerHTML = '';
+          terminal.appendChild(inputContainer);
+          return '';
+        default:
+          return `Command not found: ${cmd}`;
+      }
+    }
   </script>
 </body>
 </html>
