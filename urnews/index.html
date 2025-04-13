@@ -7,7 +7,6 @@
   <meta name="keywords" content="News Explorer, latest news, breaking news, global news, technology news, politics, trending topics, news updates, in-depth analysis, current events">
   <title>News Explorer - Latest Breaking News, Global Updates, and In-Depth Analysis</title>
   <style>
-    /* Styles for existing page */
     body {
       font-family: 'Georgia', serif;
       background-color: #fff;
@@ -153,21 +152,47 @@
     let currentPostIndex = 0;
     const postsPerPage = 20;
 
-    // Load Posts from JSON
+    // Load Posts from RSS Feeds
     function loadPosts() {
-      fetch('newsy.json')
-        .then(response => response.json())
-        .then(posts => {
-          allPosts = posts;
+      // Replace with the RSS URL you want to fetch
+      const rssFeedUrls = [
+        'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+        'https://feeds.bbci.co.uk/news/rss.xml',
+        'https://www.theguardian.com/world/rss',
+        // Add more RSS feeds here
+      ];
+
+      Promise.all(rssFeedUrls.map(url => fetchRSS(url)))
+        .then(responses => {
+          allPosts = responses.flat(); // Flatten the array of posts from multiple RSS feeds
           renderPosts();
         })
         .catch(error => {
-          console.error('Error fetching posts:', error);
+          console.error('Error fetching RSS feeds:', error);
         });
     }
 
+    // Fetch and parse RSS
+    function fetchRSS(url) {
+      return fetch(url)
+        .then(response => response.text())
+        .then(str => (new window.DOMParser()).parseFromString(str, 'text/xml'))
+        .then(data => {
+          const items = data.querySelectorAll('item');
+          const posts = Array.from(items).map(item => ({
+            title: item.querySelector('title').textContent,
+            link: item.querySelector('link').textContent,
+            pubDate: item.querySelector('pubDate').textContent,
+            source: item.querySelector('source') ? item.querySelector('source').textContent : new URL(item.querySelector('link').textContent).hostname
+          }));
+          return posts;
+        });
+    }
+
+    // Render Posts
     function renderPosts() {
       const mainContainer = document.getElementById('postsContainer');
+      mainContainer.innerHTML = ''; // Clear any previous posts
 
       // Calculate the next batch of posts to render
       const nextPosts = allPosts.slice(currentPostIndex, currentPostIndex + postsPerPage);
@@ -200,7 +225,7 @@
 
       // Set popup content
       popupTitle.textContent = post.title;
-      popupMeta.textContent = `Source: ${new URL(post.link).hostname.replace("www.", "")} | Published: ${new Date(post.pubDate).toLocaleString()}`;
+      popupMeta.textContent = `Source: ${post.source} | Published: ${new Date(post.pubDate).toLocaleString()}`;
       popupOriginalLink.href = post.link;
       popupShareLink.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link)}&text=${encodeURIComponent(post.title)}`;
 
