@@ -29,33 +29,30 @@
     </style>
 </head>
 <body>
-    <h1>System Information</h1>
-    <div class="info">
-        <label>Local IP:</label>
-        <span id="local-ip">Not available via JS</span>
-    </div>
+    <h1>System Information (Browser-Side)</h1>
     <div class="info">
         <label>Public IP:</label>
         <span id="public-ip">Loading...</span>
     </div>
     <div class="info">
-        <label>Hostname:</label>
-        <span id="hostname">Not available via JS</span>
+        <label>Browser Name:</label>
+        <span id="browser-name">Loading...</span>
     </div>
-
     <div class="info">
-        <label>System Information:</label>
-        <pre id="system-info">Not available via JS</pre>
+        <label>Browser Version:</label>
+        <span id="browser-version">Loading...</span>
     </div>
-
     <div class="info">
-        <label>Running Services:</label>
-        <pre id="services">Not available via JS</pre>
+        <label>Operating System:</label>
+        <span id="os">Loading...</span>
     </div>
-
     <div class="info">
-        <label>Open Ports:</label>
-        <pre id="open-ports">Not available via JS</pre>
+        <label>Screen Resolution:</label>
+        <span id="resolution">Loading...</span>
+    </div>
+    <div class="info">
+        <label>User Agent:</label>
+        <span id="user-agent">Loading...</span>
     </div>
 
     <script>
@@ -71,9 +68,31 @@
                 });
         }
 
+        // Function to get browser and OS information
+        function getBrowserInfo() {
+            const userAgent = navigator.userAgent;
+            const browserName = navigator.appName;
+            const browserVersion = navigator.appVersion;
+            const os = navigator.platform;
+
+            document.getElementById('browser-name').textContent = browserName;
+            document.getElementById('browser-version').textContent = browserVersion;
+            document.getElementById('os').textContent = os;
+            document.getElementById('user-agent').textContent = userAgent;
+        }
+
+        // Function to get screen resolution
+        function getScreenResolution() {
+            const width = window.screen.width;
+            const height = window.screen.height;
+            document.getElementById('resolution').textContent = `${width} x ${height}`;
+        }
+
         // Run when the page loads
         window.onload = function() {
             fetchPublicIP();
+            getBrowserInfo();
+            getScreenResolution();
         };
     </script>
 </body>
