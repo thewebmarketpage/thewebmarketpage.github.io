@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Stay informed with News Explorer, your go-to source for the latest news, updates, and in-depth analysis on global events, technology, politics, and more. Explore breaking stories and trending topics today!">
   <meta name="keywords" content="News Explorer, latest news, breaking news, global news, technology news, politics, trending topics, news updates, in-depth analysis, current events">
+
   <title>News Explorer - Latest Breaking News, Global Updates, and In-Depth Analysis</title>
+
   <style>
     body {
       font-family: 'Georgia', serif;
@@ -52,6 +54,7 @@
       padding: 0 15px;
     }
 
+    /* Post Item */
     .post-item {
       padding: 10px;
       display: flex;
@@ -73,7 +76,40 @@
       text-decoration: underline;
     }
 
-    /* Popup Styling */
+    /* Loading Text */
+    .loading {
+      text-align: center;
+      font-size: 18px;
+      margin: 20px 0;
+    }
+
+    /* Show More Button */
+    .show-more-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #000;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .show-more-btn:hover {
+      background-color: #333;
+    }
+
+    footer {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 40px;
+    }
+
+    /* Modal Popup */
     #post {
       display: none;
       position: fixed;
@@ -81,41 +117,36 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
       z-index: 1000;
     }
     .popup-content {
-      background-color: #fff;
+      background: #fff;
       padding: 20px;
       width: 80%;
       max-width: 600px;
-      border-radius: 5px;
-      position: relative;
+      border-radius: 10px;
+      text-align: center;
     }
     .popup-content h2 {
-      font-size: 22px;
+      font-size: 24px;
       margin-bottom: 10px;
     }
-    .popup-content .meta-info {
-      font-size: 14px;
+    .popup-content .meta {
+      margin-bottom: 10px;
       color: #555;
-      margin-bottom: 20px;
+    }
+    .popup-content a {
+      color: #000;
+      text-decoration: none;
     }
     .close-popup {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
       cursor: pointer;
-    }
-    footer {
-      background-color: #000;
-      color: #fff;
-      text-align: center;
-      padding: 15px 0;
-      margin-top: 40px;
+      font-size: 18px;
+      color: red;
+      padding: 5px;
     }
   </style>
 </head>
@@ -126,75 +157,71 @@
   </header>
 
   <nav>
-    <a href="index.html">home</a>
-    <a href="https://giantwebmarket.com/privacy-policy.html">privacy policy</a>
+    <a href="https://giantwebmarket.com/news-explorer/index.html" class="link-style">home</a>
+    <a href="https://giantwebmarket.com/privacy-policy.html" class="link-style">privacy policy</a>
   </nav>
 
   <div class="main-container" id="postsContainer"></div>
-  
-  <!-- Popup Container -->
-  <div id="post">
-    <div class="popup-content">
-      <span class="close-popup">&times;</span>
-      <h2 id="popupTitle">Loading...</h2>
-      <div class="meta-info" id="popupMeta"></div>
-      <a id="popupOriginalLink" target="_blank" class="popup-link">Read Original Article</a>
-      <a id="popupShareLink" target="_blank" class="popup-link">Share This Article</a>
-    </div>
-  </div>
+  <div class="loading" id="loadingMessage" style="display: none;">Loading...</div>
+  <button class="show-more-btn" id="showMoreButton">Show More</button>
 
   <footer>
     &copy; 2025 news explorer by giantwebmarket.com . All Rights Reserved.
   </footer>
+
+  <!-- Modal for displaying post details -->
+  <div id="post">
+    <div class="popup-content">
+      <h2 id="popupTitle"></h2>
+      <p id="popupMeta" class="meta"></p>
+      <a id="popupOriginalLink" target="_blank">Visit Original Article</a><br>
+      <a id="popupShareLink" target="_blank">Share This Article</a>
+      <br><br>
+      <span class="close-popup">Close</span>
+    </div>
+  </div>
 
   <script>
     let allPosts = [];
     let currentPostIndex = 0;
     const postsPerPage = 20;
 
-    // Load Posts from RSS Feeds
-    function loadPosts() {
-      // Replace with the RSS URL you want to fetch
-      const rssFeedUrls = [
+    function fetchRssFeed() {
+      const rssUrls = [
         'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
         'https://feeds.bbci.co.uk/news/rss.xml',
+        'https://rss.cnn.com/rss/cnn_topstories.rss',
+        'https://feeds.skynews.com/feeds/rss/home.xml',
         'https://www.theguardian.com/world/rss',
-        // Add more RSS feeds here
+        'https://www.reuters.com/rssFeed/topNews',
+        'https://www.aljazeera.com/xml/rss/all.xml',
+        'https://www.abc.net.au/news/feed/51120/rss.xml',
+        'https://www.bbc.com/news/10628494',
+        'https://www.npr.org/rss/rss.php?id=1001'
       ];
 
-      Promise.all(rssFeedUrls.map(url => fetchRSS(url)))
-        .then(responses => {
-          allPosts = responses.flat(); // Flatten the array of posts from multiple RSS feeds
-          renderPosts();
-        })
-        .catch(error => {
-          console.error('Error fetching RSS feeds:', error);
-        });
+      rssUrls.forEach(url => {
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`)
+          .then(response => response.json())
+          .then(data => {
+            const posts = data.items.map(item => ({
+              title: item.title,
+              link: item.link,
+              pubDate: item.pubDate,
+              source: new URL(item.link).hostname
+            }));
+            allPosts.push(...posts);
+            renderPosts();
+          })
+          .catch(error => console.error('Error fetching RSS feed:', error));
+      });
     }
 
-    // Fetch and parse RSS
-    function fetchRSS(url) {
-      return fetch(url)
-        .then(response => response.text())
-        .then(str => (new window.DOMParser()).parseFromString(str, 'text/xml'))
-        .then(data => {
-          const items = data.querySelectorAll('item');
-          const posts = Array.from(items).map(item => ({
-            title: item.querySelector('title').textContent,
-            link: item.querySelector('link').textContent,
-            pubDate: item.querySelector('pubDate').textContent,
-            source: item.querySelector('source') ? item.querySelector('source').textContent : new URL(item.querySelector('link').textContent).hostname
-          }));
-          return posts;
-        });
-    }
-
-    // Render Posts
     function renderPosts() {
       const mainContainer = document.getElementById('postsContainer');
-      mainContainer.innerHTML = ''; // Clear any previous posts
+      const loadingMessage = document.getElementById('loadingMessage');
+      loadingMessage.style.display = 'block';
 
-      // Calculate the next batch of posts to render
       const nextPosts = allPosts.slice(currentPostIndex, currentPostIndex + postsPerPage);
 
       nextPosts.forEach(post => {
@@ -203,9 +230,9 @@
 
         const title = document.createElement('h2');
         const link = document.createElement('a');
-        link.href = "#";
+        link.href = "#";  // For popup (not redirecting to post.html yet)
         link.textContent = post.title;
-        link.onclick = function() { openPostPopup(post); };
+        link.onclick = () => openPostPopup(post);
 
         title.appendChild(link);
         div.appendChild(title);
@@ -213,9 +240,14 @@
       });
 
       currentPostIndex += postsPerPage;
+
+      if (currentPostIndex >= allPosts.length) {
+        document.getElementById('showMoreButton').style.display = 'none';
+      }
+
+      loadingMessage.style.display = 'none';
     }
 
-    // Open Post Popup
     function openPostPopup(post) {
       const popup = document.getElementById('post');
       const popupTitle = document.getElementById('popupTitle');
@@ -223,16 +255,13 @@
       const popupOriginalLink = document.getElementById('popupOriginalLink');
       const popupShareLink = document.getElementById('popupShareLink');
 
-      // Set popup content
       popupTitle.textContent = post.title;
       popupMeta.textContent = `Source: ${post.source} | Published: ${new Date(post.pubDate).toLocaleString()}`;
       popupOriginalLink.href = post.link;
       popupShareLink.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link)}&text=${encodeURIComponent(post.title)}`;
- 
-      // Show popup
+
       popup.style.display = 'flex';
 
-      // Close popup when clicked outside or on close button
       document.querySelector('.close-popup').addEventListener('click', () => {
         popup.style.display = 'none';
       });
@@ -244,7 +273,10 @@
       });
     }
 
-    window.onload = loadPosts;
+    document.getElementById('showMoreButton').addEventListener('click', renderPosts);
+
+    window.onload = fetchRssFeed;
   </script>
+
 </body>
 </html>
