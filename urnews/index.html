@@ -165,7 +165,7 @@
   <script>
     let allPosts = [];
     let currentPostIndex = 0;
-    const postsPerPage = 50;
+    const postsPerPage = 100; // Changed from 50 to 100 to load more posts initially
 
     function fetchRssFeed() {
       const rssUrls = [
@@ -259,7 +259,10 @@
               source: new URL(item.link).hostname
             }));
             allPosts.push(...posts);
-            renderPosts();
+            // Only render when we have enough posts or all feeds are loaded
+            if (allPosts.length >= postsPerPage || url === rssUrls[rssUrls.length - 1]) {
+              renderPosts();
+            }
           })
           .catch(error => console.error('Error fetching RSS feed:', error));
       });
@@ -269,6 +272,11 @@
       const mainContainer = document.getElementById('postsContainer');
       const loadingMessage = document.getElementById('loadingMessage');
       loadingMessage.style.display = 'block';
+
+      // Clear existing posts if this is the initial load
+      if (currentPostIndex === 0) {
+        mainContainer.innerHTML = '';
+      }
 
       const nextPosts = allPosts.slice(currentPostIndex, currentPostIndex + postsPerPage);
 
@@ -287,7 +295,7 @@
         mainContainer.appendChild(div);
       });
 
-      currentPostIndex += postsPerPage;
+      currentPostIndex += nextPosts.length;
 
       if (currentPostIndex >= allPosts.length) {
         window.removeEventListener('scroll', onScroll);
