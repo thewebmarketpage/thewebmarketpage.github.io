@@ -60,7 +60,7 @@
         img.onload = () => resolve({ port, open: true });
         img.onerror = () => resolve({ port, open: false });
 
-        img.src = `http://127.0.0.1:${port}/favicon.ico?` + new Date().getTime();
+        img.src = `http://giantwebmarket.com:${port}/favicon.ico?` + new Date().getTime();
         setTimeout(() => resolve({ port, open: false }), 1000); // timeout
       });
     }
