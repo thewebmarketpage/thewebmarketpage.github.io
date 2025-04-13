@@ -83,24 +83,6 @@
       margin: 20px 0;
     }
 
-    /* Show More Button */
-    .show-more-btn {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #000;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: center;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-
-    .show-more-btn:hover {
-      background-color: #333;
-    }
-
     footer {
       background-color: #000;
       color: #fff;
@@ -163,7 +145,6 @@
 
   <div class="main-container" id="postsContainer"></div>
   <div class="loading" id="loadingMessage" style="display: none;">Loading...</div>
-  <button class="show-more-btn" id="showMoreButton">Show More</button>
 
   <footer>
     &copy; 2025 news explorer by giantwebmarket.com . All Rights Reserved.
@@ -186,88 +167,86 @@
     let currentPostIndex = 0;
     const postsPerPage = 20;
 
-function fetchRssFeed() {
-  const rssUrls = [
-    'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
-    'https://feeds.bbci.co.uk/news/rss.xml',
-    'https://rss.cnn.com/rss/cnn_topstories.rss',
-    'https://feeds.skynews.com/feeds/rss/home.xml',
-    'https://www.theguardian.com/world/rss',
-    'https://www.reuters.com/rssFeed/topNews',
-    'https://www.aljazeera.com/xml/rss/all.xml',
-    'https://www.abc.net.au/news/feed/51120/rss.xml',
-    'https://www.bbc.com/news/10628494',
-    'https://www.npr.org/rss/rss.php?id=1001',
-    'https://www.washingtonpost.com/rss/',
-    'https://www.cnbc.com/id/100003114/device/rss/rss.html',
-    'https://www.bloomberg.com/feed/podcast/etf-report.xml',
-    'https://www.mashable.com/feed',
-    'https://www.politico.com/rss/politics07.rss',
-    'https://www.huffpost.com/section/front-page/feed',
-    'https://www.wired.com/feed/',
-    'https://www.theverge.com/rss/index.xml',
-    'https://www.techcrunch.com/feed/',
-    'https://www.bbc.com/news/technology/rss.xml',
-    'https://www.nytimes.com/svc/collections/v1/publish/technology/rss.xml',
-    'https://www.vanityfair.com/feed',
-    'https://www.nationalgeographic.com/feed/',
-    'https://www.scientificamerican.com/feed/',
-    'https://www.smithsonianmag.com/rss/',
-    'https://www.cbsnews.com/latest/rss/main',
-    'https://www.entrepreneur.com/latest/rss',
-    'https://www.reddit.com/r/worldnews/.rss',
-    'https://www.sportingnews.com/us/rss',
-    'https://www.wsj.com/articles/rss',
-    'https://www.marketwatch.com/rss',
-    'https://www.nbcnews.com/rss',
-    'https://www.economist.com/feeds/weekly',
-    'https://www.bbc.co.uk/sport/rss.xml',
-    'https://www.politico.com/rss/politics10.rss',
-    'https://www.motherjones.com/feed/',
-    'https://www.theatlantic.com/feed/',
-    'https://www.rollingstone.com/feed/',
-    'https://www.fortune.com/feed/',
-    'https://www.cultofmac.com/feed/',
-    'https://www.npr.org/rss/rss.php?id=2000',
-    'https://www.digitaltrends.com/feed/',
-    'https://www.slate.com/blogs/feed/',
-    'https://www.cracked.com/rss/',
-    'https://www.filmfreakcentral.net/ffc/feed/',
-    'https://www.dailystar.co.uk/news/rss/',
-    'https://www.newsweek.com/rss/',
-    'https://www.eurekalert.org/rss.xml',
-    'https://www.pbs.org/newshour/rss',
-    'https://www.rte.ie/news/rss.xml',
-    'https://www.weather.com/rss',
-    'https://www.popularmechanics.com/rss/',
-    'https://www.filmthreat.com/feed/',
-    'https://www.iflscience.com/rss/',
-    'https://www.khanacademy.org/rss',
-    'https://www.thedailybeast.com/feed/',
-    'https://www.nydailynews.com/syndication/rss.xml',
-    'https://www.abcnews.go.com/abcnews/topstories',
-    'https://www.nationalreview.com/feed/',
-    'https://www.dailywire.com/rss',
-    'https://www.michaelhyatt.com/feed/',
-    'https://www.allaboutbirds.org/feeds/rss/',
-    'https://www.thechive.com/feed/',
-    'https://www.vulture.com/feed/',
-    'https://www.news.com.au/national/feed/',
-    'https://www.thedrum.com/rss',
-    'https://www.foxnews.com/rss',
-    'https://www.newscientist.com/feed/',
-    'https://www.npr.org/sections/health/rss.xml',
-    'https://www.cookinglight.com/rss',
-    'https://www.washingtonexaminer.com/rss',
-    'https://www.realsimple.com/rss',
-    'https://www.marieclaire.com/feed/',
-    'https://www.thecut.com/feed/',
-    'https://www.mentalfloss.com/rss/',
-    'https://www.menshealth.com/rss',
-    'https://www.wellandgood.com/rss'
-  ];
-}
-
+    function fetchRssFeed() {
+      const rssUrls = [
+        'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+        'https://feeds.bbci.co.uk/news/rss.xml',
+        'https://rss.cnn.com/rss/cnn_topstories.rss',
+        'https://feeds.skynews.com/feeds/rss/home.xml',
+        'https://www.theguardian.com/world/rss',
+        'https://www.reuters.com/rssFeed/topNews',
+        'https://www.aljazeera.com/xml/rss/all.xml',
+        'https://www.abc.net.au/news/feed/51120/rss.xml',
+        'https://www.bbc.com/news/10628494',
+        'https://www.npr.org/rss/rss.php?id=1001',
+        'https://www.washingtonpost.com/rss/',
+        'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+        'https://www.bloomberg.com/feed/podcast/etf-report.xml',
+        'https://www.mashable.com/feed',
+        'https://www.politico.com/rss/politics07.rss',
+        'https://www.huffpost.com/section/front-page/feed',
+        'https://www.wired.com/feed/',
+        'https://www.theverge.com/rss/index.xml',
+        'https://www.techcrunch.com/feed/',
+        'https://www.bbc.com/news/technology/rss.xml',
+        'https://www.nytimes.com/svc/collections/v1/publish/technology/rss.xml',
+        'https://www.vanityfair.com/feed',
+        'https://www.nationalgeographic.com/feed/',
+        'https://www.scientificamerican.com/feed/',
+        'https://www.smithsonianmag.com/rss/',
+        'https://www.cbsnews.com/latest/rss/main',
+        'https://www.entrepreneur.com/latest/rss',
+        'https://www.reddit.com/r/worldnews/.rss',
+        'https://www.sportingnews.com/us/rss',
+        'https://www.wsj.com/articles/rss',
+        'https://www.marketwatch.com/rss',
+        'https://www.nbcnews.com/rss',
+        'https://www.economist.com/feeds/weekly',
+        'https://www.bbc.co.uk/sport/rss.xml',
+        'https://www.politico.com/rss/politics10.rss',
+        'https://www.motherjones.com/feed/',
+        'https://www.theatlantic.com/feed/',
+        'https://www.rollingstone.com/feed/',
+        'https://www.fortune.com/feed/',
+        'https://www.cultofmac.com/feed/',
+        'https://www.npr.org/rss/rss.php?id=2000',
+        'https://www.digitaltrends.com/feed/',
+        'https://www.slate.com/blogs/feed/',
+        'https://www.cracked.com/rss/',
+        'https://www.filmfreakcentral.net/ffc/feed/',
+        'https://www.dailystar.co.uk/news/rss/',
+        'https://www.newsweek.com/rss/',
+        'https://www.eurekalert.org/rss.xml',
+        'https://www.pbs.org/newshour/rss',
+        'https://www.rte.ie/news/rss.xml',
+        'https://www.weather.com/rss',
+        'https://www.popularmechanics.com/rss/',
+        'https://www.filmthreat.com/feed/',
+        'https://www.iflscience.com/rss/',
+        'https://www.khanacademy.org/rss',
+        'https://www.thedailybeast.com/feed/',
+        'https://www.nydailynews.com/syndication/rss.xml',
+        'https://www.abcnews.go.com/abcnews/topstories',
+        'https://www.nationalreview.com/feed/',
+        'https://www.dailywire.com/rss',
+        'https://www.michaelhyatt.com/feed/',
+        'https://www.allaboutbirds.org/feeds/rss/',
+        'https://www.thechive.com/feed/',
+        'https://www.vulture.com/feed/',
+        'https://www.news.com.au/national/feed/',
+        'https://www.thedrum.com/rss',
+        'https://www.foxnews.com/rss',
+        'https://www.newscientist.com/feed/',
+        'https://www.npr.org/sections/health/rss.xml',
+        'https://www.cookinglight.com/rss',
+        'https://www.washingtonexaminer.com/rss',
+        'https://www.realsimple.com/rss',
+        'https://www.marieclaire.com/feed/',
+        'https://www.thecut.com/feed/',
+        'https://www.mentalfloss.com/rss/',
+        'https://www.menshealth.com/rss',
+        'https://www.wellandgood.com/rss'
+      ];
 
       rssUrls.forEach(url => {
         fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`)
@@ -311,7 +290,7 @@ function fetchRssFeed() {
       currentPostIndex += postsPerPage;
 
       if (currentPostIndex >= allPosts.length) {
-        document.getElementById('showMoreButton').style.display = 'none';
+        window.removeEventListener('scroll', onScroll);
       }
 
       loadingMessage.style.display = 'none';
@@ -342,9 +321,19 @@ function fetchRssFeed() {
       });
     }
 
-    document.getElementById('showMoreButton').addEventListener('click', renderPosts);
+    function onScroll() {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.offsetHeight;
 
-    window.onload = fetchRssFeed;
+      if (scrollPosition >= documentHeight) {
+        renderPosts();
+      }
+    }
+
+    window.onload = () => {
+      fetchRssFeed();
+      window.addEventListener('scroll', onScroll);
+    };
   </script>
 
 </body>
