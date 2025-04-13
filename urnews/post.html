@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View full article details on News Explorer.">
+  <title id="dynamicTitle">Loading...</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background-color: #fff;
+      margin: 0;
+      color: #222;
+    }
+    header {
+      background-color: #fff;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #000;
+    }
+    header h1 {
+      font-size: 48px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+    nav a {
+      color: black;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .content-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+    .post-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .meta-info {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .original-link, .share-link {
+      display: inline-block;
+      margin: 10px 10px 20px 0;
+      color: #000;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    .similar-posts {
+      margin-top: 40px;
+    }
+    .similar-posts h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+    }
+    .similar-posts ul {
+      list-style: none;
+      padding: 0;
+    }
+    .similar-posts li {
+      margin-bottom: 8px;
+    }
+    .similar-posts a {
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .similar-posts a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>news explorer</h1>
+  </header>
+
+  <nav>
+    <a href="index.html">home</a>
+    <a href="https://giantwebmarket.com/privacy-policy.html">privacy policy</a>
+  </nav>
+
+  <div class="content-container">
+    <div class="post-title" id="postTitle">Loading...</div>
+    <div class="meta-info" id="postMeta"></div>
+    <a id="originalLink" class="original-link" target="_blank">Read Original Article</a>
+    <a id="shareLink" class="share-link" target="_blank">Share This Article</a>
+
+    <div class="similar-posts">
+      <h3>Similar Posts</h3>
+      <ul id="similarList"></ul>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 news explorer by giantwebmarket.com . All Rights Reserved.
+  </footer>
+
+  <script>
+    // Example posts array; replace with actual logic or fetch from index
+    const posts = JSON.parse(localStorage.getItem("allPosts")) || [];
+
+    function getPostIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    function slugify(title) {
+      return title.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
+    }
+
+    function findPostById(slug) {
+      return posts.find(p => slugify(p.title) === slug);
+    }
+
+    function renderPost() {
+      const postId = getPostIdFromURL();
+      const post = findPostById(postId);
+
+      const postTitleEl = document.getElementById('postTitle');
+      const postMetaEl = document.getElementById('postMeta');
+      const originalLinkEl = document.getElementById('originalLink');
+      const shareLinkEl = document.getElementById('shareLink');
+      const similarList = document.getElementById('similarList');
+
+      if (post) {
+        document.title = post.title + ' - News Explorer';
+        postTitleEl.textContent = post.title;
+
+        const source = new URL(post.link).hostname.replace("www.", "");
+        const pubDate = new Date(post.pubDate).toLocaleString();
+
+        postMetaEl.textContent = `Source: ${source} | Published: ${pubDate}`;
+
+        originalLinkEl.href = post.link;
+        shareLinkEl.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(post.title)}`;
+
+        // Render similar posts
+        const similar = posts.filter(p => slugify(p.title) !== postId).slice(0, 10);
+        similar.forEach(p => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `post.html?id=${slugify(p.title)}`;
+          a.textContent = p.title;
+          li.appendChild(a);
+          similarList.appendChild(li);
+        });
+
+      } else {
+        postTitleEl.textContent = 'Post not found';
+      }
+    }
+
+    window.onload = renderPost;
+  </script>
+</body>
+</html>
