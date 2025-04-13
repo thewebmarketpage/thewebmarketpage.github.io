@@ -1,109 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Browser Terminal</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Browser Terminal</title>
   <style>
-    * { box-sizing: border-box; }
-
-    html, body {
+    body {
+      font-family: monospace;
+      background-color: #111;
+      color: #0f0;
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
-      font-family: monospace;
-      background: #111;
-      color: #0f0;
-    }
-
-    #terminal {
-      display: flex;
-      flex-direction: column;
       height: 100vh;
-      padding: 10px;
-      overflow-y: auto;
+      overflow: hidden;
     }
-
-    .line {
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .input-line {
-      display: flex;
-      margin-top: auto;
-    }
-
-    .input-line span {
+    h1 {
       color: #0ff;
-      margin-right: 5px;
+      text-align: center;
     }
-
-    .input-line input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #0f0;
-      font-family: monospace;
-      font-size: 1em;
-    }
-
-    #nano-editor {
-      position: fixed;
-      top: 10%;
-      left: 10%;
-      width: 80%;
-      height: 80%;
-      background: #222;
-      color: #0f0;
-      display: none;
-      flex-direction: column;
-      border: 1px solid #0f0;
-      padding: 10px;
-    }
-
-    #nano-editor textarea {
-      flex: 1;
+    .terminal {
       width: 100%;
-      background: #111;
-      color: #0f0;
-      border: none;
-      font-family: monospace;
-      resize: none;
+      height: 100%;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: #111;
     }
-
-    #nano-editor button {
-      background: #0f0;
-      color: #111;
-      border: none;
-      padding: 5px 10px;
+    .file-item {
       cursor: pointer;
-      margin-right: 10px;
+      user-select: none;
+    }
+    .file-item:hover {
+      background-color: #333;
+    }
+    input {
+      background: none;
+      border: none;
+      color: #0f0;
+      font-size: 16px;
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <div id="terminal">
-    <div class="line">Welcome to the browser terminal. Type <code>help</code> to get started.</div>
-    <div class="input-line">
-      <span>$</span><input type="text" id="input" autofocus />
-    </div>
-  </div>
-
-  <div id="nano-editor">
-    <div style="margin-bottom: 5px;">Editing: <span id="nano-filename"></span></div>
-    <textarea id="nano-content"></textarea>
-    <div style="margin-top: 10px;">
-      <button onclick="saveNano()">Save</button>
-      <button onclick="closeNano()">Cancel</button>
+  <div class="terminal">
+    <h1>Browser Terminal</h1>
+    <div id="output"></div>
+    <div id="input-wrapper">
+      <input id="input" type="text" autofocus placeholder="Type a command..." />
     </div>
   </div>
 
   <script>
-    const terminal = document.getElementById('terminal');
-    const input = document.getElementById('input');
-
-    let fs = {
+    let fs = JSON.parse(localStorage.getItem('fs')) || {
       '/': {
         type: 'dir',
         contents: {
@@ -112,129 +60,174 @@
         }
       }
     };
+
     let currentPath = ['/'];
+    const terminal = document.getElementById('output');
+    const inputElement = document.getElementById('input');
+    const inputWrapper = document.getElementById('input-wrapper');
 
     function getCurrentDir() {
-      return currentPath.reduce((acc, part) => acc.contents[part], { contents: fs });
+      return currentPath.reduce((dir, name) => dir.contents[name], fs);
     }
 
-    input.addEventListener('keydown', function (e) {
+    function saveFileSystem() {
+      localStorage.setItem('fs', JSON.stringify(fs));
+    }
+
+    function renderDirContents() {
+      const dir = getCurrentDir();
+      return Object.entries(dir.contents).map(([name, item]) => {
+        const isDir = item.type === 'dir';
+        return `<div class="file-item" id="${name}" onclick="changeDir('${name}')">
+                  ${isDir ? '📁' : '📄'} ${name}
+                </div>`;
+      }).join('');
+    }
+
+    function changeDir(name) {
+      const dir = getCurrentDir().contents[name];
+      if (dir && dir.type === 'dir') {
+        currentPath.push(name);
+        renderTerminal();
+      }
+    }
+
+    function handleOutput(cmd, output) {
+      const outputElement = document.createElement('pre');
+      outputElement.textContent = `${cmd}\n${output}`;
+      terminal.appendChild(outputElement);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function handleCommand(cmd) {
+      const args = cmd.trim().split(' ');
+      const command = args[0];
+      const result = { ls, cd, mkdir, touch, rm, cat, tree }[command];
+      if (result) return result(args);
+      return `Command not found: ${command}`;
+    }
+
+    function ls(args) {
+      return renderDirContents();
+    }
+
+    function cd(args) {
+      const dirName = args[1];
+      const dir = getCurrentDir().contents[dirName];
+      if (dir && dir.type === 'dir') {
+        currentPath.push(dirName);
+        return '';
+      }
+      return 'No such directory';
+    }
+
+    function mkdir(args) {
+      const name = args[1];
+      if (!name) return 'Usage: mkdir [foldername]';
+      getCurrentDir().contents[name] = { type: 'dir', contents: {} };
+      saveFileSystem();
+      return '';
+    }
+
+    function touch(args) {
+      const name = args[1];
+      if (!name) return 'Usage: touch [filename]';
+      getCurrentDir().contents[name] = { type: 'file', content: '' };
+      saveFileSystem();
+      return '';
+    }
+
+    function rm(args) {
+      const name = args[1];
+      if (!name) return 'Usage: rm [filename]';
+      const dir = getCurrentDir();
+      delete dir.contents[name];
+      saveFileSystem();
+      return '';
+    }
+
+    function cat(args) {
+      const name = args[1];
+      const file = getCurrentDir().contents[name];
+      if (file && file.type === 'file') {
+        return file.content;
+      }
+      return 'No such file';
+    }
+
+    function tree(args) {
+      return renderTree(getCurrentDir(), 0);
+    }
+
+    function renderTree(dir, level) {
+      const indent = '  '.repeat(level);
+      let output = '';
+      Object.entries(dir.contents).forEach(([name, item]) => {
+        output += `${indent}${item.type === 'dir' ? '📁' : '📄'} ${name}\n`;
+        if (item.type === 'dir') output += renderTree(item, level + 1);
+      });
+      return output;
+    }
+
+    function renderTerminal() {
+      terminal.innerHTML = renderDirContents();
+      terminal.insertBefore(inputWrapper, terminal.lastElementChild);
+      inputElement.focus();
+      makeDraggable();
+    }
+
+    function makeDraggable() {
+      const files = document.querySelectorAll('.file-item');
+      files.forEach(file => {
+        file.setAttribute('draggable', 'true');
+        file.addEventListener('dragstart', dragStart);
+        file.addEventListener('dragover', dragOver);
+        file.addEventListener('drop', dropFile);
+      });
+    }
+
+    function dragStart(e) {
+      e.dataTransfer.setData('text/plain', e.target.id);
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+    }
+
+    function dropFile(e) {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text/plain');
+      const fileElement = document.getElementById(id);
+      const targetDir = e.target;  // Drop target
+      // Handle file moving logic here
+    }
+
+    inputElement.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
-        const cmd = input.value;
+        const cmd = inputElement.value.trim();
         const output = handleCommand(cmd);
-        const inputLine = document.createElement('div');
-        inputLine.className = 'line';
-        inputLine.innerHTML = `<span style="color:#0ff;">$</span> ${cmd}`;
-        terminal.insertBefore(inputLine, input.parentElement);
-
-        if (output !== '') {
-          const out = document.createElement('div');
-          out.className = 'line';
-          out.innerHTML = output;
-          terminal.insertBefore(out, input.parentElement);
-        }
-
-        input.value = '';
+        handleOutput(cmd, output);
+        inputElement.value = '';
         terminal.scrollTop = terminal.scrollHeight;
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        const cmd = inputElement.value.trim();
+        const parts = cmd.split(' ');
+        const dir = getCurrentDir();
+        
+        if (parts[0] === 'cd' || parts[0] === 'ls') {
+          const partial = parts[1] || '';
+          const options = Object.keys(dir.contents).filter(name => name.startsWith(partial));
+          if (options.length === 1) {
+            inputElement.value = cmd.slice(0, cmd.lastIndexOf(' ') + 1) + options[0];
+          } else if (options.length > 1) {
+            handleOutput(cmd, `Did you mean? ${options.join('  ')}`);
+          }
+        }
       }
     });
 
-    function handleCommand(cmd) {
-      const args = cmd.trim().split(/\s+/);
-      const command = args[0];
-
-      switch (command) {
-        case 'help':
-          return `Available commands:<br>help, clear, echo, ls, cd, mkdir, touch, cat, tree, rm, nano`;
-        case 'clear':
-          const inputLine = input.parentElement;
-          terminal.innerHTML = '';
-          terminal.appendChild(inputLine);
-          return '';
-        case 'echo':
-          return args.slice(1).join(' ');
-        case 'ls': {
-          const dir = getCurrentDir();
-          return Object.keys(dir.contents).join('  ');
-        }
-        case 'cd': {
-          const dir = args[1];
-          if (!dir || dir === '/') currentPath = ['/'];
-          else if (dir === '..') currentPath.pop();
-          else {
-            const cur = getCurrentDir();
-            if (cur.contents[dir] && cur.contents[dir].type === 'dir') {
-              currentPath.push(dir);
-            } else {
-              return `No such directory: ${dir}`;
-            }
-          }
-          return '';
-        }
-        case 'mkdir': {
-          const name = args[1];
-          if (!name) return 'Usage: mkdir [foldername]';
-          getCurrentDir().contents[name] = { type: 'dir', contents: {} };
-          return '';
-        }
-        case 'touch': {
-          const name = args[1];
-          if (!name) return 'Usage: touch [filename]';
-          getCurrentDir().contents[name] = { type: 'file', content: '' };
-          return '';
-        }
-        case 'cat': {
-          const name = args[1];
-          const file = getCurrentDir().contents[name];
-          if (file && file.type === 'file') return file.content;
-          return `No such file: ${name}`;
-        }
-        case 'rm': {
-          const name = args[1];
-          const target = getCurrentDir().contents[name];
-          if (!target) return `No such file or directory: ${name}`;
-          if (target.type === 'dir' && args[1] !== '-r') return 'Use rm -r [dir] to remove directories';
-          delete getCurrentDir().contents[name];
-          return '';
-        }
-        case 'tree': {
-          function render(dir, depth = 0) {
-            return Object.entries(dir.contents).map(([name, item]) => {
-              const prefix = '  '.repeat(depth) + (item.type === 'dir' ? '📁' : '📄') + ' ' + name;
-              return item.type === 'dir'
-                ? prefix + '\n' + render(item, depth + 1)
-                : prefix;
-            }).join('\n');
-          }
-          return render(getCurrentDir());
-        }
-        case 'nano': {
-          const name = args[1];
-          if (!name) return 'Usage: nano [filename]';
-          const curDir = getCurrentDir();
-          if (!curDir.contents[name]) {
-            curDir.contents[name] = { type: 'file', content: '' };
-          }
-          document.getElementById('nano-filename').textContent = name;
-          document.getElementById('nano-content').value = curDir.contents[name].content;
-          document.getElementById('nano-editor').style.display = 'flex';
-          return '';
-        }
-        default:
-          return `Command not found: ${command}`;
-      }
-    }
-
-    function saveNano() {
-      const name = document.getElementById('nano-filename').textContent;
-      const text = document.getElementById('nano-content').value;
-      getCurrentDir().contents[name].content = text;
-      closeNano();
-    }
-
-    function closeNano() {
-      document.getElementById('nano-editor').style.display = 'none';
-    }
+    renderTerminal();
   </script>
 </body>
 </html>
