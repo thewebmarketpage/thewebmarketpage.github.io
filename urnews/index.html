@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Stay informed with News Explorer, your go-to source for the latest news, updates, and in-depth analysis on global events, technology, politics, and more. Explore breaking stories and trending topics today!">
+  <meta name="description" content="Stay informed with News Explorer, your go-to source for the latest news, updates, and in-depth analysis on global events, technology, politics, and more.">
   <meta name="keywords" content="News Explorer, latest news, breaking news, global news, technology news, politics, trending topics, news updates, in-depth analysis, current events">
   <meta name="google-adsense-account" content="ca-pub-4307722391842007">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007" crossorigin="anonymous"></script>
   <title>News Explorer - Latest Breaking News, Global Updates, and In-Depth Analysis</title>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -52,23 +51,20 @@
     nav a:hover {
       text-decoration: underline;
     }
-
     .main-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 columns */
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
       max-width: 1300px;
       margin: 30px auto;
       padding: 0 15px;
     }
-
     .post-item {
       padding: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-
     .post-item h2 {
       font-size: 16px;
       text-align: center;
@@ -83,30 +79,11 @@
     .post-item h2 a:hover {
       text-decoration: underline;
     }
-
     .loading {
       text-align: center;
       font-size: 18px;
       margin: 20px 0;
     }
-
-    .show-more-btn {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #000;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: center;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-
-    .show-more-btn:hover {
-      background-color: #333;
-    }
-
     footer {
       background-color: #000;
       color: #fff;
@@ -123,13 +100,12 @@
   </header>
 
   <nav>
-    <a href="https://giantwebmarket.com/news-explorer/index.html" class="link-style">home</a>
-    <a href="https://giantwebmarket.com/privacy-policy.html" class="link-style">privacy policy</a>
+    <a href="https://giantwebmarket.com/news-explorer/index.html">home</a>
+    <a href="https://giantwebmarket.com/privacy-policy.html">privacy policy</a>
   </nav>
 
   <div class="main-container" id="postsContainer"></div>
   <div class="loading" id="loadingMessage" style="display: none;">Loading...</div>
-  <button class="show-more-btn" id="showMoreButton" style="display: none;">Show More</button>
 
   <footer>
     &copy; 2025 news explorer by giantwebmarket.com . All Rights Reserved.
@@ -170,7 +146,15 @@
       }
 
       allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-      renderPosts(allItems.slice(0, 100)); // Show top 100 posts max
+      renderPosts(allItems.slice(0, 100));
+    }
+
+    function slugify(text) {
+      return text.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
     }
 
     function renderPosts(items) {
@@ -182,8 +166,8 @@
 
         const title = document.createElement('h2');
         const link = document.createElement('a');
-        const encodedId = encodeURIComponent(btoa(item.link));
-        link.href = `post.html?id=${encodedId}`;
+        const slug = slugify(item.title);
+        link.href = `post.html?id=${slug}`;
         link.textContent = item.title;
 
         title.appendChild(link);
@@ -206,5 +190,6 @@
       });
     });
   </script>
+
 </body>
 </html>
