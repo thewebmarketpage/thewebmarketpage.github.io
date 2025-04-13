@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Browser Terminal</title>
+  <title>Simple OS - Browser-based</title>
   <style>
     body {
       font-family: monospace;
@@ -12,25 +12,17 @@
       margin: 0;
       padding: 0;
       height: 100vh;
-      overflow: hidden;
     }
     h1 {
-      color: #0ff;
       text-align: center;
+      color: #0ff;
+      margin-top: 20px;
     }
     .terminal {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
       padding: 10px;
       background-color: #111;
-    }
-    .file-item {
-      cursor: pointer;
-      user-select: none;
-    }
-    .file-item:hover {
-      background-color: #333;
+      height: calc(100% - 40px);
+      overflow-y: auto;
     }
     input {
       background: none;
@@ -38,47 +30,64 @@
       color: #0f0;
       font-size: 16px;
       width: 100%;
+      outline: none;
+    }
+    .output {
+      color: #0f0;
+      white-space: pre-wrap;
+    }
+    .output, .file-item {
+      user-select: none;
+    }
+    .file-item {
+      cursor: pointer;
+      padding: 5px;
+    }
+    .file-item:hover {
+      background-color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="terminal">
-    <h1>Browser Terminal</h1>
+
+  <h1>Browser OS</h1>
+  <div class="terminal" id="terminal">
     <div id="output"></div>
     <div id="input-wrapper">
-      <input id="input" type="text" autofocus placeholder="Type a command..." />
+      <input type="text" id="input" autofocus placeholder="Type a command...">
     </div>
   </div>
 
   <script>
+    // Default file system structure
     let fs = JSON.parse(localStorage.getItem('fs')) || {
       '/': {
         type: 'dir',
         contents: {
           'home': { type: 'dir', contents: {} },
-          'readme.txt': { type: 'file', content: 'Welcome to the browser terminal!' }
+          'readme.txt': { type: 'file', content: 'Welcome to the browser OS!' }
         }
       }
     };
 
+    // Initialize state
     let currentPath = ['/'];
     const terminal = document.getElementById('output');
     const inputElement = document.getElementById('input');
-    const inputWrapper = document.getElementById('input-wrapper');
-
-    function getCurrentDir() {
-      return currentPath.reduce((dir, name) => dir.contents[name], fs);
-    }
 
     function saveFileSystem() {
       localStorage.setItem('fs', JSON.stringify(fs));
+    }
+
+    function getCurrentDir() {
+      return currentPath.reduce((dir, name) => dir.contents[name], fs);
     }
 
     function renderDirContents() {
       const dir = getCurrentDir();
       return Object.entries(dir.contents).map(([name, item]) => {
         const isDir = item.type === 'dir';
-        return `<div class="file-item" id="${name}" onclick="changeDir('${name}')">
+        return `<div class="file-item" onclick="changeDir('${name}')">
                   ${isDir ? '📁' : '📄'} ${name}
                 </div>`;
       }).join('');
@@ -102,7 +111,7 @@
     function handleCommand(cmd) {
       const args = cmd.trim().split(' ');
       const command = args[0];
-      const result = { ls, cd, mkdir, touch, rm, cat, tree }[command];
+      const result = { ls, cd, mkdir, touch, rm, cat, save, tree }[command];
       if (result) return result(args);
       return `Command not found: ${command}`;
     }
@@ -155,6 +164,18 @@
       return 'No such file';
     }
 
+    function save(args) {
+      const name = args[1];
+      const content = args.slice(2).join(' ') || '';
+      const file = getCurrentDir().contents[name];
+      if (file && file.type === 'file') {
+        file.content = content;
+        saveFileSystem();
+        return `File ${name} saved.`;
+      }
+      return 'No such file';
+    }
+
     function tree(args) {
       return renderTree(getCurrentDir(), 0);
     }
@@ -171,35 +192,8 @@
 
     function renderTerminal() {
       terminal.innerHTML = renderDirContents();
-      terminal.insertBefore(inputWrapper, terminal.lastElementChild);
+      terminal.insertBefore(document.getElementById('input-wrapper'), terminal.lastElementChild);
       inputElement.focus();
-      makeDraggable();
-    }
-
-    function makeDraggable() {
-      const files = document.querySelectorAll('.file-item');
-      files.forEach(file => {
-        file.setAttribute('draggable', 'true');
-        file.addEventListener('dragstart', dragStart);
-        file.addEventListener('dragover', dragOver);
-        file.addEventListener('drop', dropFile);
-      });
-    }
-
-    function dragStart(e) {
-      e.dataTransfer.setData('text/plain', e.target.id);
-    }
-
-    function dragOver(e) {
-      e.preventDefault();
-    }
-
-    function dropFile(e) {
-      e.preventDefault();
-      const id = e.dataTransfer.getData('text/plain');
-      const fileElement = document.getElementById(id);
-      const targetDir = e.target;  // Drop target
-      // Handle file moving logic here
     }
 
     inputElement.addEventListener('keydown', function (e) {
@@ -209,25 +203,11 @@
         handleOutput(cmd, output);
         inputElement.value = '';
         terminal.scrollTop = terminal.scrollHeight;
-      } else if (e.key === 'Tab') {
-        e.preventDefault();
-        const cmd = inputElement.value.trim();
-        const parts = cmd.split(' ');
-        const dir = getCurrentDir();
-        
-        if (parts[0] === 'cd' || parts[0] === 'ls') {
-          const partial = parts[1] || '';
-          const options = Object.keys(dir.contents).filter(name => name.startsWith(partial));
-          if (options.length === 1) {
-            inputElement.value = cmd.slice(0, cmd.lastIndexOf(' ') + 1) + options[0];
-          } else if (options.length > 1) {
-            handleOutput(cmd, `Did you mean? ${options.join('  ')}`);
-          }
-        }
       }
     });
 
     renderTerminal();
   </script>
+
 </body>
 </html>
