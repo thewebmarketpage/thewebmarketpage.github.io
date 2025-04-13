@@ -5,12 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Stay informed with News Explorer, your go-to source for the latest news, updates, and in-depth analysis on global events, technology, politics, and more. Explore breaking stories and trending topics today!">
   <meta name="keywords" content="News Explorer, latest news, breaking news, global news, technology news, politics, trending topics, news updates, in-depth analysis, current events">
-
   <meta name="google-adsense-account" content="ca-pub-4307722391842007">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007"
-    crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007" crossorigin="anonymous"></script>
   <title>News Explorer - Latest Breaking News, Global Updates, and In-Depth Analysis</title>
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
   <script>
@@ -19,7 +16,6 @@
     gtag('js', new Date());
     gtag('config', 'G-5FB2YTV3KP');
   </script>
-
   <style>
     body {
       font-family: 'Georgia', serif;
@@ -27,14 +23,12 @@
       margin: 0;
       color: #222;
     }
-
     header {
       background-color: #fff;
       padding: 20px;
       text-align: center;
       border-bottom: 2px solid #000;
     }
-
     header h1 {
       font-size: 48px;
       font-weight: bold;
@@ -42,13 +36,11 @@
       margin: 0;
       letter-spacing: 2px;
     }
-
     nav {
       display: flex;
       justify-content: center;
       padding: 10px 0;
     }
-
     nav a {
       color: black;
       text-decoration: none;
@@ -57,14 +49,13 @@
       text-transform: uppercase;
       cursor: pointer;
     }
-
     nav a:hover {
       text-decoration: underline;
     }
 
     .main-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, 1fr); /* 3 columns */
       gap: 20px;
       max-width: 1300px;
       margin: 30px auto;
@@ -83,14 +74,12 @@
       text-align: center;
       margin: 0;
     }
-
     .post-item h2 a {
       color: black;
       text-decoration: none;
       text-transform: uppercase;
       font-weight: bold;
     }
-
     .post-item h2 a:hover {
       text-decoration: underline;
     }
@@ -140,62 +129,70 @@
 
   <div class="main-container" id="postsContainer"></div>
   <div class="loading" id="loadingMessage" style="display: none;">Loading...</div>
-  <button class="show-more-btn" id="showMoreButton">Show More</button>
+  <button class="show-more-btn" id="showMoreButton" style="display: none;">Show More</button>
 
   <footer>
     &copy; 2025 news explorer by giantwebmarket.com . All Rights Reserved.
   </footer>
 
   <script>
-    let allPosts = [];
-    let currentPostIndex = 0;
-    const postsPerPage = 20;
+    const RSS_FEEDS = [
+      'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+      'http://feeds.reuters.com/reuters/topNews',
+      'http://feeds.bbci.co.uk/news/world/rss.xml',
+      'https://www.theguardian.com/world/rss',
+      'https://feeds.a.dj.com/rss/RSSWorldNews.xml',
+      'https://www.aljazeera.com/xml/rss/all.xml',
+      'https://www.npr.org/rss/rss.php?id=1001',
+      'https://www.politico.com/rss/politics08.xml',
+      'https://rss.cnn.com/rss/edition.rss',
+      'https://feeds.skynews.com/feeds/rss/world.xml'
+    ];
 
-    function loadPosts() {
-      fetch('newsy.json')
-        .then(response => response.json())
-        .then(posts => {
-          allPosts = posts;
-          renderPosts();
-        })
-        .catch(error => {
-          console.error('Error fetching posts:', error);
-        });
+    const postsContainer = document.getElementById('postsContainer');
+    const loadingMessage = document.getElementById('loadingMessage');
+
+    async function loadAllFeeds() {
+      loadingMessage.style.display = 'block';
+      const allItems = [];
+
+      for (const url of RSS_FEEDS) {
+        try {
+          const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          if (data.status === 'ok') {
+            allItems.push(...data.items);
+          }
+        } catch (error) {
+          console.error('Error fetching feed:', url, error);
+        }
+      }
+
+      allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+      renderPosts(allItems.slice(0, 100)); // Show top 100 posts max
     }
 
-    function renderPosts() {
-      const mainContainer = document.getElementById('postsContainer');
-      const loadingMessage = document.getElementById('loadingMessage');
+    function renderPosts(items) {
+      loadingMessage.style.display = 'none';
 
-      loadingMessage.style.display = 'block';
-
-      const nextPosts = allPosts.slice(currentPostIndex, currentPostIndex + postsPerPage);
-
-      nextPosts.forEach(post => {
+      items.forEach(item => {
         const div = document.createElement('div');
         div.classList.add('post-item');
 
         const title = document.createElement('h2');
         const link = document.createElement('a');
-        link.href = `https://giantwebmarket.com/news-explorer/post.html?id=${post.id}`;
-        link.textContent = post.title;
+        const encodedId = encodeURIComponent(btoa(item.link));
+        link.href = `post.html?id=${encodedId}`;
+        link.textContent = item.title;
 
         title.appendChild(link);
         div.appendChild(title);
-        mainContainer.appendChild(div);
+        postsContainer.appendChild(div);
       });
-
-      currentPostIndex += postsPerPage;
-      loadingMessage.style.display = 'none';
-
-      if (currentPostIndex >= allPosts.length) {
-        document.getElementById('showMoreButton').style.display = 'none';
-      }
     }
 
-    document.getElementById('showMoreButton').addEventListener('click', renderPosts);
-
-    window.onload = loadPosts;
+    window.onload = loadAllFeeds;
   </script>
 
   <script async type="application/javascript" src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
