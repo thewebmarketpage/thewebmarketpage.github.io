@@ -228,7 +228,7 @@
       popupMeta.textContent = `Source: ${post.source} | Published: ${new Date(post.pubDate).toLocaleString()}`;
       popupOriginalLink.href = post.link;
       popupShareLink.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(post.link)}&text=${encodeURIComponent(post.title)}`;
-
+ 
       // Show popup
       popup.style.display = 'flex';
 
