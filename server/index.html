@@ -3,226 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Web Server</title>
+    <title>System Information</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+            background-color: #f4f4f4;
+            color: #333;
             padding: 20px;
         }
-        #editor {
-            width: 100%;
-            height: 300px;
-            margin: 20px 0;
-            padding: 10px;
-            font-family: monospace;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        h1 {
+            text-align: center;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+        .info {
+            margin-bottom: 15px;
         }
-        button:hover {
-            background-color: #45a049;
-        }
-        #status {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .server-running {
-            background-color: #dff0d8;
-            color: #3c763d;
-        }
-        .server-stopped {
-            background-color: #f2dede;
-            color: #a94442;
-        }
-        .network-info {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        .info-item {
-            margin: 5px 0;
-        }
-        .info-label {
+        .info label {
             font-weight: bold;
-            display: inline-block;
-            width: 120px;
+        }
+        pre {
+            background-color: #282828;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Simple Web Server</h1>
-    
-    <div class="network-info">
-        <h2>Network Information</h2>
-        <div class="info-item">
-            <span class="info-label">Local IP:</span>
-            <span id="localIp">Detecting...</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Public IP:</span>
-            <span id="publicIp">Detecting...</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Hostname:</span>
-            <span id="hostname">Detecting...</span>
-        </div>
+    <h1>System Information</h1>
+    <div class="info">
+        <label>Local IP:</label>
+        <span id="local-ip">Loading...</span>
     </div>
-    
-    <p>Enter the content you want to serve below:</p>
-    
-    <textarea id="editor" placeholder="Enter your HTML content here..."></textarea>
-    
-    <button id="startButton">Start Server</button>
-    <button id="stopButton" disabled>Stop Server</button>
-    
-    <div id="status" class="server-stopped">Server is not running</div>
-    
-    <script>
-        let server = null;
-        const defaultContent = `<!DOCTYPE html>
-<html>
-<head>
-    <title>My Server</title>
-</head>
-<body>
-    <h1>Welcome to My Server</h1>
-    <p>This content is served from the Simple Web Server.</p>
-    <p>Edit the content in the text box and click "Start Server" to update.</p>
-</body>
-</html>`;
+    <div class="info">
+        <label>Public IP:</label>
+        <span id="public-ip">Loading...</span>
+    </div>
+    <div class="info">
+        <label>Hostname:</label>
+        <span id="hostname">Loading...</span>
+    </div>
 
-        // Initialize the editor with default content
-        document.getElementById('editor').value = defaultContent;
-        
-        // Function to get local IP addresses
-        async function getLocalIPs() {
-            try {
-                const ips = [];
-                // This works in Chrome, Firefox, and Edge
-                const pc = new RTCPeerConnection({iceServers: []});
-                pc.createDataChannel('');
-                pc.createOffer().then(offer => pc.setLocalDescription(offer));
-                
-                pc.onicecandidate = (ice) => {
-                    if (!ice.candidate) return;
-                    const ip = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-                    if (ips.indexOf(ip) === -1) ips.push(ip);
-                    document.getElementById('localIp').textContent = ips.join(', ');
-                };
-            } catch (e) {
-                console.error("Error getting local IPs:", e);
-                document.getElementById('localIp').textContent = "Not available (try in Chrome/Firefox)";
-            }
-        }
-        
-        // Function to get public IP
-        async function getPublicIP() {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                document.getElementById('publicIp').textContent = data.ip;
-            } catch (e) {
-                console.error("Error getting public IP:", e);
-                document.getElementById('publicIp').textContent = "Not available";
-            }
-        }
-        
-        // Function to get hostname
-        function getHostname() {
-            try {
-                // Note: This will only work if served from a proper web server
-                // and may show the server's hostname rather than client's
-                document.getElementById('hostname').textContent = window.location.hostname || "Not available";
-            } catch (e) {
-                console.error("Error getting hostname:", e);
-                document.getElementById('hostname').textContent = "Not available";
-            }
-        }
-        
-        // Get network information when page loads
-        window.addEventListener('load', () => {
-            getLocalIPs();
-            getPublicIP();
-            getHostname();
-        });
-        
-        // Start server button
-        document.getElementById('startButton').addEventListener('click', async () => {
-            const content = document.getElementById('editor').value;
-            
-            try {
-                // Stop existing server if running
-                if (server) {
-                    server.close();
-                }
-                
-                // Create a new server
-                server = await startServer(content);
-                
-                // Update UI
-                document.getElementById('startButton').disabled = true;
-                document.getElementById('stopButton').disabled = false;
-                document.getElementById('status').textContent = `Server running on http://${document.getElementById('localIp').textContent || 'localhost'}:80`;
-                document.getElementById('status').className = 'server-running';
-            } catch (error) {
-                document.getElementById('status').textContent = `Error: ${error.message}`;
-                document.getElementById('status').className = 'server-stopped';
-            }
-        });
-        
-        // Stop server button
-        document.getElementById('stopButton').addEventListener('click', () => {
-            if (server) {
-                server.close();
-                server = null;
-                
-                // Update UI
-                document.getElementById('startButton').disabled = false;
-                document.getElementById('stopButton').disabled = true;
-                document.getElementById('status').textContent = 'Server is not running';
-                document.getElementById('status').className = 'server-stopped';
-            }
-        });
-        
-        // Function to start the server
-        async function startServer(content) {
-            return new Promise((resolve, reject) => {
-                try {
-                    // In a real app, you would use something like:
-                    // const http = require('http');
-                    // const server = http.createServer((req, res) => {
-                    //     res.writeHead(200, {'Content-Type': 'text/html'});
-                    //     res.end(content);
-                    // });
-                    // server.listen(80);
-                    
-                    // For this demo, we'll just simulate it
-                    const mockServer = {
-                        close: () => console.log('Server stopped')
-                    };
-                    
-                    console.log(`Server would be running with content:\n${content}`);
-                    alert(`In a real implementation, this would start a server on port 80 serving your content.\n\nFor security reasons, browsers can't directly create servers. You would need a backend server component.`);
-                    
-                    resolve(mockServer);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        }
+    <div class="info">
+        <label>System Information:</label>
+        <pre id="system-info">Loading...</pre>
+    </div>
+
+    <div class="info">
+        <label>Running Services:</label>
+        <pre id="services">Loading...</pre>
+    </div>
+
+    <div class="info">
+        <label>Open Ports:</label>
+        <pre id="open-ports">Loading...</pre>
+    </div>
+
+    <script>
+        // Example fetching data, you should replace with actual backend fetch logic
+        document.getElementById('local-ip').textContent = '<?php echo shell_exec("hostname -I"); ?>';
+        document.getElementById('public-ip').textContent = '<?php echo shell_exec("curl -s ifconfig.me"); ?>';
+        document.getElementById('hostname').textContent = '<?php echo shell_exec("hostname"); ?>';
+        document.getElementById('system-info').textContent = '<?php echo shell_exec("uname -a && lscpu && lsblk && df -h"); ?>';
+        document.getElementById('services').textContent = '<?php echo shell_exec("systemctl list-units --type=service"); ?>';
+        document.getElementById('open-ports').textContent = '<?php echo shell_exec("ss -tuln"); ?>';
     </script>
 </body>
 </html>
