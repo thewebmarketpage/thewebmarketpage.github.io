@@ -32,7 +32,7 @@
     <h1>System Information</h1>
     <div class="info">
         <label>Local IP:</label>
-        <span id="local-ip">Loading...</span>
+        <span id="local-ip">Not available via JS</span>
     </div>
     <div class="info">
         <label>Public IP:</label>
@@ -40,32 +40,41 @@
     </div>
     <div class="info">
         <label>Hostname:</label>
-        <span id="hostname">Loading...</span>
+        <span id="hostname">Not available via JS</span>
     </div>
 
     <div class="info">
         <label>System Information:</label>
-        <pre id="system-info">Loading...</pre>
+        <pre id="system-info">Not available via JS</pre>
     </div>
 
     <div class="info">
         <label>Running Services:</label>
-        <pre id="services">Loading...</pre>
+        <pre id="services">Not available via JS</pre>
     </div>
 
     <div class="info">
         <label>Open Ports:</label>
-        <pre id="open-ports">Loading...</pre>
+        <pre id="open-ports">Not available via JS</pre>
     </div>
 
     <script>
-        // Example fetching data, you should replace with actual backend fetch logic
-        document.getElementById('local-ip').textContent = '<?php echo shell_exec("hostname -I"); ?>';
-        document.getElementById('public-ip').textContent = '<?php echo shell_exec("curl -s ifconfig.me"); ?>';
-        document.getElementById('hostname').textContent = '<?php echo shell_exec("hostname"); ?>';
-        document.getElementById('system-info').textContent = '<?php echo shell_exec("uname -a && lscpu && lsblk && df -h"); ?>';
-        document.getElementById('services').textContent = '<?php echo shell_exec("systemctl list-units --type=service"); ?>';
-        document.getElementById('open-ports').textContent = '<?php echo shell_exec("ss -tuln"); ?>';
+        // Fetch Public IP from an external service
+        function fetchPublicIP() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('public-ip').textContent = data.ip;
+                })
+                .catch(error => {
+                    document.getElementById('public-ip').textContent = 'Failed to fetch public IP';
+                });
+        }
+
+        // Run when the page loads
+        window.onload = function() {
+            fetchPublicIP();
+        };
     </script>
 </body>
 </html>
