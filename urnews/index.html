@@ -2,21 +2,212 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>URNEWS - Integrated View</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stay informed with News Explorer, your go-to source for the latest news, updates, and in-depth analysis on global events, technology, politics, and more. Explore breaking stories and trending topics today!">
+  <meta name="keywords" content="News Explorer, latest news, breaking news, global news, technology news, politics, trending topics, news updates, in-depth analysis, current events">
+
+  <meta name="google-adsense-account" content="ca-pub-4307722391842007">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4307722391842007"
+    crossorigin="anonymous"></script>
+  <title>News Explorer - Latest Breaking News, Global Updates, and In-Depth Analysis</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FB2YTV3KP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5FB2YTV3KP');
+  </script>
+
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background-color: #fff;
+      margin: 0;
+      color: #222;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #000;
+    }
+
+    header h1 {
+      font-size: 48px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+
+    nav a {
+      color: black;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .main-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1300px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .post-item {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .post-item h2 {
+      font-size: 16px;
+      text-align: center;
+      margin: 0;
+    }
+
+    .post-item h2 a {
+      color: black;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .post-item h2 a:hover {
+      text-decoration: underline;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 18px;
+      margin: 20px 0;
+    }
+
+    .show-more-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #000;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .show-more-btn:hover {
+      background-color: #333;
+    }
+
+    footer {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
-  <div id="wp-content">Loading WordPress content...</div>
+
+  <header>
+    <h1>news explorer</h1>
+  </header>
+
+  <nav>
+    <a href="https://giantwebmarket.com/news-explorer/index.html" class="link-style">home</a>
+    <a href="https://giantwebmarket.com/privacy-policy.html" class="link-style">privacy policy</a>
+  </nav>
+
+  <div class="main-container" id="postsContainer"></div>
+  <div class="loading" id="loadingMessage" style="display: none;">Loading...</div>
+  <button class="show-more-btn" id="showMoreButton">Show More</button>
+
+  <footer>
+    &copy; 2025 news explorer by giantwebmarket.com . All Rights Reserved.
+  </footer>
 
   <script>
-    fetch("https://tip-dakota-gamma-evidence.trycloudflare.com/")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("wp-content").innerHTML = html;
-      })
-      .catch(err => {
-        document.getElementById("wp-content").innerHTML = "Failed to load content.";
-        console.error(err);
+    let allPosts = [];
+    let currentPostIndex = 0;
+    const postsPerPage = 20;
+
+    function loadPosts() {
+      fetch('newsy.json')
+        .then(response => response.json())
+        .then(posts => {
+          allPosts = posts;
+          renderPosts();
+        })
+        .catch(error => {
+          console.error('Error fetching posts:', error);
+        });
+    }
+
+    function renderPosts() {
+      const mainContainer = document.getElementById('postsContainer');
+      const loadingMessage = document.getElementById('loadingMessage');
+
+      loadingMessage.style.display = 'block';
+
+      const nextPosts = allPosts.slice(currentPostIndex, currentPostIndex + postsPerPage);
+
+      nextPosts.forEach(post => {
+        const div = document.createElement('div');
+        div.classList.add('post-item');
+
+        const title = document.createElement('h2');
+        const link = document.createElement('a');
+        link.href = `https://giantwebmarket.com/news-explorer/post.html?id=${post.id}`;
+        link.textContent = post.title;
+
+        title.appendChild(link);
+        div.appendChild(title);
+        mainContainer.appendChild(div);
       });
+
+      currentPostIndex += postsPerPage;
+      loadingMessage.style.display = 'none';
+
+      if (currentPostIndex >= allPosts.length) {
+        document.getElementById('showMoreButton').style.display = 'none';
+      }
+    }
+
+    document.getElementById('showMoreButton').addEventListener('click', renderPosts);
+
+    window.onload = loadPosts;
+  </script>
+
+  <script async type="application/javascript" src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
+  <script>
+    (self.SWG_BASIC = self.SWG_BASIC || []).push(basicSubscriptions => {
+      basicSubscriptions.init({
+        type: "NewsArticle",
+        isPartOfType: ["Product"],
+        isPartOfProductId: "CAow3fK4DA:openaccess",
+        clientOptions: { theme: "light", lang: "en" },
+      });
+    });
   </script>
 </body>
 </html>
