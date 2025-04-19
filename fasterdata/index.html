@@ -10,29 +10,55 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       background: #f0f2f5;
       padding: 40px;
+      margin: 0;
     }
 
     h1 {
-      font-size: 32px;
+      font-size: 36px;
       margin-bottom: 10px;
+      color: #333;
+    }
+
+    p {
+      font-size: 18px;
+      color: #666;
     }
 
     input, button {
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
-      margin: 5px;
+      margin: 10px 5px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      width: 250px;
+      max-width: 90%;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #0056b3;
     }
 
     #domainResult {
       margin-top: 20px;
       font-weight: bold;
+      font-size: 16px;
+      color: #444;
     }
 
     .g_id_signin {
@@ -41,8 +67,16 @@
     }
 
     .divider {
-      margin: 40px 0;
+      margin: 40px auto;
+      width: 80%;
+      max-width: 400px;
       border-top: 1px solid #ccc;
+    }
+
+    @media (max-width: 500px) {
+      input, button {
+        width: 90%;
+      }
     }
   </style>
 </head>
@@ -51,7 +85,7 @@
   <h1>Welcome to FasterData</h1>
   <p>Domain Registration Made Easy</p>
 
-  <!-- Google Login -->
+  <!-- Google Sign-In Button -->
   <div id="g_id_onload"
        data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
        data-callback="handleCredentialResponse"
@@ -63,8 +97,8 @@
 
   <!-- Domain Search -->
   <h2>Search for a Domain</h2>
-  <input type="text" id="domainInput" placeholder="example.com">
-  <button onclick="searchDomain()">Search</button>
+  <input type="text" id="domainInput" placeholder="Enter a domain (e.g. example.com)">
+  <button onclick="searchDomain()">Check Availability</button>
   <p id="domainResult"></p>
 
   <script>
@@ -89,29 +123,40 @@
         .then(data => {
           if (data.reply && data.reply.available === "yes") {
             result.textContent = `✅ ${domain} is available!`;
-          } else {
+          } else if (data.reply && data.reply.available === "no") {
             result.textContent = `❌ ${domain} is taken.`;
+          } else {
+            result.textContent = "⚠️ Unexpected response from NameSilo.";
           }
         })
         .catch(error => {
           console.error("Error:", error);
-          result.textContent = "⚠️ Error checking domain.";
+          result.textContent = "⚠️ Error checking domain. Please try again.";
         });
     }
 
     function handleCredentialResponse(response) {
       const data = parseJwt(response.credential);
-      localStorage.setItem("user", JSON.stringify(data));
-      window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
+      if (data) {
+        localStorage.setItem("user", JSON.stringify(data));
+        window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
+      } else {
+        alert("Login failed.");
+      }
     }
 
     function parseJwt(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      ).join(''));
-      return JSON.parse(jsonPayload);
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        console.error("Failed to parse JWT", e);
+        return null;
+      }
     }
   </script>
 
