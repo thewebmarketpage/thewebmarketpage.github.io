@@ -187,8 +187,8 @@
 
     function logToConsole(message) {
       const consoleOutput = document.getElementById("consoleOutput");
-      consoleOutput.textContent += message + '\n';
-      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+      consoleOutput.textContent += message + '\n';  // Append the new message to the console output
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;  // Scroll to the bottom of the console box
     }
   </script>
 
