@@ -130,6 +130,9 @@
       fetch(finalUrl)
         .then(response => response.json())
         .then(data => {
+          // Print the full response to the console (like a real terminal log)
+          logToConsole(`Full API Response: ${JSON.stringify(data, null, 2)}`);
+
           if (data.reply && data.reply.code === "300") {
             const availableDomains = data.reply.available || [];
             const unavailableDomains = data.reply.unavailable || [];
