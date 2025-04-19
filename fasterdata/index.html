@@ -13,12 +13,15 @@
       text-align: center;
       padding: 50px;
     }
+
     h1 {
       color: #58a6ff;
     }
+
     #buttons {
       margin-top: 40px;
     }
+
     .btn {
       background-color: #238636;
       border: none;
@@ -29,6 +32,7 @@
       cursor: pointer;
       border-radius: 8px;
     }
+
     .btn:hover {
       background-color: #2ea043;
     }
@@ -38,14 +42,14 @@
   <h1>LoopDesk Domain Network</h1>
   <p>Register or Login to manage your domain and hosting</p>
 
-  <!-- Google Sign-In Config -->
+  <!-- Google Sign-In Configuration -->
   <div id="g_id_onload"
        data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
        data-callback="handleCredentialResponse"
        data-auto_prompt="false">
   </div>
 
-  <!-- Custom Google Sign-In Buttons -->
+  <!-- Custom Sign-In Buttons -->
   <div id="buttons">
     <button class="btn" onclick="google.accounts.id.prompt()">Login with Google</button>
     <button class="btn" onclick="google.accounts.id.prompt()">Register with Google</button>
@@ -58,12 +62,8 @@
 
       console.log("User signed in:", payload);
 
-      // Optional: Send token to backend here
-      // fetch('/api/auth/google', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ token: jwt })
-      // });
+      // Save name or email in localStorage for use on dashboard
+      localStorage.setItem("user_name", payload.name || payload.email);
 
       // Redirect to dashboard
       window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
