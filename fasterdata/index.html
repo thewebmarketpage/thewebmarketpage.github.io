@@ -10,55 +10,29 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       background: #f0f2f5;
       padding: 40px;
-      margin: 0;
     }
 
     h1 {
-      font-size: 36px;
+      font-size: 32px;
       margin-bottom: 10px;
-      color: #333;
-    }
-
-    p {
-      font-size: 18px;
-      color: #666;
     }
 
     input, button {
-      padding: 12px;
+      padding: 10px;
       font-size: 16px;
-      margin: 10px 5px;
+      margin: 5px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      width: 250px;
-      max-width: 90%;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-      transition: background 0.2s ease-in-out;
-    }
-
-    button:hover {
-      background-color: #0056b3;
     }
 
     #domainResult {
       margin-top: 20px;
       font-weight: bold;
-      font-size: 16px;
-      color: #444;
     }
 
     .g_id_signin {
@@ -67,16 +41,24 @@
     }
 
     .divider {
-      margin: 40px auto;
-      width: 80%;
-      max-width: 400px;
+      margin: 40px 0;
       border-top: 1px solid #ccc;
     }
 
-    @media (max-width: 500px) {
-      input, button {
-        width: 90%;
-      }
+    label {
+      margin-top: 10px;
+      display: block;
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    code {
+      font-family: monospace;
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -85,7 +67,7 @@
   <h1>Welcome to FasterData</h1>
   <p>Domain Registration Made Easy</p>
 
-  <!-- Google Sign-In Button -->
+  <!-- Google Login -->
   <div id="g_id_onload"
        data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
        data-callback="handleCredentialResponse"
@@ -97,88 +79,120 @@
 
   <!-- Domain Search -->
   <h2>Search for a Domain</h2>
-  <input type="text" id="domainInput" placeholder="Enter a domain (e.g. example.com)">
-  <button onclick="searchDomain()">Check Availability</button>
+  <input type="text" id="domainInput" placeholder="example.com">
+  <button onclick="searchDomain()">Search</button>
   <p id="domainResult"></p>
 
- <script>
-  const apiKey = "6f946d8551777d22ac47";
-  const proxies = [
-    "https://corsproxy.io/?",
-    "https://api.allorigins.win/raw?url=",
-    "https://thingproxy.freeboard.io/fetch/",
-    "https://cors-anywhere.herokuapp.com/",
-    "https://yacdn.org/proxy/"
-  ];
+  <div>
+    <h3>Select a Proxy</h3>
+    <label>
+      <input type="radio" name="proxy" value="https://corsproxy.io/?" checked> CORS Proxy 1 (corsproxy.io)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://api.allorigins.win/raw?url="> CORS Proxy 2 (allorigins.win)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://thingproxy.freeboard.io/fetch/"> CORS Proxy 3 (thingproxy.freeboard.io)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://cors-anywhere.herokuapp.com/"> CORS Proxy 4 (cors-anywhere.herokuapp.com)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://yacdn.org/proxy/"> CORS Proxy 5 (yacdn.org)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://api.codetabs.com/v1/proxy/?quest="> CORS Proxy 6 (codetabs.com)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://proxy.cors.sh/"> CORS Proxy 7 (cors.sh)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://my-cors-proxy.netlify.app/.netlify/functions/cors-proxy?url="> CORS Proxy 8 (netlify.app)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://github-cors-proxy.herokuapp.com/"> CORS Proxy 9 (github-cors-proxy.herokuapp.com)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://jsonp.afeld.me/?url="> CORS Proxy 10 (jsonp.afeld.me)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://crossorigin.me/"> CORS Proxy 11 (crossorigin.me)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://bird.ioliu.cn/v1/?url="> CORS Proxy 12 (bird.ioliu.cn)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://api.allorigins.win/get?url="> CORS Proxy 13 (allorigins.win)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://mitmproxy.herokuapp.com/"> CORS Proxy 14 (mitmproxy.herokuapp.com)
+    </label>
+    <label>
+      <input type="radio" name="proxy" value="https://unblock.ryanrk.com/?url="> CORS Proxy 15 (ryanrk.com)
+    </label>
+  </div>
 
-  async function searchDomain() {
-    const domain = document.getElementById("domainInput").value.trim();
-    const result = document.getElementById("domainResult");
+  <script>
+    const apiKey = "6f946d8551777d22ac47";
 
-    if (!domain) {
-      result.textContent = "❗ Please enter a domain name.";
-      return;
+    function searchDomain() {
+      const domain = document.getElementById("domainInput").value.trim();
+      const result = document.getElementById("domainResult");
+
+      // Get selected proxy
+      const selectedProxy = document.querySelector('input[name="proxy"]:checked').value;
+
+      result.innerHTML = "";
+
+      if (!domain) {
+        result.textContent = "❗ Please enter a domain name.";
+        return;
+      }
+
+      result.textContent = "🔍 Checking availability...";
+
+      const realUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
+      const fullUrl = selectedProxy + encodeURIComponent(realUrl);
+
+      fetch(fullUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.reply && data.reply.available === "yes") {
+            result.innerHTML = `✅ <b>${domain}</b> is <span style="color:green;">available</span> (Proxy: <code>${selectedProxy}</code>)`;
+          } else {
+            result.innerHTML = `❌ <b>${domain}</b> is taken (Proxy: <code>${selectedProxy}</code>)`;
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          result.innerHTML = `⚠️ Error checking domain (Proxy: <code>${selectedProxy}</code>).`;
+        });
     }
 
-    result.textContent = "🔍 Checking availability...";
-
-    const realUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
-
-    for (let i = 0; i < proxies.length; i++) {
-      const proxy = proxies[i];
-      const fullUrl = proxy + encodeURIComponent(realUrl);
-
-      try {
-        const response = await fetch(fullUrl);
-        const contentType = response.headers.get("content-type");
-
-        if (!response.ok || !contentType || !contentType.includes("application/json")) {
-          throw new Error("Invalid response type or status");
-        }
-
-        const data = await response.json();
-
-        if (data.reply && data.reply.available === "yes") {
-          result.textContent = `✅ ${domain} is available! (Proxy: "${proxy}")`;
-        } else {
-          result.textContent = `❌ ${domain} is taken. (Proxy: "${proxy}")`;
-        }
-
-        console.log("✔ Used proxy:", proxy);
-        return;
-      } catch (error) {
-        console.warn(`❌ Proxy failed: ${proxy}`, error);
+    function handleCredentialResponse(response) {
+      const data = parseJwt(response.credential);
+      if (data) {
+        localStorage.setItem("user", JSON.stringify(data));
+        window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
+      } else {
+        alert("Login failed.");
       }
     }
 
-    result.textContent = "⚠️ All proxies failed. Try again later.";
-  }
-
-  function handleCredentialResponse(response) {
-    const data = parseJwt(response.credential);
-    if (data) {
-      localStorage.setItem("user", JSON.stringify(data));
-      window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
-    } else {
-      alert("Login failed.");
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        console.error("Failed to parse JWT", e);
+        return null;
+      }
     }
-  }
-
-  function parseJwt(token) {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      ).join(''));
-      return JSON.parse(jsonPayload);
-    } catch (e) {
-      console.error("Failed to parse JWT", e);
-      return null;
-    }
-  }
-</script>
-
+  </script>
 
 </body>
 </html>
