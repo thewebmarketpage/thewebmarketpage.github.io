@@ -76,29 +76,6 @@
       color: var(--primary);
     }
     
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--darker);
-      font-weight: bold;
-      transition: transform 0.3s ease;
-    }
-    
-    .user-avatar:hover {
-      transform: scale(1.1);
-    }
-    
     .container {
       max-width: 1200px;
       margin: 2rem auto;
@@ -219,146 +196,54 @@
       box-shadow: 0 0 0 3px rgba(106, 155, 216, 0.2);
     }
     
-    .file-upload {
-      border: 2px dashed rgba(255,255,255,0.1);
+    .auth-methods {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    
+    .auth-method {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
       border-radius: 10px;
-      padding: 2rem;
+      padding: 1.5rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      border: 1px solid transparent;
     }
     
-    .file-upload:hover {
+    .auth-method:hover {
       border-color: var(--primary);
-      background-color: rgba(106, 155, 216, 0.05);
+      background: rgba(106, 155, 216, 0.1);
     }
     
-    .file-upload input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
+    .auth-method.active {
+      border-color: var(--accent);
+      background: rgba(93, 190, 125, 0.1);
     }
     
-    .file-upload-icon {
-      font-size: 2.5rem;
-      color: var(--primary);
+    .auth-icon {
+      font-size: 2rem;
       margin-bottom: 1rem;
-    }
-    
-    .file-upload-text {
-      margin-bottom: 0.5rem;
-    }
-    
-    .file-upload-hint {
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-    
-    .file-list {
-      margin-top: 1.5rem;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    
-    .file-item {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      background-color: rgba(255,255,255,0.05);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    .file-item:last-child {
-      border-bottom: none;
-    }
-    
-    .file-icon {
-      margin-right: 1rem;
       color: var(--primary);
     }
     
-    .file-info {
-      flex: 1;
+    .auth-method.active .auth-icon {
+      color: var(--accent);
     }
     
-    .file-name {
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-    }
-    
-    .file-size {
-      font-size: 0.85rem;
-      opacity: 0.7;
-    }
-    
-    .file-remove {
-      color: var(--danger);
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-    }
-    
-    .file-remove:hover {
-      background-color: rgba(231, 76, 60, 0.2);
-    }
-    
-    .progress-container {
-      margin: 2rem 0;
-      display: none;
-    }
-    
-    .progress-bar {
-      height: 8px;
-      background-color: rgba(255,255,255,0.1);
-      border-radius: 4px;
-      overflow: hidden;
+    .auth-title {
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
     
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      border-radius: 4px;
-      width: 0%;
-      transition: width 0.5s ease;
-    }
-    
-    .progress-text {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-    }
-    
-    .deploy-result {
+    .auth-form {
       display: none;
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background-color: rgba(93, 190, 125, 0.1);
-      border-radius: 10px;
-      border: 1px solid rgba(93, 190, 125, 0.3);
     }
     
-    .deploy-url {
-      display: flex;
-      align-items: center;
-      background-color: rgba(255,255,255,0.05);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      margin: 1rem 0;
-    }
-    
-    .deploy-url-text {
-      flex: 1;
-      font-family: monospace;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .auth-form.active {
+      display: block;
     }
     
     .btn {
@@ -408,29 +293,7 @@
       background-color: rgba(106, 155, 216, 0.1);
     }
     
-    .btn-danger {
-      background-color: var(--danger);
-      color: white;
-    }
-    
-    .btn-danger:hover {
-      background-color: #c44133;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
-    }
-    
     .btn-group {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-    
-    .btn-sm {
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-    }
-    
-    .action-buttons {
       display: flex;
       gap: 1rem;
       margin-top: 1.5rem;
@@ -471,7 +334,11 @@
         font-size: 0.8rem;
       }
       
-      .action-buttons {
+      .auth-methods {
+        flex-direction: column;
+      }
+      
+      .btn-group {
         flex-direction: column;
       }
       
@@ -492,10 +359,6 @@
         <a href="#">Domains</a>
         <a href="#" class="active">Deploy</a>
         <a href="#">Servers</a>
-        <div class="user-info" id="userInfo">
-          <div class="user-avatar" id="userAvatar">U</div>
-          <span id="userName">User</span>
-        </div>
       </div>
     </nav>
   </header>
@@ -509,35 +372,117 @@
       <div class="step-indicator">
         <div class="step active" id="step1">
           <div class="step-number">1</div>
-          <div class="step-label">Name Your Site</div>
+          <div class="step-label">Login/Register</div>
         </div>
         <div class="step" id="step2">
           <div class="step-number">2</div>
-          <div class="step-label">Upload Files</div>
+          <div class="step-label">Name Your Site</div>
         </div>
         <div class="step" id="step3">
           <div class="step-number">3</div>
+          <div class="step-label">Upload Files</div>
+        </div>
+        <div class="step" id="step4">
+          <div class="step-number">4</div>
           <div class="step-label">Deploy</div>
         </div>
       </div>
       
-      <!-- Step 1: Website Name -->
+      <!-- Step 1: Authentication -->
       <div class="step-content" id="step1-content">
+        <div class="auth-methods">
+          <div class="auth-method active" id="loginMethod">
+            <div class="auth-icon">
+              <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <div class="auth-title">Login</div>
+            <div class="auth-description">Already have an account? Sign in to continue</div>
+          </div>
+          <div class="auth-method" id="registerMethod">
+            <div class="auth-icon">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="auth-title">Register</div>
+            <div class="auth-description">New to FasterData? Create an account</div>
+          </div>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="auth-form active" id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail" class="form-label">Email Address</label>
+            <input type="email" id="loginEmail" class="form-control" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword" class="form-label">Password</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Remember me</label>
+              </div>
+              <a href="#" style="color: var(--primary);">Forgot password?</a>
+            </div>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-primary" id="loginButton">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+          </div>
+        </div>
+        
+        <!-- Register Form -->
+        <div class="auth-form" id="registerForm">
+          <div class="form-group">
+            <label for="registerName" class="form-label">Full Name</label>
+            <input type="text" id="registerName" class="form-control" placeholder="Your Name" required>
+          </div>
+          <div class="form-group">
+            <label for="registerEmail" class="form-label">Email Address</label>
+            <input type="email" id="registerEmail" class="form-control" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword" class="form-label">Password</label>
+            <input type="password" id="registerPassword" class="form-control" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <label for="registerConfirm" class="form-label">Confirm Password</label>
+            <input type="password" id="registerConfirm" class="form-control" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="agreeTerms" required>
+            <label for="agreeTerms">I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a> and <a href="#" style="color: var(--primary);">Privacy Policy</a></label>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-primary" id="registerButton">
+              <i class="fas fa-user-plus"></i> Register
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 2: Website Name -->
+      <div class="step-content" id="step2-content" style="display: none;">
         <div class="form-group">
           <label for="siteName" class="form-label">Website Name</label>
           <input type="text" id="siteName" class="form-control" placeholder="my-awesome-site" required>
-          <small class="file-upload-hint">This will create your website URL: https://giantwebmarket.com/<span id="urlPreview">my-awesome-site</span>/</small>
+          <small style="opacity: 0.7;">This will create your website URL: https://giantwebmarket.com/<span id="urlPreview">my-awesome-site</span>/</small>
         </div>
         
         <div class="btn-group">
-          <button class="btn btn-primary" id="nextStep1">
+          <button class="btn btn-outline" id="backStep2">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn btn-primary" id="nextStep2">
             Continue <i class="fas fa-arrow-right"></i>
           </button>
         </div>
       </div>
       
-      <!-- Step 2: File Upload -->
-      <div class="step-content" id="step2-content" style="display: none;">
+      <!-- Step 3: File Upload -->
+      <div class="step-content" id="step3-content" style="display: none;">
         <div class="form-group">
           <label class="form-label">Upload Website Files</label>
           <div class="file-upload" id="fileUploadArea">
@@ -555,71 +500,39 @@
         </div>
         
         <div class="btn-group">
-          <button class="btn btn-outline" id="backStep2">
+          <button class="btn btn-outline" id="backStep3">
             <i class="fas fa-arrow-left"></i> Back
           </button>
-          <button class="btn btn-primary" id="nextStep2" disabled>
+          <button class="btn btn-primary" id="nextStep3" disabled>
             Continue <i class="fas fa-arrow-right"></i>
           </button>
         </div>
       </div>
       
-      <!-- Step 3: Deploy -->
-      <div class="step-content" id="step3-content" style="display: none;">
+      <!-- Step 4: Deploy -->
+      <div class="step-content" id="step4-content" style="display: none;">
         <div class="form-group">
           <h3>Ready to deploy your website</h3>
           <p>Review your settings before deployment:</p>
           
           <div style="background-color: rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span>Account:</span>
+              <strong id="reviewEmail">user@example.com</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
               <span>Website Name:</span>
               <strong id="reviewName">my-awesome-site</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <div style="display: flex; justify-content: space-between;">
               <span>Files to Upload:</span>
               <strong id="reviewFiles">0</strong>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span>Website URL:</span>
-              <strong>https://giantwebmarket.com/<span id="reviewUrl">my-awesome-site</span>/</strong>
-            </div>
-          </div>
-        </div>
-        
-        <div class="progress-container" id="progressContainer">
-          <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-          </div>
-          <div class="progress-text">
-            <span id="progressStatus">Preparing deployment...</span>
-            <span id="progressPercent">0%</span>
-          </div>
-        </div>
-        
-        <div class="deploy-result" id="deployResult">
-          <h3><i class="fas fa-check-circle"></i> Deployment Successful!</h3>
-          <p>Your website is now live at:</p>
-          <div class="deploy-url">
-            <div class="deploy-url-text" id="deployedUrl">https://giantwebmarket.com/my-awesome-site/</div>
-            <button class="btn btn-sm btn-outline" id="copyUrl">
-              <i class="fas fa-copy"></i> Copy
-            </button>
-          </div>
-          <div class="action-buttons">
-            <a href="#" class="btn btn-secondary" id="visitSite" target="_blank">
-              <i class="fas fa-external-link-alt"></i> Visit Site
-            </a>
-            <button class="btn btn-outline" id="stopSite">
-              <i class="fas fa-stop"></i> Stop Site
-            </button>
-            <button class="btn btn-danger" id="deleteSite">
-              <i class="fas fa-trash"></i> Delete Site
-            </button>
           </div>
         </div>
         
         <div class="btn-group">
-          <button class="btn btn-outline" id="backStep3">
+          <button class="btn btn-outline" id="backStep4">
             <i class="fas fa-arrow-left"></i> Back
           </button>
           <button class="btn btn-primary" id="deployButton">
@@ -641,32 +554,9 @@
   </footer>
 
   <script>
-    // Get user data from cookie
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-    
-    const userData = JSON.parse(getCookie('fasterdata_user') || null);
-    
-    if (!userData) {
-      window.location.href = 'login.html';
-    } else {
-      // Display user info
-      document.getElementById('userName').textContent = userData.name;
-      document.getElementById('userAvatar').textContent = userData.name.charAt(0).toUpperCase();
-      
-      // Set avatar background color based on email hash
-      const emailHash = userData.email ? userData.email.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : 0;
-      const colors = ['#6a9bd8', '#3a6ea5', '#5dbe7d', '#FF5722', '#9C27B0'];
-      const colorIndex = emailHash % colors.length;
-      document.getElementById('userAvatar').style.backgroundColor = colors[colorIndex];
-    }
-    
     // Step navigation
     let currentStep = 1;
-    const totalSteps = 3;
+    const totalSteps = 4;
     
     function showStep(step) {
       document.querySelectorAll('.step-content').forEach(el => {
@@ -687,25 +577,83 @@
       currentStep = step;
     }
     
-    // Step 1: Website name
+    // Toggle between login and register
+    document.getElementById('loginMethod').addEventListener('click', function() {
+      document.getElementById('loginMethod').classList.add('active');
+      document.getElementById('registerMethod').classList.remove('active');
+      document.getElementById('loginForm').classList.add('active');
+      document.getElementById('registerForm').classList.remove('active');
+    });
+    
+    document.getElementById('registerMethod').addEventListener('click', function() {
+      document.getElementById('registerMethod').classList.add('active');
+      document.getElementById('loginMethod').classList.remove('active');
+      document.getElementById('registerForm').classList.add('active');
+      document.getElementById('loginForm').classList.remove('active');
+    });
+    
+    // Login/Register functionality
+    document.getElementById('loginButton').addEventListener('click', function() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      
+      if (!email || !password) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      // In a real app, you would validate credentials with your backend
+      document.getElementById('reviewEmail').textContent = email;
+      showStep(2);
+    });
+    
+    document.getElementById('registerButton').addEventListener('click', function() {
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value.trim();
+      const confirm = document.getElementById('registerConfirm').value.trim();
+      
+      if (!name || !email || !password || !confirm) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      if (password !== confirm) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      if (!document.getElementById('agreeTerms').checked) {
+        alert('You must agree to the terms and conditions');
+        return;
+      }
+      
+      // In a real app, you would register the user with your backend
+      document.getElementById('reviewEmail').textContent = email;
+      showStep(2);
+    });
+    
+    // Step 2: Website name
     document.getElementById('siteName').addEventListener('input', function() {
       const name = this.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
       document.getElementById('urlPreview').textContent = name;
-      document.getElementById('reviewUrl').textContent = name;
       document.getElementById('reviewName').textContent = name;
-      document.getElementById('deployedUrl').textContent = `https://giantwebmarket.com/${name}/`;
     });
     
-    document.getElementById('nextStep1').addEventListener('click', function() {
+    document.getElementById('nextStep2').addEventListener('click', function() {
       const siteName = document.getElementById('siteName').value.trim();
       if (!siteName) {
         alert('Please enter a website name');
         return;
       }
-      showStep(2);
+      showStep(3);
     });
     
-    // Step 2: File upload
+    document.getElementById('backStep2').addEventListener('click', function() {
+      showStep(1);
+    });
+    
+    // Step 3: File upload
     const fileInput = document.getElementById('fileInput');
     const fileList = document.getElementById('fileList');
     let files = [];
@@ -745,7 +693,7 @@
       
       if (files.length === 0) {
         fileList.innerHTML = '<div style="padding: 1rem; text-align: center; opacity: 0.7;">No files selected</div>';
-        document.getElementById('nextStep2').disabled = true;
+        document.getElementById('nextStep3').disabled = true;
         document.getElementById('reviewFiles').textContent = '0';
         return;
       }
@@ -795,7 +743,7 @@
         return;
       }
       
-      document.getElementById('nextStep2').disabled = false;
+      document.getElementById('nextStep3').disabled = false;
       document.getElementById('reviewFiles').textContent = files.length;
       
       // Add event listeners to remove buttons
@@ -814,114 +762,30 @@
       else return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
     }
     
-    document.getElementById('backStep2').addEventListener('click', () => showStep(1));
-    document.getElementById('nextStep2').addEventListener('click', () => showStep(3));
-    
-    // Step 3: Deploy
     document.getElementById('backStep3').addEventListener('click', () => showStep(2));
+    document.getElementById('nextStep3').addEventListener('click', () => showStep(4));
+    
+    // Step 4: Deploy
+    document.getElementById('backStep4').addEventListener('click', () => showStep(3));
     
     document.getElementById('deployButton').addEventListener('click', function() {
-      const progressContainer = document.getElementById('progressContainer');
-      const progressFill = document.getElementById('progressFill');
-      const progressStatus = document.getElementById('progressStatus');
-      const progressPercent = document.getElementById('progressPercent');
-      
-      progressContainer.style.display = 'block';
-      this.disabled = true;
-      
-      // Simulate deployment progress
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 10;
-        if (progress > 100) progress = 100;
-        
-        progressFill.style.width = progress + '%';
-        progressPercent.textContent = Math.floor(progress) + '%';
-        
-        if (progress < 30) {
-          progressStatus.textContent = 'Uploading files...';
-        } else if (progress < 70) {
-          progressStatus.textContent = 'Configuring server...';
-        } else {
-          progressStatus.textContent = 'Finalizing deployment...';
-        }
-        
-        if (progress === 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            document.getElementById('deployResult').style.display = 'block';
-            this.style.display = 'none';
-          }, 500);
-        }
-      }, 300);
-    });
-    
-    // Copy URL
-    document.getElementById('copyUrl').addEventListener('click', function() {
-      const url = document.getElementById('deployedUrl').textContent;
-      navigator.clipboard.writeText(url);
-      
-      const originalText = this.innerHTML;
-      this.innerHTML = '<i class="fas fa-check"></i> Copied!';
-      
-      setTimeout(() => {
-        this.innerHTML = originalText;
-      }, 2000);
-    });
-    
-    // Visit Site
-    document.getElementById('visitSite').addEventListener('click', function(e) {
-      const url = document.getElementById('deployedUrl').textContent;
-      this.href = url;
-    });
-    
-    // Stop Site
-    document.getElementById('stopSite').addEventListener('click', function() {
-      if (confirm('Are you sure you want to stop this website? It will no longer be accessible.')) {
-        alert('Website has been stopped. (In a real app, this would make an API call)');
-      }
-    });
-    
-    // Delete Site (with 10s confirmation)
-    document.getElementById('deleteSite').addEventListener('click', function() {
+      // In a real app, this would upload files and deploy the site
       const siteName = document.getElementById('siteName').value.trim();
-      const confirmation = prompt(`Type "${siteName}" to confirm permanent deletion (this cannot be undone):`);
+      alert(`Website ${siteName} deployed successfully!\n\nURL: https://giantwebmarket.com/${siteName}/`);
       
-      if (confirmation === siteName) {
-        const countdown = document.createElement('div');
-        countdown.style.marginTop = '1rem';
-        countdown.style.color = 'var(--danger)';
-        countdown.textContent = 'Deleting in 10 seconds... Click here to cancel.';
-        
-        countdown.addEventListener('click', () => {
-          clearTimeout(deleteTimer);
-          countdown.remove();
-        });
-        
-        this.parentNode.appendChild(countdown);
-        
-        let seconds = 10;
-        const deleteTimer = setInterval(() => {
-          seconds--;
-          countdown.textContent = `Deleting in ${seconds} seconds... Click here to cancel.`;
-          
-          if (seconds <= 0) {
-            clearInterval(deleteTimer);
-            alert('Website has been permanently deleted. (In a real app, this would make an API call)');
-            // Redirect or reset form
-            showStep(1);
-            files = [];
-            updateFileList();
-            document.getElementById('siteName').value = '';
-            document.getElementById('deployResult').style.display = 'none';
-            document.getElementById('deployButton').style.display = 'block';
-            document.getElementById('progressContainer').style.display = 'none';
-            countdown.remove();
-          }
-        }, 1000);
-      } else if (confirmation !== null) {
-        alert('Confirmation text did not match. Deletion cancelled.');
-      }
+      // Reset form and go back to step 1
+      setTimeout(() => {
+        files = [];
+        updateFileList();
+        document.getElementById('siteName').value = '';
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('registerName').value = '';
+        document.getElementById('registerEmail').value = '';
+        document.getElementById('registerPassword').value = '';
+        document.getElementById('registerConfirm').value = '';
+        showStep(1);
+      }, 3000);
     });
   </script>
 </body>
