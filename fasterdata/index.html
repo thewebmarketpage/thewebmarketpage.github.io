@@ -13,23 +13,43 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: #f9f9f9;
+      background: #f0f2f5;
       padding: 40px;
     }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
     input, button {
       padding: 10px;
       font-size: 16px;
       margin: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
+
     #domainResult {
       margin-top: 20px;
       font-weight: bold;
+    }
+
+    .g_id_signin {
+      margin: 20px auto;
+      display: inline-block;
+    }
+
+    .divider {
+      margin: 40px 0;
+      border-top: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
 
   <h1>Welcome to FasterData</h1>
+  <p>Domain Registration Made Easy</p>
 
   <!-- Google Login -->
   <div id="g_id_onload"
@@ -39,7 +59,7 @@
   </div>
   <div class="g_id_signin" data-type="standard"></div>
 
-  <hr>
+  <div class="divider"></div>
 
   <!-- Domain Search -->
   <h2>Search for a Domain</h2>
@@ -61,9 +81,10 @@
 
       result.textContent = "🔍 Checking availability...";
 
-      const url = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
+      const realUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
+      const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(realUrl);
 
-      fetch(url)
+      fetch(proxyUrl)
         .then(response => response.json())
         .then(data => {
           if (data.reply && data.reply.available === "yes") {
@@ -87,11 +108,9 @@
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(
-        atob(base64).split('').map(c =>
-          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        ).join('')
-      );
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''));
       return JSON.parse(jsonPayload);
     }
   </script>
