@@ -1,79 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LoopDesk Domain Network</title>
+  <meta charset="UTF-8">
+  <title>FasterData - Domain Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Sign-In -->
+  <meta name="google-signin-client_id" content="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <style>
     body {
-      font-family: sans-serif;
-      background: #0d1117;
-      color: #fff;
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 50px;
+      background: #f7f7f7;
+      padding: 40px;
     }
-
     h1 {
-      color: #58a6ff;
+      color: #333;
     }
-
-    #buttons {
-      margin-top: 40px;
-    }
-
-    .btn {
-      background-color: #238636;
-      border: none;
-      padding: 12px 24px;
-      color: white;
+    input, button {
+      padding: 10px;
       font-size: 16px;
-      margin: 10px;
-      cursor: pointer;
-      border-radius: 8px;
+      margin: 5px;
     }
-
-    .btn:hover {
-      background-color: #2ea043;
+    .g_id_signin {
+      margin: 20px auto;
+    }
+    #domainResult {
+      font-weight: bold;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>LoopDesk Domain Network</h1>
-  <p>Register or Login to manage your domain and hosting</p>
 
-  <!-- Google Sign-In Configuration -->
+  <h1>Welcome to FasterData</h1>
+
+  <!-- Google Login -->
   <div id="g_id_onload"
        data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
        data-callback="handleCredentialResponse"
        data-auto_prompt="false">
   </div>
+  <div class="g_id_signin" data-type="standard"></div>
 
-  <!-- Custom Sign-In Buttons -->
-  <div id="buttons">
-    <button class="btn" onclick="google.accounts.id.prompt()">Login with Google</button>
-    <button class="btn" onclick="google.accounts.id.prompt()">Register with Google</button>
-  </div>
+  <hr>
+
+  <!-- Domain Search -->
+  <h2>Search for a Domain</h2>
+  <input type="text" id="domainInput" placeholder="example.com">
+  <button onclick="searchDomain()">Search</button>
+  <p id="domainResult"></p>
 
   <script>
+    // Mocked domain availability check (simulate NameSilo API)
+    function searchDomain() {
+      const domain = document.getElementById("domainInput").value.trim();
+      const result = document.getElementById("domainResult");
+
+      if (!domain) {
+        result.textContent = "❗ Please enter a domain name.";
+        return;
+      }
+
+      result.textContent = "🔍 Checking availability...";
+
+      // Simulated check (random availability)
+      setTimeout(() => {
+        const available = Math.random() > 0.5;
+        if (available) {
+          result.textContent = `✅ ${domain} is available!`;
+        } else {
+          result.textContent = `❌ ${domain} is already taken.`;
+        }
+      }, 1000);
+    }
+
+    // Google Sign-In callback
     function handleCredentialResponse(response) {
-      const jwt = response.credential;
-      const payload = parseJwt(jwt);
-
-      console.log("User signed in:", payload);
-
-      // Save name or email in localStorage for use on dashboard
-      localStorage.setItem("user_name", payload.name || payload.email);
-
-      // Redirect to dashboard
+      // Decode JWT (only for demo; use backend validation in real app)
+      const data = parseJwt(response.credential);
+      console.log("User logged in:", data);
+      localStorage.setItem("user", JSON.stringify(data));
       window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
     }
 
+    // Decode JWT token (for client-side test)
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      return JSON.parse(atob(base64));
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
     }
   </script>
+
 </body>
 </html>
