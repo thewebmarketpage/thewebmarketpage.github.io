@@ -13,23 +13,17 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: #f7f7f7;
+      background: #f9f9f9;
       padding: 40px;
-    }
-    h1 {
-      color: #333;
     }
     input, button {
       padding: 10px;
       font-size: 16px;
       margin: 5px;
     }
-    .g_id_signin {
-      margin: 20px auto;
-    }
     #domainResult {
-      font-weight: bold;
       margin-top: 20px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -54,7 +48,8 @@
   <p id="domainResult"></p>
 
   <script>
-    // Mocked domain availability check (simulate NameSilo API)
+    const apiKey = "6f946d8551777d22ac47";
+
     function searchDomain() {
       const domain = document.getElementById("domainInput").value.trim();
       const result = document.getElementById("domainResult");
@@ -66,33 +61,37 @@
 
       result.textContent = "🔍 Checking availability...";
 
-      // Simulated check (random availability)
-      setTimeout(() => {
-        const available = Math.random() > 0.5;
-        if (available) {
-          result.textContent = `✅ ${domain} is available!`;
-        } else {
-          result.textContent = `❌ ${domain} is already taken.`;
-        }
-      }, 1000);
+      const url = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.reply && data.reply.available === "yes") {
+            result.textContent = `✅ ${domain} is available!`;
+          } else {
+            result.textContent = `❌ ${domain} is taken.`;
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          result.textContent = "⚠️ Error checking domain.";
+        });
     }
 
-    // Google Sign-In callback
     function handleCredentialResponse(response) {
-      // Decode JWT (only for demo; use backend validation in real app)
       const data = parseJwt(response.credential);
-      console.log("User logged in:", data);
       localStorage.setItem("user", JSON.stringify(data));
       window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
     }
 
-    // Decode JWT token (for client-side test)
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
+      const jsonPayload = decodeURIComponent(
+        atob(base64).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join('')
+      );
       return JSON.parse(jsonPayload);
     }
   </script>
