@@ -38,20 +38,19 @@
   <h1>LoopDesk Domain Network</h1>
   <p>Register or Login to manage your domain and hosting</p>
 
-  <!-- Google Sign-In Onload Script Config -->
+  <!-- Google Sign-In Config -->
   <div id="g_id_onload"
        data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
        data-callback="handleCredentialResponse"
        data-auto_prompt="false">
   </div>
 
-  <!-- Google Sign-In Button Triggers -->
+  <!-- Custom Google Sign-In Buttons -->
   <div id="buttons">
     <button class="btn" onclick="google.accounts.id.prompt()">Login with Google</button>
     <button class="btn" onclick="google.accounts.id.prompt()">Register with Google</button>
   </div>
 
-  <!-- Google Sign-In Callback Handler -->
   <script>
     function handleCredentialResponse(response) {
       const jwt = response.credential;
@@ -59,15 +58,15 @@
 
       console.log("User signed in:", payload);
 
-      // TODO: Send this token to your backend for validation and account handling
-      // Example:
+      // Optional: Send token to backend here
       // fetch('/api/auth/google', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({ token: jwt })
       // });
 
-      alert(`Welcome, ${payload.name || payload.email}!`);
+      // Redirect to dashboard
+      window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
     }
 
     function parseJwt(token) {
