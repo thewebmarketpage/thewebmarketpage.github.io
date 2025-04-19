@@ -1,10 +1,10 @@
+<!-- login.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>FasterData - Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google Sign-In -->
   <meta name="google-signin-client_id" content="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -68,10 +68,6 @@
       padding: 0.5rem;
     }
     
-    .nav-links a:hover {
-      opacity: 0.9;
-    }
-    
     main {
       flex: 1;
       display: flex;
@@ -90,20 +86,6 @@
       text-align: center;
     }
     
-    .auth-card h2 {
-      color: var(--dark);
-      margin-bottom: 1rem;
-    }
-    
-    .auth-card p {
-      color: #666;
-      margin-bottom: 2rem;
-    }
-    
-    .google-btn-container {
-      margin: 1.5rem 0;
-    }
-    
     footer {
       background-color: var(--dark);
       color: white;
@@ -116,32 +98,6 @@
       justify-content: center;
       gap: 1.5rem;
       margin-bottom: 1rem;
-    }
-    
-    .footer-links a {
-      color: white;
-      text-decoration: none;
-    }
-    
-    .footer-links a:hover {
-      text-decoration: underline;
-    }
-    
-    .copyright {
-      color: #aaa;
-      font-size: 0.9rem;
-    }
-    
-    @media (max-width: 768px) {
-      nav {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .nav-links {
-        width: 100%;
-        justify-content: center;
-      }
     }
   </style>
 </head>
@@ -163,52 +119,43 @@
   <main>
     <div class="auth-card">
       <h2>Sign In</h2>
-      <p>Use your Google account to access to login or register new account</p>
+      <p>Use your Google account to access your dashboard</p>
       
-      <div class="google-btn-container">
-        <div id="g_id_onload"
-             data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="handleGoogleSignIn"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin"
-             data-type="standard"
-             data-shape="rectangular"
-             data-theme="filled_blue"
-             data-text="signin_with"
-             data-size="large"
-             data-logo_alignment="left">
-        </div>
+      <div id="g_id_onload"
+           data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
+           data-context="signin"
+           data-ux_mode="popup"
+           data-callback="handleGoogleSignIn"
+           data-auto_prompt="false">
       </div>
-      
-      <p style="font-size: 0.9rem;">
-        By signing in, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
-      </p>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="filled_blue"
+           data-text="signin_with"
+           data-size="large"
+           data-logo_alignment="left">
+      </div>
     </div>
   </main>
 
   <footer>
     <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="#">Terms of Use</a>
-      <a href="#">Privacy Policy</a>
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
       <a href="#">Contact</a>
     </div>
-    <p class="copyright">© 2023 FasterData. All rights reserved.</p>
+    <p>© 2023 FasterData. All rights reserved.</p>
   </footer>
 
   <script>
     function handleGoogleSignIn(response) {
-      const credential = response.credential;
-      const userData = parseJwt(credential);
+      const userData = parseJwt(response.credential);
       
-      console.log("Google user:", userData);
-      alert(`Welcome ${userData.name}! Redirecting to dashboard...`);
+      // Set cookie that expires in 1 day
+      document.cookie = `fasterdata_user=${JSON.stringify(userData)}; path=/; max-age=86400`;
       
-      // Store user data and redirect
-      localStorage.setItem('fasterdata_user', JSON.stringify(userData));
+      // Redirect to dashboard
       window.location.href = "dash.html";
     }
     
@@ -219,11 +166,6 @@
         '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
       ).join(''));
       return JSON.parse(jsonPayload);
-    }
-    
-    // Redirect if already logged in
-    if (localStorage.getItem('fasterdata_user')) {
-      window.location.href = "dash.html";
     }
   </script>
 </body>

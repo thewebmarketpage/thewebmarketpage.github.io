@@ -1,62 +1,161 @@
+<!-- dash.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
+  <meta charset="UTF-8">
+  <title>FasterData - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4CAF50;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --danger: #dc3545;
+    }
+    
     body {
-      font-family: sans-serif;
-      background: #0d1117;
-      color: #fff;
-      text-align: center;
-      padding: 50px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fa;
+      color: #333;
     }
-
-    h1 {
-      color: #58a6ff;
-    }
-
-    .welcome {
-      font-size: 24px;
-      margin-top: 40px;
-    }
-
-    .btn {
-      background-color: #da3633;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 20px;
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      margin-right: 10px;
+      color: var(--accent);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: bold;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    .welcome-banner {
+      background: white;
       border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .dashboard-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+    
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .card-content {
+      color: #666;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.3s ease;
       cursor: pointer;
+      border: none;
+      text-decoration: none;
     }
-
-    .btn:hover {
-      background-color: #e5534b;
-    }
-  </style>
-</head>
-<body>
-  <h1>Welcome to Your Dashboard</h1>
-  <p class="welcome" id="welcomeMessage">Checking login status...</p>
-  <button class="btn" onclick="logout()">Logout</button>
-
-  <script>
-    const userName = localStorage.getItem("user_name");
-
-    if (!userName) {
-      // Not logged in, redirect to index.html
-      window.location.href = "https://giantwebmarket.com/fasterdata/index.html";
-    } else {
-      document.getElementById("welcomeMessage").textContent = `Hello, ${userName}!`;
-    }
-
-    function logout() {
-      localStorage.removeItem("user_name");
-      window.location.href = "https://giantwebmarket.com/fasterdata/index.html";
-    }
-  </script>
-</body>
-</html>
+    
+    .btn-primary {
+      background-color: var(--accent);
+     
