@@ -137,6 +137,9 @@
             const availableDomains = data.reply.available || [];
             const unavailableDomains = data.reply.unavailable || [];
 
+            // Clear previous results
+            result.innerHTML = "";
+
             // Handle available domains
             availableDomains.forEach(item => {
               const domain = item.domain;
@@ -160,18 +163,19 @@
               logToConsole(`❌ ${domain} is taken.`);
             });
 
+            // If no domains are found, show a message to try again
             if (availableDomains.length === 0 && unavailableDomains.length === 0) {
-              result.textContent = "⚠️ No domains found or error in the response.";
-              logToConsole("⚠️ No domains found or error in the response.");
+              result.innerHTML = "<div class='unavailable'>⚠️ No valid domain information found. Please try again.</div>";
+              logToConsole("⚠️ No valid domain information found. Please try again.");
             }
           } else {
-            result.textContent = "⚠️ Error checking domains.";
-            logToConsole("⚠️ Error checking domains.");
+            result.innerHTML = "<div class='unavailable'>⚠️ Error processing the domain information. Please try again.</div>";
+            logToConsole("⚠️ Error processing the domain information.");
           }
         })
         .catch(error => {
           console.error("Error:", error);
-          result.textContent = "⚠️ Error checking domains.";
+          result.innerHTML = "<div class='unavailable'>⚠️ Error checking domains. Please try again later.</div>";
           logToConsole(`⚠️ Error: ${error}`);
         });
     }
