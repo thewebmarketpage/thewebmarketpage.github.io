@@ -134,23 +134,25 @@
             const availableDomains = data.reply.available || [];
             const unavailableDomains = data.reply.unavailable || [];
 
-            availableDomains.forEach(domain => {
+            availableDomains.forEach(item => {
+              const domain = item.domain;  // Access the nested 'domain' field correctly
+              const price = item.price;
               result.innerHTML += `
                 <div class="available">
-                  ✅ ${domain.domain} is available for $${domain.price}. 
-                  <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
+                  ✅ ${domain} is available for $${price}. 
+                  <button class="register-button" onclick="registerDomain('${domain}')">Register</button>
                 </div>
               `;
-              logToConsole(`✅ ${domain.domain} is available for $${domain.price}`);
+              logToConsole(`✅ ${domain} is available for $${price}`);
             });
 
             unavailableDomains.forEach(domain => {
               result.innerHTML += `
                 <div class="unavailable">
-                  ❌ ${domain.domain} is taken.
+                  ❌ ${domain} is taken.
                 </div>
               `;
-              logToConsole(`❌ ${domain.domain} is taken.`);
+              logToConsole(`❌ ${domain} is taken.`);
             });
           } else {
             result.textContent = "⚠️ Error checking domains.";
@@ -191,6 +193,6 @@
       consoleOutput.scrollTop = consoleOutput.scrollHeight;  // Scroll to the bottom of the console box
     }
   </script>
- 
+
 </body>
 </html>
