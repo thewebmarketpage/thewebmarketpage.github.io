@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FasterData - Domain Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4a6fa5;
+      --secondary: #166088;
+      --accent: #4CAF50;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --danger: #dc3545;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      margin-right: 10px;
+      color: var(--accent);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: bold;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    .domain-hero {
+      background: linear-gradient(135deg, rgba(74, 111, 165, 0.1), rgba(22, 96, 136, 0.1));
+      border-radius: 8px;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .domain-hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://example.com/domain-pattern.png') repeat;
+      opacity: 0.05;
+      z-index: 0;
+    }
+    
+    .domain-hero h1 {
+      position: relative;
+      z-index: 1;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .domain-hero p {
+      position: relative;
+      z-index: 1;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+    
+    .search-container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .search-container input {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    
+    .search-container button {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .search-container button:hover {
+      background-color: #3d8b40;
+      transform: translateY(-2px);
+    }
+    
+    .tld-bubbles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    
+    .tld-bubble {
+      background: white;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .tld-bubble:hover {
+      background-color: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .tld-bubble.active {
+      background-color: var(--accent);
+      color: white;
+    }
+    
+    .domain-section {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .section-title i {
+      color: var(--primary);
+    }
+    
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .domain-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .domain-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .domain-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .domain-name .tld {
+      color: var(--primary);
+    }
+    
+    .domain-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+    }
+    
+    .status-available {
+      background-color: rgba(76, 175, 80, 0.1);
+      color: var(--accent);
+    }
+    
+    .status-taken {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+    }
+    
+    .domain-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+      color: var(--dark);
+    }
+    
+    .domain-price span {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: normal;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+    }
+    
+    .btn-primary {
+      background-color: var(--accent);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #3d8b40;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .subdomain-form {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .subdomain-form input {
+      flex: 1;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .subdomain-form button {
+      padding: 0 1.5rem;
+    }
+    
+    .subdomain-list {
+      margin-top: 1.5rem;
+      border-top: 1px solid #eee;
+      padding-top: 1.5rem;
+    }
+    
+    .subdomain-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .subdomain-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .subdomain-actions .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
+    
+    footer {
+      background-color: var(--dark);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .search-container {
+        flex-direction: column;
+      }
+      
+      .search-container button {
+        padding: 1rem;
+      }
+      
+      nav {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .nav-links {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-bolt"></i> FasterData
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="#" class="active">Domains</a>
+        <a href="#">Hosting</a>
+        <a href="#">VPS</a>
+        <div class="user-info" id="userInfo">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <span id="userName">User</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="domain-hero">
+      <h1>Find Your Perfect Domain</h1>
+      <p>Search for available domains and register your unique online identity instantly</p>
+      
+      <div class="search-container">
+        <input type="text" id="domainSearch" placeholder="Enter your desired domain name">
+        <button id="searchButton">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+      
+      <div class="tld-bubbles">
+        <div class="tld-bubble active">.com</div>
+        <div class="tld-bubble">.net</div>
+        <div class="tld-bubble">.org</div>
+        <div class="tld-bubble">.io</div>
+        <div class="tld-bubble">.tech</div>
+        <div class="tld-bubble">.store</div>
+        <div class="tld-bubble">.online</div>
+      </div>
+    </div>
+    
+    <div class="domain-section">
+      <h2 class="section-title">
+        <i class="fas fa-globe"></i> Available Domains
+      </h2>
+      
+      <div class="domain-grid">
+        <div class="domain-card">
+          <div class="domain-name">
+            webapp<span class="tld">.com</span>
+            <span class="domain-status status-available">Available</span>
+          </div>
+          <div class="domain-price">$12.99 <span>/year</span></div>
+          <p>Perfect for your web application or SaaS product</p>
+          <button class="btn btn-primary">Register</button>
+          <button class="btn btn-outline">Add to Cart</button>
+        </div>
+        
+        <div class="domain-card">
+          <div class="domain-name">
+            digitalhub<span class="tld">.com</span>
+            <span class="domain-status status-available">Available</span>
+          </div>
+          <div class="domain-price">$15.99 <span>/year</span></div>
+          <p>Great for digital agencies and tech companies</p>
+          <button class="btn btn-primary">Register</button>
+          <button class="btn btn-outline">Add to Cart</button>
+        </div>
+        
+        <div class="domain-card">
+          <div class="domain-name">
+            cloudnexus<span class="tld">.com</span>
+            <span class="domain-status status-taken">Taken</span>
+          </div>
+          <div class="domain-price">$2,499 <span>/buy now</span></div>
+          <p>Premium domain available for purchase</p>
+          <button class="btn btn-outline">Make Offer</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="domain-section">
+      <h2 class="section-title">
+        <i class="fas fa-sitemap"></i> Manage Subdomains for giantwebmarket.com
+      </h2>
+      
+      <div class="subdomain-form">
+        <input type="text" id="subdomainInput" placeholder="Enter subdomain (e.g. 'blog', 'shop')">
+        <button class="btn btn-primary" id="createSubdomain">
+          <i class="fas fa-plus"></i> Create Subdomain
+        </button>
+      </div>
+      
+      <div class="subdomain-list">
+        <h3>Existing Subdomains</h3>
+        <div class="subdomain-item">
+          <div>
+            <strong>shop.giantwebmarket.com</strong>
+            <div class="text-muted">Created: 2023-05-15</div>
+          </div>
+          <div class="subdomain-actions">
+            <button class="btn btn-outline">DNS</button>
+            <button class="btn btn-outline">Delete</button>
+          </div>
+        </div>
+        
+        <div class="subdomain-item">
+          <div>
+            <strong>blog.giantwebmarket.com</strong>
+            <div class="text-muted">Created: 2023-04-22</div>
+          </div>
+          <div class="subdomain-actions">
+            <button class="btn btn-outline">DNS</button>
+            <button class="btn btn-outline">Delete</button>
+          </div>
+        </div>
+        
+        <div class="subdomain-item">
+          <div>
+            <strong>app.giantwebmarket.com</strong>
+            <div class="text-muted">Created: 2023-06-10</div>
+          </div>
+          <div class="subdomain-actions">
+            <button class="btn btn-outline">DNS</button>
+            <button class="btn btn-outline">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="domain-section">
+      <h2 class="section-title">
+        <i class="fas fa-cog"></i> Domain Management Tools
+      </h2>
+      
+      <div class="domain-grid">
+        <div class="domain-card">
+          <div class="domain-name">
+            <i class="fas fa-exchange-alt"></i> Domain Transfer
+          </div>
+          <p>Transfer your existing domains to FasterData for better management</p>
+          <button class="btn btn-primary">Start Transfer</button>
+        </div>
+        
+        <div class="domain-card">
+          <div class="domain-name">
+            <i class="fas fa-lock"></i> WHOIS Privacy
+          </div>
+          <p>Protect your personal information with WHOIS privacy protection</p>
+          <button class="btn btn-primary">Enable Privacy</button>
+        </div>
+        
+        <div class="domain-card">
+          <div class="domain-name">
+            <i class="fas fa-forward"></i> Domain Forwarding
+          </div>
+          <p>Redirect your domain to another website or URL</p>
+          <button class="btn btn-primary">Set Up Forwarding</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Support Center</a>
+      <a href="#">Contact Us</a>
+    </div>
+    <p>© 2023 FasterData. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Get user data from cookie
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    
+    const userData = JSON.parse(getCookie('fasterdata_user') || null);
+    
+    if (!userData) {
+      window.location.href = 'login.html';
+    } else {
+      // Display user info
+      document.getElementById('userName').textContent = userData.name;
+      document.getElementById('userAvatar').textContent = userData.name.charAt(0).toUpperCase();
+      
+      // Set avatar background color based on email hash
+      const emailHash = userData.email ? userData.email.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : 0;
+      const colors = ['#4a6fa5', '#166088', '#4CAF50', '#FF5722', '#9C27B0'];
+      const colorIndex = emailHash % colors.length;
+      document.getElementById('userAvatar').style.backgroundColor = colors[colorIndex];
+    }
+    
+    // TLD bubble selection
+    document.querySelectorAll('.tld-bubble').forEach(bubble => {
+      bubble.addEventListener('click', function() {
+        document.querySelectorAll('.tld-bubble').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Subdomain creation
+    document.getElementById('createSubdomain').addEventListener('click', function() {
+      const subdomain = document.getElementById('subdomainInput').value.trim();
+      if (!subdomain) {
+        alert('Please enter a subdomain name');
+        return;
+      }
+      
+      if (!/^[a-z0-9-]+$/i.test(subdomain)) {
+        alert('Subdomain can only contain letters, numbers and hyphens');
+        return;
+      }
+      
+      const fullDomain = `${subdomain}.giantwebmarket.com`;
+      alert(`Subdomain ${fullDomain} created successfully!\n\n(In a real app, this would make an API call to create the subdomain)`);
+      
+      // Add to list (demo only)
+      const subdomainList = document.querySelector('.subdomain-list');
+      const newItem = document.createElement('div');
+      newItem.className = 'subdomain-item';
+      newItem.innerHTML = `
+        <div>
+          <strong>${fullDomain}</strong>
+          <div class="text-muted">Created: ${new Date().toISOString().split('T')[0]}</div>
+        </div>
+        <div class="subdomain-actions">
+          <button class="btn btn-outline">DNS</button>
+          <button class="btn btn-outline">Delete</button>
+        </div>
+      `;
+      subdomainList.insertBefore(newItem, subdomainList.firstChild);
+      
+      // Clear input
+      document.getElementById('subdomainInput').value = '';
+    });
+    
+    // Domain search functionality
+    document.getElementById('searchButton').addEventListener('click', function() {
+      const domain = document.getElementById('domainSearch').value.trim();
+      const tld = document.querySelector('.tld-bubble.active').textContent;
+      
+      if (!domain) {
+        alert('Please enter a domain name to search');
+        return;
+      }
+      
+      alert(`Searching for ${domain}${tld}...\n\n(In a real app, this would check domain availability via API)`);
+    });
+  </script>
+</body>
+</html>
