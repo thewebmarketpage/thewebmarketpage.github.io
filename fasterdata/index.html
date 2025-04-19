@@ -4,11 +4,6 @@
   <meta charset="UTF-8">
   <title>FasterData - Domain Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Google Sign-In -->
-  <meta name="google-signin-client_id" content="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,12 +11,10 @@
       background: #f0f2f5;
       padding: 40px;
     }
-
     h1 {
       font-size: 32px;
       margin-bottom: 10px;
     }
-
     input, button {
       padding: 10px;
       font-size: 16px;
@@ -29,7 +22,6 @@
       border-radius: 8px;
       border: 1px solid #ccc;
     }
-
     #domainResult {
       margin-top: 20px;
       font-weight: bold;
@@ -38,78 +30,27 @@
       margin-left: auto;
       margin-right: auto;
     }
-
-    .g_id_signin {
-      margin: 20px auto;
-      display: inline-block;
-    }
-
-    .divider {
-      margin: 40px 0;
-      border-top: 1px solid #ccc;
-    }
-
-    .console-output {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: black;
-      color: #00FF00;
-      font-family: monospace;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      max-height: 300px;
-      overflow-y: scroll;
-      text-align: left;
-    }
-
-    #domainInput {
-      width: 300px;
-    }
-
-    .register-button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      padding: 5px 10px;
-      margin-left: 10px;
-      border-radius: 4px;
-    }
-
-    .register-button:hover {
-      background-color: #45a049;
-    }
-
-    .unavailable {
-      color: red;
-      margin: 10px 0;
-    }
-
-    .available {
-      color: green;
-      margin: 10px 0;
-    }
-
     .domain-result-item {
       padding: 8px;
       border-bottom: 1px solid #eee;
     }
-
-    .domain-price {
-      font-weight: normal;
-      color: #666;
+    .unavailable {
+      color: red;
     }
-
-    .error-message {
-      color: #d9534f;
+    .available {
+      color: green;
     }
-
-    .loading {
-      color: #5bc0de;
+    .register-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      margin-left: 10px;
+      border-radius: 4px;
+      cursor: pointer;
     }
-
-    .domain-tld {
-      font-weight: bold;
+    #domainInput {
+      width: 300px;
     }
   </style>
 </head>
@@ -118,24 +59,10 @@
   <h1>Welcome to FasterData</h1>
   <p>Domain Registration Made Easy</p>
 
-  <!-- Google Login -->
-  <div id="g_id_onload"
-       data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
-       data-callback="handleCredentialResponse"
-       data-auto_prompt="false">
-  </div>
-  <div class="g_id_signin" data-type="standard"></div>
-
-  <div class="divider"></div>
-
-  <!-- Domain Search -->
-  <h2>Search for Multiple Domains</h2>
-  <input type="text" id="domainInput" placeholder="example.com,domain2.com,domain3.net">
+  <h2>Search for Domains</h2>
+  <input type="text" id="domainInput" placeholder="example.com, domain2.com">
   <button onclick="searchDomains()">Search</button>
   <div id="domainResult"></div>
-
-  <!-- Console Output -->
-  <div class="console-output" id="consoleOutput"></div>
 
   <script>
     const apiKey = "6f946d8551777d22ac47";
@@ -144,224 +71,69 @@
     function searchDomains() {
       const domainsInput = document.getElementById("domainInput").value.trim();
       const result = document.getElementById("domainResult");
-      const consoleOutput = document.getElementById("consoleOutput");
 
       if (!domainsInput) {
-        showError(result, "❗ Please enter at least one domain.");
-        logToConsole("❗ Please enter at least one domain.");
+        result.innerHTML = "<div class='unavailable'>❗ Please enter at least one domain.</div>";
         return;
       }
-
-      // Clear previous results
-      result.innerHTML = "";
-      logToConsole("Cleared previous results.");
 
       const domains = domainsInput.split(',').map(domain => domain.trim()).filter(domain => domain.length > 0);
-      
-      if (domains.length === 0) {
-        showError(result, "❗ Please enter valid domain names.");
-        logToConsole("❗ No valid domains found in input.");
-        return;
-      }
-
-      showLoading(result, `🔍 Checking availability for ${domains.length} domain(s)...`);
-      logToConsole(`🔍 Checking availability for: ${domains.join(', ')}`);
+      result.innerHTML = "<div>🔍 Checking availability...</div>";
 
       const apiUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domains=${encodeURIComponent(domains.join(','))}`;
       const finalUrl = proxyUrl + encodeURIComponent(apiUrl);
 
       fetch(finalUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-          logToConsole(`📦 Raw API Response:\n${JSON.stringify(data, null, 2)}`);
-          processApiResponse(data, domains, result);
+          let html = '';
+          
+          // Process available domains
+          if (data.reply.available) {
+            if (data.reply.available.domain) {
+              // Single domain response
+              const domain = data.reply.available.domain;
+              html += `
+                <div class="domain-result-item available">
+                  ✅ ${domain.domain} is available ($${domain.price})
+                  <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
+                </div>
+              `;
+            } else if (Array.isArray(data.reply.available)) {
+              // Multiple domains response
+              data.reply.available.forEach(domain => {
+                html += `
+                  <div class="domain-result-item available">
+                    ✅ ${domain.domain} is available ($${domain.price})
+                    <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
+                  </div>
+                `;
+              });
+            }
+          }
+
+          // Process unavailable domains
+          if (data.reply.unavailable) {
+            if (Array.isArray(data.reply.unavailable)) {
+              data.reply.unavailable.forEach(domain => {
+                html += `<div class="domain-result-item unavailable">❌ ${domain} is not available</div>`;
+              });
+            } else if (typeof data.reply.unavailable === "string") {
+              html += `<div class="domain-result-item unavailable">❌ ${data.reply.unavailable} is not available</div>`;
+            }
+          }
+
+          result.innerHTML = html || "<div class='unavailable'>No domain information received</div>";
         })
         .catch(error => {
+          result.innerHTML = "<div class='unavailable'>Error checking domains. Please try again.</div>";
           console.error("Error:", error);
-          showError(result, "⚠️ Error checking domains. Please try again later.");
-          logToConsole(`⚠️ Fetch Error: ${error.message}`);
         });
-    }
-
-    function processApiResponse(data, requestedDomains, resultElement) {
-      logToConsole("🔄 Processing API response...");
-      
-      // Clear loading message
-      resultElement.innerHTML = "";
-      
-      if (!data.reply || data.reply.code !== "300") {
-        showError(resultElement, "⚠️ Error in API response. Please try again.");
-        logToConsole("⚠️ API response indicates an error.");
-        return;
-      }
-
-      const availableDomains = [];
-      const unavailableDomains = [];
-      const invalidDomains = [];
-      const premiumDomains = [];
-
-      // Handle the response structure
-      if (data.reply.available) {
-        // Check if it's the single domain format
-        if (data.reply.available.domain) {
-          const domainData = data.reply.available.domain;
-          if (domainData.premium === "1" || domainData.premium === 1) {
-            premiumDomains.push(domainData);
-          } else {
-            availableDomains.push(domainData);
-          }
-        } 
-        // Check if it's the multiple domains array format
-        else if (Array.isArray(data.reply.available)) {
-          data.reply.available.forEach(item => {
-            if (item.premium === "1" || item.premium === 1) {
-              premiumDomains.push(item);
-            } else {
-              availableDomains.push(item);
-            }
-          });
-        }
-      }
-
-      // Process unavailable domains
-      if (data.reply.unavailable) {
-        if (Array.isArray(data.reply.unavailable)) {
-          unavailableDomains.push(...data.reply.unavailable);
-        } else if (typeof data.reply.unavailable === "string") {
-          unavailableDomains.push(data.reply.unavailable);
-        }
-      }
-
-      // Check for any requested domains that weren't in the response
-      requestedDomains.forEach(domain => {
-        const foundInAvailable = availableDomains.some(d => d.domain === domain);
-        const foundInPremium = premiumDomains.some(d => d.domain === domain);
-        const foundInUnavailable = unavailableDomains.includes(domain);
-        
-        if (!foundInAvailable && !foundInPremium && !foundInUnavailable) {
-          invalidDomains.push(domain);
-        }
-      });
-
-      // Display results
-      displayResults(resultElement, {
-        available: availableDomains,
-        unavailable: unavailableDomains,
-        invalid: invalidDomains,
-        premium: premiumDomains
-      });
-
-      logToConsole("✅ Results processed successfully.");
-    }
-
-    function displayResults(resultElement, results) {
-      let html = '';
-
-      // Display available domains
-      if (results.available.length > 0) {
-        html += '<h3>Available Domains</h3>';
-        results.available.forEach(domain => {
-          html += `
-            <div class="domain-result-item available">
-              <span class="domain-tld">${domain.domain}</span>
-              <span class="domain-price">$${domain.price} (1 year)</span>
-              <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
-            </div>
-          `;
-          logToConsole(`✅ ${domain.domain} is available for $${domain.price}`);
-        });
-      }
-
-      // Display premium domains
-      if (results.premium.length > 0) {
-        html += '<h3>Premium Domains</h3>';
-        results.premium.forEach(domain => {
-          html += `
-            <div class="domain-result-item available">
-              <span class="domain-tld">${domain.domain}</span>
-              <span class="domain-price">$${domain.price} (Premium)</span>
-              <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
-            </div>
-          `;
-          logToConsole(`💰 ${domain.domain} is a premium domain for $${domain.price}`);
-        });
-      }
-
-      // Display unavailable domains
-      if (results.unavailable.length > 0) {
-        html += '<h3>Unavailable Domains</h3>';
-        results.unavailable.forEach(domain => {
-          const domainName = typeof domain === 'string' ? domain : domain.domain;
-          html += `
-            <div class="domain-result-item unavailable">
-              ❌ ${domainName} is already registered.
-            </div>
-          `;
-          logToConsole(`❌ ${domainName} is already registered.`);
-        });
-      }
-
-      // Display invalid domains
-      if (results.invalid.length > 0) {
-        html += '<h3>Invalid Domains</h3>';
-        results.invalid.forEach(domain => {
-          html += `
-            <div class="domain-result-item unavailable">
-              ⚠️ ${domain} is not a valid domain or couldn't be checked.
-            </div>
-          `;
-          logToConsole(`⚠️ ${domain} is not a valid domain or couldn't be checked.`);
-        });
-      }
-
-      // If no results at all (shouldn't happen with proper API response)
-      if (html === '') {
-        html = '<div class="error-message">⚠️ No domain information received. Please try again.</div>';
-        logToConsole("⚠️ No domain information received in response.");
-      }
-
-      resultElement.innerHTML = html;
     }
 
     function registerDomain(domain) {
-      logToConsole(`🚀 Initiating registration for domain: ${domain}`);
-      // Here you would typically redirect to a registration page or make an API call
-      alert(`Registration would now proceed for: ${domain}\n\nThis would typically redirect to a registration page.`);
-    }
-
-    function handleCredentialResponse(response) {
-      const data = parseJwt(response.credential);
-      localStorage.setItem("user", JSON.stringify(data));
-      window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
-    }
-
-    function parseJwt(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      ).join(''));
-      return JSON.parse(jsonPayload);
-    }
-
-    function logToConsole(message) {
-      const consoleOutput = document.getElementById("consoleOutput");
-      const timestamp = new Date().toISOString().substr(11, 8);
-      consoleOutput.textContent += `[${timestamp}] ${message}\n`;
-      consoleOutput.scrollTop = consoleOutput.scrollHeight;
-    }
-
-    function showError(element, message) {
-      element.innerHTML = `<div class="error-message">${message}</div>`;
-    }
-
-    function showLoading(element, message) {
-      element.innerHTML = `<div class="loading">${message}</div>`;
+      alert(`Would register domain: ${domain}`);
+      // In a real app, you would redirect to registration page or make API call
     }
   </script>
 
