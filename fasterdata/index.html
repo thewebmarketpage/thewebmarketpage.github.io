@@ -137,8 +137,9 @@
             const availableDomains = data.reply.available || [];
             const unavailableDomains = data.reply.unavailable || [];
 
+            // Handle available domains
             availableDomains.forEach(item => {
-              const domain = item.domain;  // Access the nested 'domain' field correctly
+              const domain = item.domain;
               const price = item.price;
               result.innerHTML += `
                 <div class="available">
@@ -149,6 +150,7 @@
               logToConsole(`✅ ${domain} is available for $${price}`);
             });
 
+            // Handle unavailable domains
             unavailableDomains.forEach(domain => {
               result.innerHTML += `
                 <div class="unavailable">
@@ -157,6 +159,11 @@
               `;
               logToConsole(`❌ ${domain} is taken.`);
             });
+
+            if (availableDomains.length === 0 && unavailableDomains.length === 0) {
+              result.textContent = "⚠️ No domains found or error in the response.";
+              logToConsole("⚠️ No domains found or error in the response.");
+            }
           } else {
             result.textContent = "⚠️ Error checking domains.";
             logToConsole("⚠️ Error checking domains.");
