@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LoopDesk Domain Network</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0d1117;
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #58a6ff;
+    }
+    #buttons {
+      margin-top: 40px;
+    }
+    .btn {
+      background-color: #238636;
+      border: none;
+      padding: 12px 24px;
+      color: white;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .btn:hover {
+      background-color: #2ea043;
+    }
+  </style>
+</head>
+<body>
+  <h1>LoopDesk Domain Network</h1>
+  <p>Register or Login to manage your domain and hosting</p>
+
+  <!-- Google Sign-In Onload Script Config -->
+  <div id="g_id_onload"
+       data-client_id="562436860775-mt3jpblj0iscaletgi8osacofke0cm7j.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
+
+  <!-- Google Sign-In Button Triggers -->
+  <div id="buttons">
+    <button class="btn" onclick="google.accounts.id.prompt()">Login with Google</button>
+    <button class="btn" onclick="google.accounts.id.prompt()">Register with Google</button>
+  </div>
+
+  <!-- Google Sign-In Callback Handler -->
+  <script>
+    function handleCredentialResponse(response) {
+      const jwt = response.credential;
+      const payload = parseJwt(jwt);
+
+      console.log("User signed in:", payload);
+
+      // TODO: Send this token to your backend for validation and account handling
+      // Example:
+      // fetch('/api/auth/google', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ token: jwt })
+      // });
+
+      alert(`Welcome, ${payload.name || payload.email}!`);
+    }
+
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base64));
+    }
+  </script>
+</body>
+</html>
