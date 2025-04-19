@@ -123,7 +123,7 @@
             }
           }
 
-          result.innerHTML = html || "<div class='unavailable'>No domain information received</div>";
+          result.innerHTML = html || "<div class='unavailable'>unavailable domain name, you can try another one!</div>";
         })
         .catch(error => {
           result.innerHTML = "<div class='unavailable'>Error checking domains. Please try again.</div>";
