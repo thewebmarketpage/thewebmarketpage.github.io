@@ -33,6 +33,10 @@
     #domainResult {
       margin-top: 20px;
       font-weight: bold;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .g_id_signin {
@@ -55,6 +59,7 @@
       word-wrap: break-word;
       max-height: 300px;
       overflow-y: scroll;
+      text-align: left;
     }
 
     #domainInput {
@@ -66,6 +71,9 @@
       color: white;
       border: none;
       cursor: pointer;
+      padding: 5px 10px;
+      margin-left: 10px;
+      border-radius: 4px;
     }
 
     .register-button:hover {
@@ -74,10 +82,34 @@
 
     .unavailable {
       color: red;
+      margin: 10px 0;
     }
 
     .available {
       color: green;
+      margin: 10px 0;
+    }
+
+    .domain-result-item {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .domain-price {
+      font-weight: normal;
+      color: #666;
+    }
+
+    .error-message {
+      color: #d9534f;
+    }
+
+    .loading {
+      color: #5bc0de;
+    }
+
+    .domain-tld {
+      font-weight: bold;
     }
   </style>
 </head>
@@ -100,7 +132,7 @@
   <h2>Search for Multiple Domains</h2>
   <input type="text" id="domainInput" placeholder="example.com,domain2.com,domain3.net">
   <button onclick="searchDomains()">Search</button>
-  <p id="domainResult"></p>
+  <div id="domainResult"></div>
 
   <!-- Console Output -->
   <div class="console-output" id="consoleOutput"></div>
@@ -115,80 +147,190 @@
       const consoleOutput = document.getElementById("consoleOutput");
 
       if (!domainsInput) {
-        result.textContent = "❗ Please enter at least one domain.";
+        showError(result, "❗ Please enter at least one domain.");
         logToConsole("❗ Please enter at least one domain.");
         return;
       }
 
-      const domains = domainsInput.split(',').map(domain => domain.trim()).join(',');
-      result.textContent = "🔍 Checking availability...";
-      logToConsole(`🔍 Checking availability for ${domains}...`);
+      // Clear previous results
+      result.innerHTML = "";
+      logToConsole("Cleared previous results.");
 
-      const apiUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domains=${encodeURIComponent(domains)}`;
+      const domains = domainsInput.split(',').map(domain => domain.trim()).filter(domain => domain.length > 0);
+      
+      if (domains.length === 0) {
+        showError(result, "❗ Please enter valid domain names.");
+        logToConsole("❗ No valid domains found in input.");
+        return;
+      }
+
+      showLoading(result, `🔍 Checking availability for ${domains.length} domain(s)...`);
+      logToConsole(`🔍 Checking availability for: ${domains.join(', ')}`);
+
+      const apiUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domains=${encodeURIComponent(domains.join(','))}`;
       const finalUrl = proxyUrl + encodeURIComponent(apiUrl);
 
       fetch(finalUrl)
-        .then(response => response.json())
-        .then(data => {
-          // Print the full response to the console (like a real terminal log)
-          logToConsole(`Full API Response: ${JSON.stringify(data, null, 2)}`);
-
-          if (data.reply && data.reply.code === "300") {
-            // Check if the 'available' property exists and is an array
-            const availableDomains = data.reply.available || [];
-            const unavailableDomains = data.reply.unavailable || [];
-
-            // Clear previous results
-            result.innerHTML = "";
-
-            // Handle available domains
-            if (availableDomains.length > 0) {
-              availableDomains.forEach(item => {
-                const domain = item.domain;
-                const price = item.price;
-                result.innerHTML += `
-                  <div class="available">
-                    ✅ ${domain} is available for $${price}. 
-                    <button class="register-button" onclick="registerDomain('${domain}')">Register</button>
-                  </div>
-                `;
-                logToConsole(`✅ ${domain} is available for $${price}`);
-              });
-            }
-
-            // Handle unavailable domains
-            if (unavailableDomains.length > 0) {
-              unavailableDomains.forEach(domain => {
-                result.innerHTML += `
-                  <div class="unavailable">
-                    ❌ ${domain} is taken.
-                  </div>
-                `;
-                logToConsole(`❌ ${domain} is taken.`);
-              });
-            }
-
-            // If no domains are found, show a message to try again
-            if (availableDomains.length === 0 && unavailableDomains.length === 0) {
-              result.innerHTML = "<div class='unavailable'>⚠️ No valid domain information found. Please try again.</div>";
-              logToConsole("⚠️ No valid domain information found. Please try again.");
-            }
-          } else {
-            result.innerHTML = "<div class='unavailable'>⚠️ Error processing the domain information. Please try again later.</div>";
-            logToConsole("⚠️ Error processing the domain information.");
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
+          return response.json();
+        })
+        .then(data => {
+          logToConsole(`📦 Raw API Response:\n${JSON.stringify(data, null, 2)}`);
+          processApiResponse(data, domains, result);
         })
         .catch(error => {
           console.error("Error:", error);
-          result.innerHTML = "<div class='unavailable'>⚠️ Error checking domains. Please try again later.</div>";
-          logToConsole(`⚠️ Error: ${error}`);
+          showError(result, "⚠️ Error checking domains. Please try again later.");
+          logToConsole(`⚠️ Fetch Error: ${error.message}`);
         });
     }
 
+    function processApiResponse(data, requestedDomains, resultElement) {
+      logToConsole("🔄 Processing API response...");
+      
+      // Clear loading message
+      resultElement.innerHTML = "";
+      
+      if (!data.reply || data.reply.code !== "300") {
+        showError(resultElement, "⚠️ Error in API response. Please try again.");
+        logToConsole("⚠️ API response indicates an error.");
+        return;
+      }
+
+      const availableDomains = [];
+      const unavailableDomains = [];
+      const invalidDomains = [];
+      const premiumDomains = [];
+
+      // Check if the response has the expected structure
+      if (data.reply.available) {
+        // Handle single domain response
+        if (data.reply.available.domain) {
+          const domainData = data.reply.available.domain;
+          if (domainData.premium === "1") {
+            premiumDomains.push(domainData);
+          } else {
+            availableDomains.push(domainData);
+          }
+        } 
+        // Handle multiple domains response
+        else if (Array.isArray(data.reply.available)) {
+          data.reply.available.forEach(item => {
+            if (item.premium === "1") {
+              premiumDomains.push(item);
+            } else {
+              availableDomains.push(item);
+            }
+          });
+        }
+      }
+
+      // Process unavailable domains
+      if (data.reply.unavailable) {
+        if (Array.isArray(data.reply.unavailable)) {
+          unavailableDomains.push(...data.reply.unavailable);
+        } else if (typeof data.reply.unavailable === "string") {
+          unavailableDomains.push(data.reply.unavailable);
+        }
+      }
+
+      // Check for any requested domains that weren't in the response
+      requestedDomains.forEach(domain => {
+        const found = [...availableDomains, ...unavailableDomains, ...premiumDomains].some(d => 
+          typeof d === 'string' ? d === domain : d.domain === domain
+        );
+        if (!found) {
+          invalidDomains.push(domain);
+        }
+      });
+
+      // Display results
+      displayResults(resultElement, {
+        available: availableDomains,
+        unavailable: unavailableDomains,
+        invalid: invalidDomains,
+        premium: premiumDomains
+      });
+
+      logToConsole("✅ Results processed successfully.");
+    }
+
+    function displayResults(resultElement, results) {
+      let html = '';
+
+      // Display available domains
+      if (results.available.length > 0) {
+        html += '<h3>Available Domains</h3>';
+        results.available.forEach(domain => {
+          html += `
+            <div class="domain-result-item available">
+              <span class="domain-tld">${domain.domain}</span>
+              <span class="domain-price">$${domain.price} (1 year)</span>
+              <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
+            </div>
+          `;
+          logToConsole(`✅ ${domain.domain} is available for $${domain.price}`);
+        });
+      }
+
+      // Display premium domains
+      if (results.premium.length > 0) {
+        html += '<h3>Premium Domains</h3>';
+        results.premium.forEach(domain => {
+          html += `
+            <div class="domain-result-item available">
+              <span class="domain-tld">${domain.domain}</span>
+              <span class="domain-price">$${domain.price} (Premium)</span>
+              <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
+            </div>
+          `;
+          logToConsole(`💰 ${domain.domain} is a premium domain for $${domain.price}`);
+        });
+      }
+
+      // Display unavailable domains
+      if (results.unavailable.length > 0) {
+        html += '<h3>Unavailable Domains</h3>';
+        results.unavailable.forEach(domain => {
+          const domainName = typeof domain === 'string' ? domain : domain.domain;
+          html += `
+            <div class="domain-result-item unavailable">
+              ❌ ${domainName} is already registered.
+            </div>
+          `;
+          logToConsole(`❌ ${domainName} is already registered.`);
+        });
+      }
+
+      // Display invalid domains
+      if (results.invalid.length > 0) {
+        html += '<h3>Invalid Domains</h3>';
+        results.invalid.forEach(domain => {
+          html += `
+            <div class="domain-result-item unavailable">
+              ⚠️ ${domain} is not a valid domain or couldn't be checked.
+            </div>
+          `;
+          logToConsole(`⚠️ ${domain} is not a valid domain or couldn't be checked.`);
+        });
+      }
+
+      // If no results at all (shouldn't happen with proper API response)
+      if (html === '') {
+        html = '<div class="error-message">⚠️ No domain information received. Please try again.</div>';
+        logToConsole("⚠️ No domain information received in response.");
+      }
+
+      resultElement.innerHTML = html;
+    }
+
     function registerDomain(domain) {
-      alert(`Registering domain: ${domain}`);
-      // Implement registration logic here (e.g., redirect to a registration page or trigger an API call to register the domain)
-      logToConsole(`Initiating registration for domain: ${domain}`);
+      logToConsole(`🚀 Initiating registration for domain: ${domain}`);
+      // Here you would typically redirect to a registration page or make an API call
+      alert(`Registration would now proceed for: ${domain}\n\nThis would typically redirect to a registration page.`);
     }
 
     function handleCredentialResponse(response) {
@@ -208,8 +350,17 @@
 
     function logToConsole(message) {
       const consoleOutput = document.getElementById("consoleOutput");
-      consoleOutput.textContent += message + '\n';  // Append the new message to the console output
-      consoleOutput.scrollTop = consoleOutput.scrollHeight;  // Scroll to the bottom of the console box
+      const timestamp = new Date().toISOString().substr(11, 8);
+      consoleOutput.textContent += `[${timestamp}] ${message}\n`;
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    function showError(element, message) {
+      element.innerHTML = `<div class="error-message">${message}</div>`;
+    }
+
+    function showLoading(element, message) {
+      element.innerHTML = `<div class="loading">${message}</div>`;
     }
   </script>
 
