@@ -78,9 +78,9 @@
   <div class="divider"></div>
 
   <!-- Domain Search -->
-  <h2>Search for a Domain</h2>
-  <input type="text" id="domainInput" placeholder="example.com">
-  <button onclick="searchDomain()">Search</button>
+  <h2>Search for Multiple Domains</h2>
+  <input type="text" id="domainInput" placeholder="example.com,domain2.com,domain3.net">
+  <button onclick="searchDomains()">Search</button>
   <p id="domainResult"></p>
 
   <!-- Console Output -->
@@ -90,39 +90,54 @@
     const apiKey = "6f946d8551777d22ac47";
     const proxyUrl = "https://api.codetabs.com/v1/proxy/?quest=";
 
-    function searchDomain() {
-      const domain = document.getElementById("domainInput").value.trim();
+    function searchDomains() {
+      const domainsInput = document.getElementById("domainInput").value.trim();
       const result = document.getElementById("domainResult");
       const consoleOutput = document.getElementById("consoleOutput");
 
-      if (!domain) {
-        result.textContent = "❗ Please enter a domain name.";
-        logToConsole("❗ Please enter a domain name.");
+      if (!domainsInput) {
+        result.textContent = "❗ Please enter at least one domain.";
+        logToConsole("❗ Please enter at least one domain.");
         return;
       }
 
+      const domains = domainsInput.split(',').map(domain => domain.trim()).join(',');
       result.textContent = "🔍 Checking availability...";
-      logToConsole(`🔍 Checking availability for ${domain}...`);
+      logToConsole(`🔍 Checking availability for ${domains}...`);
 
-      const apiUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
+      const apiUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domains=${encodeURIComponent(domains)}`;
       const finalUrl = proxyUrl + encodeURIComponent(apiUrl);
 
       fetch(finalUrl)
-        .then(response => {
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-          if (data.reply && data.reply.available === "yes") {
-            result.textContent = `✅ ${domain} is available!`;
-            logToConsole(`✅ ${domain} is available!`);
+          if (data.reply && data.reply.code === "300") {
+            const availableDomains = data.reply.available || [];
+            const unavailableDomains = data.reply.unavailable || [];
+            const invalidDomains = data.reply.invalid || [];
+
+            availableDomains.forEach(domain => {
+              result.textContent += `✅ ${domain.domain} is available for $${domain.price}!\n`;
+              logToConsole(`✅ ${domain.domain} is available for $${domain.price}`);
+            });
+
+            unavailableDomains.forEach(domain => {
+              result.textContent += `❌ ${domain.domain} is taken.\n`;
+              logToConsole(`❌ ${domain.domain} is taken.`);
+            });
+
+            invalidDomains.forEach(domain => {
+              result.textContent += `⚠️ Invalid domain: ${domain.domain}.\n`;
+              logToConsole(`⚠️ Invalid domain: ${domain.domain}.`);
+            });
           } else {
-            result.textContent = `❌ ${domain} is taken.`;
-            logToConsole(`❌ ${domain} is taken.`);
+            result.textContent = "⚠️ Error checking domains.";
+            logToConsole("⚠️ Error checking domains.");
           }
         })
         .catch(error => {
           console.error("Error:", error);
-          result.textContent = "⚠️ Error checking domain.";
+          result.textContent = "⚠️ Error checking domains.";
           logToConsole(`⚠️ Error: ${error}`);
         });
     }
