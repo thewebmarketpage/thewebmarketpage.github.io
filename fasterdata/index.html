@@ -60,6 +60,25 @@
     #domainInput {
       width: 300px;
     }
+
+    .register-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .register-button:hover {
+      background-color: #45a049;
+    }
+
+    .unavailable {
+      color: red;
+    }
+
+    .available {
+      color: green;
+    }
   </style>
 </head>
 <body>
@@ -114,21 +133,24 @@
           if (data.reply && data.reply.code === "300") {
             const availableDomains = data.reply.available || [];
             const unavailableDomains = data.reply.unavailable || [];
-            const invalidDomains = data.reply.invalid || [];
 
             availableDomains.forEach(domain => {
-              result.textContent += `✅ ${domain.domain} is available for $${domain.price}!\n`;
+              result.innerHTML += `
+                <div class="available">
+                  ✅ ${domain.domain} is available for $${domain.price}. 
+                  <button class="register-button" onclick="registerDomain('${domain.domain}')">Register</button>
+                </div>
+              `;
               logToConsole(`✅ ${domain.domain} is available for $${domain.price}`);
             });
 
             unavailableDomains.forEach(domain => {
-              result.textContent += `❌ ${domain.domain} is taken.\n`;
+              result.innerHTML += `
+                <div class="unavailable">
+                  ❌ ${domain.domain} is taken.
+                </div>
+              `;
               logToConsole(`❌ ${domain.domain} is taken.`);
-            });
-
-            invalidDomains.forEach(domain => {
-              result.textContent += `⚠️ Invalid domain: ${domain.domain}.\n`;
-              logToConsole(`⚠️ Invalid domain: ${domain.domain}.`);
             });
           } else {
             result.textContent = "⚠️ Error checking domains.";
@@ -140,6 +162,12 @@
           result.textContent = "⚠️ Error checking domains.";
           logToConsole(`⚠️ Error: ${error}`);
         });
+    }
+
+    function registerDomain(domain) {
+      alert(`Registering domain: ${domain}`);
+      // Implement registration logic here (e.g., redirect to a registration page or trigger an API call to register the domain)
+      logToConsole(`Initiating registration for domain: ${domain}`);
     }
 
     function handleCredentialResponse(response) {
