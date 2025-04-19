@@ -45,9 +45,20 @@
       border-top: 1px solid #ccc;
     }
 
-    .proxy-group {
-      text-align: left;
+    .console-output {
       margin-top: 20px;
+      padding: 20px;
+      background-color: black;
+      color: #00FF00;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 300px;
+      overflow-y: scroll;
+    }
+
+    #domainInput {
+      width: 300px;
     }
   </style>
 </head>
@@ -72,57 +83,47 @@
   <button onclick="searchDomain()">Search</button>
   <p id="domainResult"></p>
 
-  <!-- Proxy Selection -->
-  <div class="proxy-group">
-    <h3>Select a Proxy Server</h3>
-    <label><input type="radio" name="proxy" value="https://corsproxy.io/?"> corsproxy.io</label><br>
-    <label><input type="radio" name="proxy" value="https://thingproxy.freeboard.io/fetch/"> thingproxy.freeboard.io</label><br>
-    <label><input type="radio" name="proxy" value="https://api.allorigins.win/raw?url="> api.allorigins.win</label><br>
-    <label><input type="radio" name="proxy" value="https://crossorigin.me/"> crossorigin.me</label><br>
-    <label><input type="radio" name="proxy" value="https://api.codetabs.com/v1/proxy/?quest="> api.codetabs.com</label><br>
-    <label><input type="radio" name="proxy" value="https://cors-anywhere.herokuapp.com/"> cors-anywhere.herokuapp.com</label><br>
-    <label><input type="radio" name="proxy" value="https://proxy.cors.sh/"> proxy.cors.sh</label><br>
-    <label><input type="radio" name="proxy" value="https://allorigins.me/"> allorigins.me</label><br>
-    <label><input type="radio" name="proxy" value="https://cors-proxy.htmldriven.com/?url="> cors-proxy.htmldriven.com</label><br>
-    <label><input type="radio" name="proxy" value="https://api.openproxy.app/?url="> api.openproxy.app</label><br>
-  </div>
+  <!-- Console Output -->
+  <div class="console-output" id="consoleOutput"></div>
 
   <script>
     const apiKey = "6f946d8551777d22ac47";
+    const proxyUrl = "https://api.codetabs.com/v1/proxy/?quest=";
 
     function searchDomain() {
       const domain = document.getElementById("domainInput").value.trim();
       const result = document.getElementById("domainResult");
+      const consoleOutput = document.getElementById("consoleOutput");
 
       if (!domain) {
         result.textContent = "❗ Please enter a domain name.";
+        logToConsole("❗ Please enter a domain name.");
         return;
       }
 
       result.textContent = "🔍 Checking availability...";
+      logToConsole(`🔍 Checking availability for ${domain}...`);
 
-      const selectedProxy = document.querySelector('input[name="proxy"]:checked');
-      if (!selectedProxy) {
-        result.textContent = "❗ Please select a proxy server.";
-        return;
-      }
-
-      const proxyUrl = selectedProxy.value;
       const apiUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
       const finalUrl = proxyUrl + encodeURIComponent(apiUrl);
 
       fetch(finalUrl)
-        .then(response => response.json())
+        .then(response => {
+          return response.json();
+        })
         .then(data => {
           if (data.reply && data.reply.available === "yes") {
             result.textContent = `✅ ${domain} is available!`;
+            logToConsole(`✅ ${domain} is available!`);
           } else {
             result.textContent = `❌ ${domain} is taken.`;
+            logToConsole(`❌ ${domain} is taken.`);
           }
         })
         .catch(error => {
           console.error("Error:", error);
           result.textContent = "⚠️ Error checking domain.";
+          logToConsole(`⚠️ Error: ${error}`);
         });
     }
 
@@ -139,6 +140,12 @@
         '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
       ).join(''));
       return JSON.parse(jsonPayload);
+    }
+
+    function logToConsole(message) {
+      const consoleOutput = document.getElementById("consoleOutput");
+      consoleOutput.textContent += message + '\n';
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
   </script>
 
