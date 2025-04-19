@@ -163,7 +163,7 @@
   <main>
     <div class="auth-card">
       <h2>Sign In</h2>
-      <p>Use your Google account to access your domains</p>
+      <p>Use your Google account to access to login or register new account</p>
       
       <div class="google-btn-container">
         <div id="g_id_onload"
@@ -209,7 +209,7 @@
       
       // Store user data and redirect
       localStorage.setItem('fasterdata_user', JSON.stringify(userData));
-      window.location.href = "dashboard.html";
+      window.location.href = "dash.html";
     }
     
     function parseJwt(token) {
@@ -223,7 +223,7 @@
     
     // Redirect if already logged in
     if (localStorage.getItem('fasterdata_user')) {
-      window.location.href = "dashboard.html";
+      window.location.href = "dash.html";
     }
   </script>
 </body>
