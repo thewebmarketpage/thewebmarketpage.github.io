@@ -101,64 +101,84 @@
   <button onclick="searchDomain()">Check Availability</button>
   <p id="domainResult"></p>
 
-  <script>
-    const apiKey = "6f946d8551777d22ac47";
+ <script>
+  const apiKey = "6f946d8551777d22ac47";
+  const proxies = [
+    "https://corsproxy.io/?",
+    "https://api.allorigins.win/raw?url=",
+    "https://thingproxy.freeboard.io/fetch/",
+    "https://cors-anywhere.herokuapp.com/",
+    "https://yacdn.org/proxy/"
+  ];
 
-    function searchDomain() {
-      const domain = document.getElementById("domainInput").value.trim();
-      const result = document.getElementById("domainResult");
+  async function searchDomain() {
+    const domain = document.getElementById("domainInput").value.trim();
+    const result = document.getElementById("domainResult");
 
-      if (!domain) {
-        result.textContent = "❗ Please enter a domain name.";
-        return;
-      }
-
-      result.textContent = "🔍 Checking availability...";
-
-      const realUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
-      const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(realUrl);
-
-      fetch(proxyUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data.reply && data.reply.available === "yes") {
-            result.textContent = `✅ ${domain} is available!`;
-          } else if (data.reply && data.reply.available === "no") {
-            result.textContent = `❌ ${domain} is taken.`;
-          } else {
-            result.textContent = "⚠️ Unexpected response from NameSilo.";
-          }
-        })
-        .catch(error => {
-          console.error("Error:", error);
-          result.textContent = "⚠️ Error checking domain. Please try again.";
-        });
+    if (!domain) {
+      result.textContent = "❗ Please enter a domain name.";
+      return;
     }
 
-    function handleCredentialResponse(response) {
-      const data = parseJwt(response.credential);
-      if (data) {
-        localStorage.setItem("user", JSON.stringify(data));
-        window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
-      } else {
-        alert("Login failed.");
-      }
-    }
+    result.textContent = "🔍 Checking availability...";
 
-    function parseJwt(token) {
+    const realUrl = `https://www.namesilo.com/api/checkRegisterAvailability?version=1&type=json&key=${apiKey}&domain=${encodeURIComponent(domain)}`;
+
+    for (let i = 0; i < proxies.length; i++) {
+      const proxy = proxies[i];
+      const fullUrl = proxy + encodeURIComponent(realUrl);
+
       try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        ).join(''));
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        console.error("Failed to parse JWT", e);
-        return null;
+        const response = await fetch(fullUrl);
+        const contentType = response.headers.get("content-type");
+
+        if (!response.ok || !contentType || !contentType.includes("application/json")) {
+          throw new Error("Invalid response type or status");
+        }
+
+        const data = await response.json();
+
+        if (data.reply && data.reply.available === "yes") {
+          result.textContent = `✅ ${domain} is available! (Proxy: "${proxy}")`;
+        } else {
+          result.textContent = `❌ ${domain} is taken. (Proxy: "${proxy}")`;
+        }
+
+        console.log("✔ Used proxy:", proxy);
+        return;
+      } catch (error) {
+        console.warn(`❌ Proxy failed: ${proxy}`, error);
       }
     }
-  </script>
+
+    result.textContent = "⚠️ All proxies failed. Try again later.";
+  }
+
+  function handleCredentialResponse(response) {
+    const data = parseJwt(response.credential);
+    if (data) {
+      localStorage.setItem("user", JSON.stringify(data));
+      window.location.href = "https://giantwebmarket.com/fasterdata/dash.html";
+    } else {
+      alert("Login failed.");
+    }
+  }
+
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      console.error("Failed to parse JWT", e);
+      return null;
+    }
+  }
+</script>
+
 
 </body>
 </html>
