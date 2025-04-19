@@ -134,6 +134,7 @@
           logToConsole(`Full API Response: ${JSON.stringify(data, null, 2)}`);
 
           if (data.reply && data.reply.code === "300") {
+            // Check if the 'available' property exists and is an array
             const availableDomains = data.reply.available || [];
             const unavailableDomains = data.reply.unavailable || [];
 
@@ -141,27 +142,31 @@
             result.innerHTML = "";
 
             // Handle available domains
-            availableDomains.forEach(item => {
-              const domain = item.domain;
-              const price = item.price;
-              result.innerHTML += `
-                <div class="available">
-                  ✅ ${domain} is available for $${price}. 
-                  <button class="register-button" onclick="registerDomain('${domain}')">Register</button>
-                </div>
-              `;
-              logToConsole(`✅ ${domain} is available for $${price}`);
-            });
+            if (availableDomains.length > 0) {
+              availableDomains.forEach(item => {
+                const domain = item.domain;
+                const price = item.price;
+                result.innerHTML += `
+                  <div class="available">
+                    ✅ ${domain} is available for $${price}. 
+                    <button class="register-button" onclick="registerDomain('${domain}')">Register</button>
+                  </div>
+                `;
+                logToConsole(`✅ ${domain} is available for $${price}`);
+              });
+            }
 
             // Handle unavailable domains
-            unavailableDomains.forEach(domain => {
-              result.innerHTML += `
-                <div class="unavailable">
-                  ❌ ${domain} is taken.
-                </div>
-              `;
-              logToConsole(`❌ ${domain} is taken.`);
-            });
+            if (unavailableDomains.length > 0) {
+              unavailableDomains.forEach(domain => {
+                result.innerHTML += `
+                  <div class="unavailable">
+                    ❌ ${domain} is taken.
+                  </div>
+                `;
+                logToConsole(`❌ ${domain} is taken.`);
+              });
+            }
 
             // If no domains are found, show a message to try again
             if (availableDomains.length === 0 && unavailableDomains.length === 0) {
@@ -169,7 +174,7 @@
               logToConsole("⚠️ No valid domain information found. Please try again.");
             }
           } else {
-            result.innerHTML = "<div class='unavailable'>⚠️ Error processing the domain information. Please try again.</div>";
+            result.innerHTML = "<div class='unavailable'>⚠️ Error processing the domain information. Please try again later.</div>";
             logToConsole("⚠️ Error processing the domain information.");
           }
         })
