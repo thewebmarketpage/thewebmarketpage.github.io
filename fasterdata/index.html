@@ -205,21 +205,21 @@
       const invalidDomains = [];
       const premiumDomains = [];
 
-      // Check if the response has the expected structure
+      // Handle the response structure
       if (data.reply.available) {
-        // Handle single domain response
+        // Check if it's the single domain format
         if (data.reply.available.domain) {
           const domainData = data.reply.available.domain;
-          if (domainData.premium === "1") {
+          if (domainData.premium === "1" || domainData.premium === 1) {
             premiumDomains.push(domainData);
           } else {
             availableDomains.push(domainData);
           }
         } 
-        // Handle multiple domains response
+        // Check if it's the multiple domains array format
         else if (Array.isArray(data.reply.available)) {
           data.reply.available.forEach(item => {
-            if (item.premium === "1") {
+            if (item.premium === "1" || item.premium === 1) {
               premiumDomains.push(item);
             } else {
               availableDomains.push(item);
@@ -239,10 +239,11 @@
 
       // Check for any requested domains that weren't in the response
       requestedDomains.forEach(domain => {
-        const found = [...availableDomains, ...unavailableDomains, ...premiumDomains].some(d => 
-          typeof d === 'string' ? d === domain : d.domain === domain
-        );
-        if (!found) {
+        const foundInAvailable = availableDomains.some(d => d.domain === domain);
+        const foundInPremium = premiumDomains.some(d => d.domain === domain);
+        const foundInUnavailable = unavailableDomains.includes(domain);
+        
+        if (!foundInAvailable && !foundInPremium && !foundInUnavailable) {
           invalidDomains.push(domain);
         }
       });
