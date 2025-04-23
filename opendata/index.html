@@ -17,6 +17,10 @@
     }
     .result {
       margin: 10px 0;
+      padding: 10px;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     a {
       text-decoration: none;
@@ -24,6 +28,13 @@
     }
     a:hover {
       text-decoration: underline;
+    }
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
+    .error {
+      color: #dc3545;
     }
   </style>
 </head>
@@ -38,35 +49,113 @@
     const resultsDiv = document.getElementById('results');
     let pages = [];
 
+    // Alternative CORS proxy options
+    const CORS_PROXIES = [
+      'https://cors-anywhere.herokuapp.com/',
+      'https://api.codetabs.com/v1/proxy/?quest=',
+      'https://thingproxy.freeboard.io/fetch/'
+    ];
+
     async function fetchTitle(url) {
-      try {
-        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-        const data = await res.json();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data.contents, 'text/html');
-        const title = doc.querySelector('title')?.innerText || 'No title';
-        return { url, title };
-      } catch (e) {
-        return { url, title: 'Failed to fetch' };
+      let lastError = null;
+      
+      // Try each proxy until one works
+      for (const proxy of CORS_PROXIES) {
+        try {
+          const proxyUrl = proxy + encodeURIComponent(url);
+          const response = await fetch(proxyUrl, {
+            headers: {
+              // Some proxies require headers
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+          
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const title = doc.querySelector('title')?.innerText || 'No title';
+          return { url, title };
+        } catch (error) {
+          lastError = error;
+          console.warn(`Proxy ${proxy} failed, trying next one...`, error);
+          // Continue to next proxy
+        }
       }
+      
+      // If all proxies failed
+      console.error('All proxies failed for URL:', url, lastError);
+      return { url, title: 'Failed to fetch title', error: true };
     }
 
     async function loadData() {
-      const response = await fetch('data.json');
-      const links = await response.json();
-
-      const titlePromises = links.map(link => fetchTitle(link));
-      pages = await Promise.all(titlePromises);
-      showResults('');
+      try {
+        resultsDiv.innerHTML = '<div class="loading">Loading links and fetching titles... This may take a moment.</div>';
+        
+        const response = await fetch('data.json');
+        const links = await response.json();
+        
+        // Show loading progress
+        resultsDiv.innerHTML = `<div class="loading">Fetching titles for ${links.length} links...</div>`;
+        
+        // Process in batches to avoid overwhelming the browser
+        const batchSize = 5;
+        pages = [];
+        
+        for (let i = 0; i < links.length; i += batchSize) {
+          const batch = links.slice(i, i + batchSize);
+          const batchResults = await Promise.all(batch.map(link => fetchTitle(link)));
+          pages.push(...batchResults);
+          
+          // Update loading status
+          resultsDiv.innerHTML = `
+            <div class="loading">
+              Fetching titles... ${Math.min(i + batchSize, links.length)}/${links.length} completed
+            </div>
+          `;
+        }
+        
+        showResults('');
+      } catch (error) {
+        console.error('Error loading data:', error);
+        resultsDiv.innerHTML = `<div class="error">Failed to load data: ${error.message}</div>`;
+      }
     }
 
     function showResults(query) {
-      const filtered = pages.filter(p => p.title.toLowerCase().includes(query.toLowerCase()));
-      resultsDiv.innerHTML = filtered.map(p => `<div class="result"><a href="${p.url}" target="_blank">${p.title}</a></div>`).join('');
+      if (!query) {
+        resultsDiv.innerHTML = pages.map(p => `
+          <div class="result ${p.error ? 'error' : ''}">
+            <a href="${p.url}" target="_blank">${p.title}</a>
+          </div>
+        `).join('');
+        return;
+      }
+      
+      const filtered = pages.filter(p => 
+        p.title.toLowerCase().includes(query.toLowerCase()) || 
+        p.url.toLowerCase().includes(query.toLowerCase())
+      );
+      
+      if (filtered.length === 0) {
+        resultsDiv.innerHTML = '<div class="loading">No results found</div>';
+      } else {
+        resultsDiv.innerHTML = filtered.map(p => `
+          <div class="result ${p.error ? 'error' : ''}">
+            <a href="${p.url}" target="_blank">${p.title}</a>
+          </div>
+        `).join('');
+      }
     }
 
+    // Debounce the input to avoid too many rapid searches
+    let debounceTimer;
     searchInput.addEventListener('input', (e) => {
-      showResults(e.target.value);
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        showResults(e.target.value);
+      }, 300);
     });
 
     loadData();
