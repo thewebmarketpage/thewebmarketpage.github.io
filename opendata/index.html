@@ -35,15 +35,6 @@
     a:hover {
       text-decoration: underline;
     }
-    .loading {
-      color: #666;
-      font-style: italic;
-      padding: 10px;
-    }
-    .error {
-      color: #dc3545;
-      padding: 10px;
-    }
     .url {
       color: #6c757d;
       font-size: 0.9em;
@@ -51,17 +42,15 @@
       margin-top: 3px;
       word-break: break-all;
     }
-    .status {
-      float: right;
-      font-size: 0.8em;
-      color: #6c757d;
+    .no-results {
+      color: #666;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Search Links by Page Title</h1>
+  <h1>Link Search</h1>
   <input type="text" id="search" placeholder="Start typing to search..." autofocus />
-
   <div id="results"></div>
 
   <script>
@@ -69,167 +58,60 @@
     const resultsDiv = document.getElementById('results');
     let pages = [];
 
-    // Alternative CORS solutions
-    async function fetchTitle(url) {
-      // Try direct fetch first (might work for CORS-enabled sites)
-      try {
-        const directResponse = await fetch(url, {
-          mode: 'no-cors',
-          headers: {
-            'Accept': 'text/html'
-          }
-        });
-        if (directResponse.ok) {
-          const html = await directResponse.text();
-          const title = extractTitle(html);
-          if (title) return { url, title };
-        }
-      } catch (e) {
-        console.log(`Direct fetch failed for ${url}, trying proxies...`);
-      }
-
-      // If direct fetch fails, try these proxies in order
-      const proxies = [
-        {
-          name: 'YQL',
-          fetch: async (url) => {
-            const yqlUrl = `https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'${encodeURIComponent(url)}'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys`;
-            const response = await fetch(yqlUrl);
-            const data = await response.json();
-            return data.query.results?.body || '';
-          }
-        },
-        {
-          name: 'CORS Anywhere',
-          fetch: async (url) => {
-            const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
-            const response = await fetch(proxyUrl, {
-              headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-              }
-            });
-            return await response.text();
-          }
-        },
-        {
-          name: 'AllOrigins',
-          fetch: async (url) => {
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-            const response = await fetch(proxyUrl);
-            const data = await response.json();
-            return data.contents || '';
-          }
-        }
-      ];
-
-      let lastError = null;
-      
-      for (const proxy of proxies) {
-        try {
-          console.log(`Trying ${proxy.name} for ${url}`);
-          const html = await proxy.fetch(url);
-          if (html) {
-            const title = extractTitle(html);
-            if (title) return { url, title, source: proxy.name };
-          }
-        } catch (error) {
-          lastError = error;
-          console.warn(`${proxy.name} failed for ${url}:`, error);
-        }
-      }
-
-      console.error(`All methods failed for ${url}`, lastError);
-      return { url, title: 'Failed to fetch title', error: true };
-    }
-
-    function extractTitle(html) {
-      try {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        return doc.querySelector('title')?.textContent.trim() || 'No title';
-      } catch (e) {
-        console.error('Error parsing HTML:', e);
-        return null;
-      }
-    }
-
+    // Load data from JSON file
     async function loadData() {
       try {
-        resultsDiv.innerHTML = '<div class="loading">Loading links and fetching titles... This may take a moment.</div>';
-        
-        // Load your JSON file with URLs
         const response = await fetch('data.json');
-        if (!response.ok) throw new Error(`Failed to load data.json: ${response.status}`);
-        const links = await response.json();
+        if (!response.ok) throw new Error(`Failed to load data: ${response.status}`);
         
-        if (!Array.isArray(links)) throw new Error('data.json should contain an array of URLs');
+        // Expected data.json format:
+        // Option 1: Array of URLs (string)
+        // Option 2: Array of objects with url and title properties
+        const data = await response.json();
         
-        // Show loading progress
-        resultsDiv.innerHTML = `<div class="loading">Fetching titles for ${links.length} links... (0/${links.length})</div>`;
-        
-        // Process in smaller batches with delays
-        const batchSize = 3;
-        const delayBetweenBatches = 1000; // 1 second
-        pages = [];
-        
-        for (let i = 0; i < links.length; i += batchSize) {
-          const batch = links.slice(i, i + batchSize);
-          const batchPromises = batch.map(link => fetchTitle(link));
-          const batchResults = await Promise.all(batchPromises);
-          pages.push(...batchResults);
-          
-          // Update loading status
-          const loadedCount = Math.min(i + batchSize, links.length);
-          resultsDiv.innerHTML = `
-            <div class="loading">
-              Fetching titles... ${loadedCount}/${links.length} completed
-              <br><small>Last fetched: ${batchResults[batchResults.length - 1]?.url}</small>
-            </div>
-          `;
-          
-          // Add delay between batches to avoid rate limiting
-          if (i + batchSize < links.length) {
-            await new Promise(resolve => setTimeout(resolve, delayBetweenBatches));
+        // Normalize the data format
+        pages = Array.isArray(data) ? data.map(item => {
+          if (typeof item === 'string') {
+            return { url: item, title: item }; // Use URL as title
           }
-        }
+          return {
+            url: item.url || '',
+            title: item.title || item.url || 'Untitled'
+          };
+        }) : [];
         
         showResults('');
       } catch (error) {
         console.error('Error loading data:', error);
-        resultsDiv.innerHTML = `
-          <div class="error">
-            Failed to load data: ${error.message}
-            <br><button onclick="loadData()">Retry</button>
-          </div>
-        `;
+        resultsDiv.innerHTML = `<div class="no-results">Error loading data: ${error.message}</div>`;
       }
     }
 
     function showResults(query) {
       if (!query) {
-        resultsDiv.innerHTML = pages.map(p => `
-          <div class="result ${p.error ? 'error' : ''}">
-            <a href="${p.url}" target="_blank">${p.title}</a>
-            <span class="url">${p.url}</span>
-            ${p.source ? `<span class="status">via ${p.source}</span>` : ''}
+        // Show all results when no query
+        resultsDiv.innerHTML = pages.map(page => `
+          <div class="result">
+            <a href="${page.url}" target="_blank">${page.title}</a>
+            <span class="url">${page.url}</span>
           </div>
         `).join('');
         return;
       }
       
       const q = query.toLowerCase();
-      const filtered = pages.filter(p => 
-        p.title.toLowerCase().includes(q) || 
-        p.url.toLowerCase().includes(q)
+      const filtered = pages.filter(page => 
+        page.title.toLowerCase().includes(q) || 
+        page.url.toLowerCase().includes(q)
       );
       
       if (filtered.length === 0) {
-        resultsDiv.innerHTML = '<div class="loading">No results found for "' + query + '"</div>';
+        resultsDiv.innerHTML = `<div class="no-results">No results found for "${query}"</div>`;
       } else {
-        resultsDiv.innerHTML = filtered.map(p => `
-          <div class="result ${p.error ? 'error' : ''}">
-            <a href="${p.url}" target="_blank">${p.title}</a>
-            <span class="url">${p.url}</span>
-            ${p.source ? `<span class="status">via ${p.source}</span>` : ''}
+        resultsDiv.innerHTML = filtered.map(page => `
+          <div class="result">
+            <a href="${page.url}" target="_blank">${page.title}</a>
+            <span class="url">${page.url}</span>
           </div>
         `).join('');
       }
