@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Link Search</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .result {
+      margin: 10px 0;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Search Links by Page Title</h1>
+  <input type="text" id="search" placeholder="Start typing to search..." />
+
+  <div id="results"></div>
+
+  <script>
+    const searchInput = document.getElementById('search');
+    const resultsDiv = document.getElementById('results');
+    let pages = [];
+
+    async function fetchTitle(url) {
+      try {
+        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+        const title = doc.querySelector('title')?.innerText || 'No title';
+        return { url, title };
+      } catch (e) {
+        return { url, title: 'Failed to fetch' };
+      }
+    }
+
+    async function loadData() {
+      const response = await fetch('data.json');
+      const links = await response.json();
+
+      const titlePromises = links.map(link => fetchTitle(link));
+      pages = await Promise.all(titlePromises);
+      showResults('');
+    }
+
+    function showResults(query) {
+      const filtered = pages.filter(p => p.title.toLowerCase().includes(query.toLowerCase()));
+      resultsDiv.innerHTML = filtered.map(p => `<div class="result"><a href="${p.url}" target="_blank">${p.title}</a></div>`).join('');
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      showResults(e.target.value);
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
