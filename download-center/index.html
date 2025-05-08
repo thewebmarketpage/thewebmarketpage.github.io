@@ -264,6 +264,9 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
 
         .download-btn:hover {
@@ -648,9 +651,9 @@
                     </div>
                     
                     <div class="download-actions">
-                        <button id="main-download-btn" class="btn-primary btn-large">
+                        <a id="main-download-btn" class="btn-primary btn-large" href="#" target="_blank">
                             <i class="fas fa-download"></i> Download Now
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -728,7 +731,7 @@
                                 <span>v${software.version}</span>
                                 <span>${software.fileSize}</span>
                             </div>
-                            <button class="download-btn" data-id="${software.id}">Download</button>
+                            <a href="${software.downloadUrl}" class="download-btn" target="_blank" data-id="${software.id}">Download</a>
                         </div>
                     </div>
                 `).join('');
@@ -750,7 +753,7 @@
                                 <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
                                 <span><i class="fas fa-star"></i> ${software.rating}</span>
                             </div>
-                            <button class="download-btn" data-id="${software.id}">Download</button>
+                            <a href="${software.downloadUrl}" class="download-btn" target="_blank" data-id="${software.id}">Download</a>
                         </div>
                     </div>
                 `).join('');
@@ -774,7 +777,7 @@
                                 <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
                                 <span><i class="fas fa-star"></i> ${software.rating}</span>
                             </div>
-                            <button class="download-btn" data-id="${software.id}">Download</button>
+                            <a href="${software.downloadUrl}" class="download-btn" target="_blank" data-id="${software.id}">Download</a>
                         </div>
                     </div>
                 `).join('');
@@ -821,7 +824,7 @@
                                     <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
                                     <span><i class="fas fa-star"></i> ${software.rating}</span>
                                 </div>
-                                <button class="download-btn" data-id="${software.id}">Download</button>
+                                <a href="${software.downloadUrl}" class="download-btn" target="_blank" data-id="${software.id}">Download</a>
                             </div>
                         </div>
                     `).join('');
@@ -895,9 +898,8 @@
                 
                 // Set up download button
                 const downloadBtn = document.getElementById('main-download-btn');
+                downloadBtn.href = software.downloadUrl;
                 downloadBtn.onclick = function() {
-                    // In a real app, this would initiate the download
-                    alert(`Starting download of ${software.title} ${software.version}...`);
                     // Track the download (increment counter)
                     software.downloads += 1;
                     // Update the displayed count
@@ -914,14 +916,8 @@
                 history.pushState(null, '', `#download=${softwareId}`);
             }
 
-            // Handle download button clicks
+            // Handle clicks on software cards
             document.addEventListener('click', function(event) {
-                if (event.target.classList.contains('download-btn')) {
-                    const softwareId = parseInt(event.target.getAttribute('data-id'));
-                    showDownloadPage(softwareId);
-                }
-                
-                // Handle clicks on software cards (not just the button)
                 const softwareCard = event.target.closest('.software-card');
                 if (softwareCard && !event.target.classList.contains('download-btn')) {
                     const softwareId = parseInt(softwareCard.getAttribute('data-id'));
