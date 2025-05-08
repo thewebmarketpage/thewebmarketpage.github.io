@@ -10,7 +10,8 @@
             "downloads": 12500,
             "rating": 4.8,
             "isFeatured": true,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PhotoMaster"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PhotoMaster",
+            "downloadUrl": "https://example.com/download/photomaster-pro"
         },
         {
             "id": 2,
@@ -22,7 +23,8 @@
             "downloads": 8900,
             "rating": 4.7,
             "isFeatured": true,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=CodeEditor"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=CodeEditor",
+            "downloadUrl": "https://example.com/download/codeeditor-x"
         },
         {
             "id": 3,
@@ -34,7 +36,8 @@
             "downloads": 21500,
             "rating": 4.9,
             "isFeatured": true,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=SecureShield"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=SecureShield",
+            "downloadUrl": "https://example.com/download/secureshield"
         },
         {
             "id": 4,
@@ -46,7 +49,8 @@
             "downloads": 18700,
             "rating": 4.6,
             "isFeatured": false,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=OfficeSuite"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=OfficeSuite",
+            "downloadUrl": "https://example.com/download/officesuite-pro"
         },
         {
             "id": 5,
@@ -58,7 +62,8 @@
             "downloads": 14300,
             "rating": 4.5,
             "isFeatured": false,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=MediaPlayer"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=MediaPlayer",
+            "downloadUrl": "https://example.com/download/mediaplayer-ultra"
         },
         {
             "id": 6,
@@ -70,7 +75,8 @@
             "downloads": 9600,
             "rating": 4.4,
             "isFeatured": false,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=DiskClean"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=DiskClean",
+            "downloadUrl": "https://example.com/download/diskclean-pro"
         },
         {
             "id": 7,
@@ -82,7 +88,8 @@
             "downloads": 12700,
             "rating": 4.3,
             "isFeatured": false,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=GameBoost"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=GameBoost",
+            "downloadUrl": "https://example.com/download/gameboost"
         },
         {
             "id": 8,
@@ -94,7 +101,8 @@
             "downloads": 10500,
             "rating": 4.7,
             "isFeatured": false,
-            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PDF+Creator"
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PDF+Creator",
+            "downloadUrl": "https://example.com/download/pdf-creator-pro"
         }
     ]
 }
