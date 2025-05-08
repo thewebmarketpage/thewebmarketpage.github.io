@@ -306,6 +306,19 @@
             font-size: 0.9rem;
         }
 
+        /* Search Section */
+        .search-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-results-count {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
         /* Download Page */
         .download-page {
             display: flex;
@@ -502,6 +515,7 @@
                     <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
                     <li><a href="#" class="nav-link" data-section="categories">Categories</a></li>
                     <li><a href="#" class="nav-link" data-section="top-downloads">Top Downloads</a></li>
+                    <li><a href="#" class="nav-link" data-section="search">Search</a></li>
                     <li><a href="#" class="nav-link" data-section="about">About</a></li>
                 </ul>
             </nav>
@@ -586,6 +600,19 @@
             </section>
         </section>
 
+        <!-- Search Section -->
+        <section id="search" class="page-section">
+            <section class="featured-section">
+                <div class="search-results-header">
+                    <h1><i class="fas fa-search"></i> Search Results</h1>
+                    <div class="search-results-count" id="resultsCount"></div>
+                </div>
+                <div class="software-grid" id="searchResults">
+                    <!-- Search results will be loaded here by JavaScript -->
+                </div>
+            </section>
+        </section>
+
         <!-- About Section -->
         <section id="about" class="page-section">
             <div class="about-section">
@@ -647,6 +674,7 @@
                     <li><a href="#" class="nav-link" data-section="home">Home</a></li>
                     <li><a href="#" class="nav-link" data-section="categories">Categories</a></li>
                     <li><a href="#" class="nav-link" data-section="top-downloads">Top Downloads</a></li>
+                    <li><a href="#" class="nav-link" data-section="search">Search</a></li>
                     <li><a href="#" class="nav-link" data-section="about">About</a></li>
                 </ul>
             </div>
@@ -756,22 +784,32 @@
             function setupSearch() {
                 const searchInput = document.getElementById('searchInput');
                 const searchButton = document.getElementById('searchButton');
-                const allSoftwareContainer = document.getElementById('allSoftware');
+                const searchResultsContainer = document.getElementById('searchResults');
+                const resultsCountElement = document.getElementById('resultsCount');
 
                 function performSearch() {
-                    const searchTerm = searchInput.value.toLowerCase();
+                    const searchTerm = searchInput.value.toLowerCase().trim();
                     
-                    if (searchTerm.trim() === '') {
-                        displayAllSoftware();
+                    if (searchTerm === '') {
+                        // If search is empty, show all software in the home section
+                        document.querySelector('.nav-link[data-section="home"]').click();
                         return;
                     }
 
+                    // Show search section
+                    document.querySelector('.nav-link[data-section="search"]').click();
+                    
                     const filteredSoftware = softwareData.filter(software => 
                         software.title.toLowerCase().includes(searchTerm) || 
-                        software.description.toLowerCase().includes(searchTerm)
+                        software.description.toLowerCase().includes(searchTerm) ||
+                        software.category.toLowerCase().includes(searchTerm)
                     );
 
-                    allSoftwareContainer.innerHTML = filteredSoftware.map(software => `
+                    // Update results count
+                    resultsCountElement.textContent = `${filteredSoftware.length} results found`;
+
+                    // Display search results
+                    searchResultsContainer.innerHTML = filteredSoftware.map(software => `
                         <div class="software-card" data-id="${software.id}">
                             <div class="software-image">
                                 <img src="${software.image}" alt="${software.title}">
@@ -789,7 +827,7 @@
                     `).join('');
 
                     if (filteredSoftware.length === 0) {
-                        allSoftwareContainer.innerHTML = `
+                        searchResultsContainer.innerHTML = `
                             <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
                                 <i class="fas fa-search" style="font-size: 3rem; color: var(--text-light); margin-bottom: 20px;"></i>
                                 <h3>No results found for "${searchTerm}"</h3>
