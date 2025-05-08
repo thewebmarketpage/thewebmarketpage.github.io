@@ -1,0 +1,121 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Load software data
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            displayFeaturedSoftware(data.software);
+            displayAllSoftware(data.software);
+            setupSearch(data.software);
+        })
+        .catch(error => console.error('Error loading data:', error));
+
+    // Display featured software
+    function displayFeaturedSoftware(softwareList) {
+        const featuredContainer = document.getElementById('featuredSoftware');
+        const featuredSoftware = softwareList.filter(software => software.isFeatured);
+        
+        featuredContainer.innerHTML = featuredSoftware.map(software => `
+            <div class="software-card">
+                <div class="software-image">
+                    <img src="${software.image}" alt="${software.title}">
+                </div>
+                <div class="software-info">
+                    <h3>${software.title}</h3>
+                    <p>${software.description}</p>
+                    <div class="software-meta">
+                        <span>v${software.version}</span>
+                        <span>${software.fileSize}</span>
+                    </div>
+                    <button class="download-btn">Download</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Display all software
+    function displayAllSoftware(softwareList) {
+        const allSoftwareContainer = document.getElementById('allSoftware');
+        
+        allSoftwareContainer.innerHTML = softwareList.map(software => `
+            <div class="software-card">
+                <div class="software-image">
+                    <img src="${software.image}" alt="${software.title}">
+                </div>
+                <div class="software-info">
+                    <h3>${software.title}</h3>
+                    <p>${software.description}</p>
+                    <div class="software-meta">
+                        <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
+                        <span><i class="fas fa-star"></i> ${software.rating}</span>
+                    </div>
+                    <button class="download-btn">Download</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Setup search functionality
+    function setupSearch(softwareList) {
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const allSoftwareContainer = document.getElementById('allSoftware');
+
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm.trim() === '') {
+                displayAllSoftware(softwareList);
+                return;
+            }
+
+            const filteredSoftware = softwareList.filter(software => 
+                software.title.toLowerCase().includes(searchTerm) || 
+                software.description.toLowerCase().includes(searchTerm)
+            );
+
+            allSoftwareContainer.innerHTML = filteredSoftware.map(software => `
+                <div class="software-card">
+                    <div class="software-image">
+                        <img src="${software.image}" alt="${software.title}">
+                    </div>
+                    <div class="software-info">
+                        <h3>${software.title}</h3>
+                        <p>${software.description}</p>
+                        <div class="software-meta">
+                            <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
+                            <span><i class="fas fa-star"></i> ${software.rating}</span>
+                        </div>
+                        <button class="download-btn">Download</button>
+                    </div>
+                </div>
+            `).join('');
+
+            if (filteredSoftware.length === 0) {
+                allSoftwareContainer.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <i class="fas fa-search" style="font-size: 3rem; color: var(--text-light); margin-bottom: 20px;"></i>
+                        <h3>No results found for "${searchTerm}"</h3>
+                        <p>Try different search terms</p>
+                    </div>
+                `;
+            }
+        }
+
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+
+    // Add download button functionality
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('download-btn')) {
+            const softwareCard = event.target.closest('.software-card');
+            const softwareTitle = softwareCard.querySelector('h3').textContent;
+            alert(`Downloading ${softwareTitle}...`);
+            // In a real app, you would redirect to the download link
+        }
+    });
+});
