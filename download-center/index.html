@@ -4,407 +4,487 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechHub - Software Download Center</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-    :root {
-    --primary-color: #1e3a8a;
-    --primary-light: #3b82f6;
-    --secondary-color: #ffffff;
-    --text-color: #1f2937;
-    --text-light: #6b7280;
-    --bg-light: #f9fafb;
-    --border-color: #e5e7eb;
-}
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary-color: #ffffff;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-body {
-    background-color: var(--bg-light);
-    color: var(--text-color);
-    line-height: 1.6;
-}
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
 
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-/* Header Styles */
-.main-header {
-    background-color: var(--secondary-color);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    padding: 15px 0;
-}
+        /* Header Styles */
+        .main-header {
+            background-color: var(--secondary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 0;
+        }
 
-.main-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-.logo {
-    display: flex;
-    align-items: center;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
 
-.logo i {
-    margin-right: 10px;
-    font-size: 2rem;
-}
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
 
-.search-container {
-    display: flex;
-    flex-grow: 1;
-    margin: 0 30px;
-    max-width: 500px;
-}
+        .search-container {
+            display: flex;
+            flex-grow: 1;
+            margin: 0 30px;
+            max-width: 500px;
+        }
 
-.search-container input {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px 0 0 5px;
-    font-size: 1rem;
-    outline: none;
-}
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+            outline: none;
+        }
 
-.search-container button {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0 15px;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        .search-container button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.search-container button:hover {
-    background-color: var(--primary-light);
-}
+        .search-container button:hover {
+            background-color: var(--primary-light);
+        }
 
-.main-nav ul {
-    display: flex;
-    list-style: none;
-}
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+        }
 
-.main-nav li {
-    margin-left: 20px;
-}
+        .main-nav li {
+            margin-left: 20px;
+        }
 
-.main-nav a {
-    text-decoration: none;
-    color: var(--text-color);
-    font-weight: 500;
-    padding: 5px 0;
-    transition: color 0.3s;
-}
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
 
-.main-nav a:hover, .main-nav a.active {
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
-}
+        .main-nav a:hover, .main-nav a.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
 
-/* Hero Section */
-.hero {
-    display: flex;
-    align-items: center;
-    padding: 60px 0;
-    gap: 40px;
-}
+        /* Page Sections */
+        .page-section {
+            display: none;
+            min-height: 60vh;
+        }
 
-.hero-content {
-    flex: 1;
-}
+        .page-section.active {
+            display: block;
+        }
 
-.hero-image {
-    flex: 1;
-}
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            padding: 60px 0;
+            gap: 40px;
+        }
 
-.hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: var(--primary-color);
-}
+        .hero-content {
+            flex: 1;
+        }
 
-.hero p {
-    font-size: 1.1rem;
-    color: var(--text-light);
-    margin-bottom: 30px;
-}
+        .hero-image {
+            flex: 1;
+        }
 
-.btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 5px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
 
-.btn-primary:hover {
-    background-color: var(--primary-light);
-}
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
 
-.hero-image img {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-/* Section Headings */
-section {
-    margin: 60px 0;
-}
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
 
-section h2 {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-    color: var(--primary-color);
-    display: flex;
-    align-items: center;
-}
+        .hero-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-section h2 i {
-    margin-right: 15px;
-}
+        /* Section Headings */
+        section {
+            margin: 60px 0;
+        }
 
-/* Software Grid */
-.software-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-}
+        section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
 
-.software-card {
-    background-color: var(--secondary-color);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
+        section h2 i {
+            margin-right: 15px;
+        }
 
-.software-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
+        /* Software Grid */
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
 
-.software-image {
-    height: 150px;
-    background-color: #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-light);
-}
+        .software-card {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
 
-.software-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+        .software-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
 
-.software-info {
-    padding: 20px;
-}
+        .software-image {
+            height: 150px;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+        }
 
-.software-info h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: var(--primary-color);
-}
+        .software-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.software-info p {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-    min-height: 40px;
-}
+        .software-info {
+            padding: 20px;
+        }
 
-.software-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.8rem;
-    color: var(--text-light);
-}
+        .software-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
 
-.download-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        .software-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
 
-.download-btn:hover {
-    background-color: var(--primary-light);
-}
+        .software-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
 
-/* Categories Grid */
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-}
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.category-card {
-    background-color: var(--secondary-color);
-    border-radius: 8px;
-    padding: 25px 20px;
-    text-align: center;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-}
+        .download-btn:hover {
+            background-color: var(--primary-light);
+        }
 
-.category-card:hover {
-    transform: translateY(-5px);
-}
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
 
-.category-card i {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
+        .category-card {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
 
-.category-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-}
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
 
-.category-card p {
-    color: var(--text-light);
-    font-size: 0.9rem;
-}
+        .category-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
 
-/* Footer Styles */
-.main-footer {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 50px 0 0;
-}
+        .category-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
 
-.main-footer .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-}
+        .category-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
 
-.footer-column h3 {
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-    position: relative;
-    padding-bottom: 10px;
-}
+        /* Download Page */
+        .download-page {
+            display: flex;
+            gap: 40px;
+            padding: 40px 0;
+        }
 
-.footer-column h3::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 50px;
-    height: 2px;
-    background-color: var(--primary-light);
-}
+        .download-image {
+            flex: 1;
+        }
 
-.footer-column p {
-    margin-bottom: 20px;
-    opacity: 0.8;
-}
+        .download-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-.footer-column ul {
-    list-style: none;
-}
+        .download-details {
+            flex: 1;
+        }
 
-.footer-column ul li {
-    margin-bottom: 10px;
-}
+        .download-details h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
 
-.footer-column ul li a {
-    color: white;
-    text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.3s;
-}
+        .download-meta {
+            margin: 20px 0;
+        }
 
-.footer-column ul li a:hover {
-    opacity: 1;
-}
+        .download-meta p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
 
-.social-icons {
-    display: flex;
-    gap: 15px;
-}
+        .download-meta i {
+            width: 25px;
+            color: var(--primary-color);
+        }
 
-.social-icons a {
-    color: white;
-    font-size: 1.2rem;
-    opacity: 0.8;
-    transition: opacity 0.3s;
-}
+        .download-actions {
+            margin-top: 30px;
+        }
 
-.social-icons a:hover {
-    opacity: 1;
-}
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
 
-.footer-bottom {
-    text-align: center;
-    padding: 20px 0;
-    margin-top: 30px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
+        /* About Page */
+        .about-section {
+            padding: 40px 0;
+        }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-header .container {
-        flex-direction: column;
-    }
+        .about-section h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
 
-    .logo {
-        margin-bottom: 15px;
-    }
+        .about-section p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
 
-    .search-container {
-        margin: 15px 0;
-        width: 100%;
-    }
+        /* Footer Styles */
+        .main-footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 50px 0 0;
+        }
 
-    .main-nav {
-        margin-top: 15px;
-    }
+        .main-footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
 
-    .hero {
-        flex-direction: column;
-        text-align: center;
-    }
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
 
-    .hero-content {
-        margin-bottom: 30px;
-    }
-}
-</style>
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-light);
+        }
+
+        .footer-column p {
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            opacity: 1;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-header .container {
+                flex-direction: column;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .search-container {
+                margin: 15px 0;
+                width: 100%;
+            }
+
+            .main-nav {
+                margin-top: 15px;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                margin-bottom: 30px;
+            }
+
+            .download-page {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -419,64 +499,133 @@ section h2 i {
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="#">Categories</a></li>
-                    <li><a href="#">Top Downloads</a></li>
-                    <li><a href="#">About</a></li>
+                    <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="categories">Categories</a></li>
+                    <li><a href="#" class="nav-link" data-section="top-downloads">Top Downloads</a></li>
+                    <li><a href="#" class="nav-link" data-section="about">About</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main class="container">
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Discover & Download Premium Software</h1>
-                <p>Thousands of trusted applications for your productivity and entertainment</p>
-                <button class="btn-primary">Explore Now</button>
+        <!-- Home Section -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Discover & Download Premium Software</h1>
+                    <p>Thousands of trusted applications for your productivity and entertainment</p>
+                    <button class="btn-primary">Explore Now</button>
+                </div>
+                <div class="hero-image">
+                    <img src="https://via.placeholder.com/500x300/1e3a8a/ffffff?text=Software+Showcase" alt="Software Showcase">
+                </div>
             </div>
-            <div class="hero-image">
-                <img src="https://via.placeholder.com/500x300/1e3a8a/ffffff?text=Software+Showcase" alt="Software Showcase">
+
+            <section class="featured-section">
+                <h2><i class="fas fa-star"></i> Featured Software</h2>
+                <div class="software-grid" id="featuredSoftware">
+                    <!-- Featured software will be loaded here by JavaScript -->
+                </div>
+            </section>
+
+            <section class="all-software-section">
+                <h2><i class="fas fa-box-open"></i> All Software</h2>
+                <div class="software-grid" id="allSoftware">
+                    <!-- All software will be loaded here by JavaScript -->
+                </div>
+            </section>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="page-section">
+            <section class="categories-section">
+                <h1><i class="fas fa-folder"></i> Software Categories</h1>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <i class="fas fa-briefcase"></i>
+                        <h3>Productivity</h3>
+                        <p>120+ apps</p>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-gamepad"></i>
+                        <h3>Games</h3>
+                        <p>85+ titles</p>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-paint-brush"></i>
+                        <h3>Design</h3>
+                        <p>64+ tools</p>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-lock"></i>
+                        <h3>Security</h3>
+                        <p>42+ utilities</p>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-code"></i>
+                        <h3>Development</h3>
+                        <p>78+ tools</p>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-film"></i>
+                        <h3>Multimedia</h3>
+                        <p>56+ players</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Top Downloads Section -->
+        <section id="top-downloads" class="page-section">
+            <section class="featured-section">
+                <h1><i class="fas fa-trophy"></i> Top Downloads</h1>
+                <div class="software-grid" id="topDownloads">
+                    <!-- Top downloads will be loaded here by JavaScript -->
+                </div>
+            </section>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="page-section">
+            <div class="about-section">
+                <h1><i class="fas fa-info-circle"></i> About TechHub</h1>
+                <p>TechHub is your premier destination for discovering and downloading high-quality software applications. Founded in 2023, our mission is to provide a trusted platform where users can find the best tools for their computing needs.</p>
+                <p>We carefully curate our software collection to ensure all applications are safe, reliable, and meet our high standards for quality. Our team tests each application before listing it on our platform.</p>
+                <p>With thousands of applications across multiple categories, TechHub serves millions of users worldwide. We're committed to making software discovery easy and enjoyable.</p>
+                
+                <h2><i class="fas fa-users"></i> Our Team</h2>
+                <p>Our team consists of software enthusiasts, security experts, and user experience designers who work together to create the best software discovery platform.</p>
+                
+                <h2><i class="fas fa-shield-alt"></i> Safety Guarantee</h2>
+                <p>All software listed on TechHub undergoes rigorous security checks to ensure it's free from malware, viruses, and other security threats.</p>
             </div>
         </section>
 
-        <section class="featured-section">
-            <h2><i class="fas fa-star"></i> Featured Software</h2>
-            <div class="software-grid" id="featuredSoftware">
-                <!-- Featured software will be loaded here by JavaScript -->
-            </div>
-        </section>
-
-        <section class="categories-section">
-            <h2><i class="fas fa-folder"></i> Categories</h2>
-            <div class="categories-grid">
-                <div class="category-card">
-                    <i class="fas fa-briefcase"></i>
-                    <h3>Productivity</h3>
-                    <p>120+ apps</p>
+        <!-- Download Page (hidden by default) -->
+        <section id="download-page" class="page-section">
+            <div class="download-page">
+                <div class="download-image">
+                    <img id="download-page-image" src="" alt="Software Image">
                 </div>
-                <div class="category-card">
-                    <i class="fas fa-gamepad"></i>
-                    <h3>Games</h3>
-                    <p>85+ titles</p>
+                <div class="download-details">
+                    <h1 id="download-page-title"></h1>
+                    <p id="download-page-description"></p>
+                    
+                    <div class="download-meta">
+                        <p><i class="fas fa-tag"></i> Category: <span id="download-page-category"></span></p>
+                        <p><i class="fas fa-code-branch"></i> Version: <span id="download-page-version"></span></p>
+                        <p><i class="fas fa-database"></i> File Size: <span id="download-page-size"></span></p>
+                        <p><i class="fas fa-download"></i> Downloads: <span id="download-page-downloads"></span></p>
+                        <p><i class="fas fa-star"></i> Rating: <span id="download-page-rating"></span>/5</p>
+                    </div>
+                    
+                    <div class="download-actions">
+                        <button id="main-download-btn" class="btn-primary btn-large">
+                            <i class="fas fa-download"></i> Download Now
+                        </button>
+                    </div>
                 </div>
-                <div class="category-card">
-                    <i class="fas fa-paint-brush"></i>
-                    <h3>Design</h3>
-                    <p>64+ tools</p>
-                </div>
-                <div class="category-card">
-                    <i class="fas fa-lock"></i>
-                    <h3>Security</h3>
-                    <p>42+ utilities</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="all-software-section">
-            <h2><i class="fas fa-box-open"></i> All Software</h2>
-            <div class="software-grid" id="allSoftware">
-                <!-- All software will be loaded here by JavaScript -->
             </div>
         </section>
     </main>
@@ -495,10 +644,10 @@ section h2 i {
             <div class="footer-column">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#" class="nav-link" data-section="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="categories">Categories</a></li>
+                    <li><a href="#" class="nav-link" data-section="top-downloads">Top Downloads</a></li>
+                    <li><a href="#" class="nav-link" data-section="about">About</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -516,127 +665,237 @@ section h2 i {
     </footer>
 
     <script>
+        // Global variable to store software data
+        let softwareData = [];
+
         document.addEventListener('DOMContentLoaded', function() {
-    // Load software data
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            displayFeaturedSoftware(data.software);
-            displayAllSoftware(data.software);
-            setupSearch(data.software);
-        })
-        .catch(error => console.error('Error loading data:', error));
+            // Load software data
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    softwareData = data.software;
+                    displayFeaturedSoftware();
+                    displayAllSoftware();
+                    displayTopDownloads();
+                    setupSearch();
+                    setupNavigation();
+                    checkForDownloadPage();
+                })
+                .catch(error => console.error('Error loading data:', error));
 
-    // Display featured software
-    function displayFeaturedSoftware(softwareList) {
-        const featuredContainer = document.getElementById('featuredSoftware');
-        const featuredSoftware = softwareList.filter(software => software.isFeatured);
-        
-        featuredContainer.innerHTML = featuredSoftware.map(software => `
-            <div class="software-card">
-                <div class="software-image">
-                    <img src="${software.image}" alt="${software.title}">
-                </div>
-                <div class="software-info">
-                    <h3>${software.title}</h3>
-                    <p>${software.description}</p>
-                    <div class="software-meta">
-                        <span>v${software.version}</span>
-                        <span>${software.fileSize}</span>
-                    </div>
-                    <button class="download-btn">Download</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Display all software
-    function displayAllSoftware(softwareList) {
-        const allSoftwareContainer = document.getElementById('allSoftware');
-        
-        allSoftwareContainer.innerHTML = softwareList.map(software => `
-            <div class="software-card">
-                <div class="software-image">
-                    <img src="${software.image}" alt="${software.title}">
-                </div>
-                <div class="software-info">
-                    <h3>${software.title}</h3>
-                    <p>${software.description}</p>
-                    <div class="software-meta">
-                        <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
-                        <span><i class="fas fa-star"></i> ${software.rating}</span>
-                    </div>
-                    <button class="download-btn">Download</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Setup search functionality
-    function setupSearch(softwareList) {
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
-        const allSoftwareContainer = document.getElementById('allSoftware');
-
-        function performSearch() {
-            const searchTerm = searchInput.value.toLowerCase();
-            
-            if (searchTerm.trim() === '') {
-                displayAllSoftware(softwareList);
-                return;
-            }
-
-            const filteredSoftware = softwareList.filter(software => 
-                software.title.toLowerCase().includes(searchTerm) || 
-                software.description.toLowerCase().includes(searchTerm)
-            );
-
-            allSoftwareContainer.innerHTML = filteredSoftware.map(software => `
-                <div class="software-card">
-                    <div class="software-image">
-                        <img src="${software.image}" alt="${software.title}">
-                    </div>
-                    <div class="software-info">
-                        <h3>${software.title}</h3>
-                        <p>${software.description}</p>
-                        <div class="software-meta">
-                            <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
-                            <span><i class="fas fa-star"></i> ${software.rating}</span>
+            // Display featured software
+            function displayFeaturedSoftware() {
+                const featuredContainer = document.getElementById('featuredSoftware');
+                const featuredSoftware = softwareData.filter(software => software.isFeatured);
+                
+                featuredContainer.innerHTML = featuredSoftware.map(software => `
+                    <div class="software-card" data-id="${software.id}">
+                        <div class="software-image">
+                            <img src="${software.image}" alt="${software.title}">
                         </div>
-                        <button class="download-btn">Download</button>
+                        <div class="software-info">
+                            <h3>${software.title}</h3>
+                            <p>${software.description}</p>
+                            <div class="software-meta">
+                                <span>v${software.version}</span>
+                                <span>${software.fileSize}</span>
+                            </div>
+                            <button class="download-btn" data-id="${software.id}">Download</button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
-            if (filteredSoftware.length === 0) {
-                allSoftwareContainer.innerHTML = `
-                    <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                        <i class="fas fa-search" style="font-size: 3rem; color: var(--text-light); margin-bottom: 20px;"></i>
-                        <h3>No results found for "${searchTerm}"</h3>
-                        <p>Try different search terms</p>
+            // Display all software
+            function displayAllSoftware() {
+                const allSoftwareContainer = document.getElementById('allSoftware');
+                
+                allSoftwareContainer.innerHTML = softwareData.map(software => `
+                    <div class="software-card" data-id="${software.id}">
+                        <div class="software-image">
+                            <img src="${software.image}" alt="${software.title}">
+                        </div>
+                        <div class="software-info">
+                            <h3>${software.title}</h3>
+                            <p>${software.description}</p>
+                            <div class="software-meta">
+                                <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
+                                <span><i class="fas fa-star"></i> ${software.rating}</span>
+                            </div>
+                            <button class="download-btn" data-id="${software.id}">Download</button>
+                        </div>
                     </div>
-                `;
+                `).join('');
             }
-        }
 
-        searchButton.addEventListener('click', performSearch);
-        searchInput.addEventListener('keyup', function(event) {
-            if (event.key === 'Enter') {
-                performSearch();
+            // Display top downloads
+            function displayTopDownloads() {
+                const topDownloadsContainer = document.getElementById('topDownloads');
+                // Sort by downloads and take top 6
+                const topDownloads = [...softwareData].sort((a, b) => b.downloads - a.downloads).slice(0, 6);
+                
+                topDownloadsContainer.innerHTML = topDownloads.map(software => `
+                    <div class="software-card" data-id="${software.id}">
+                        <div class="software-image">
+                            <img src="${software.image}" alt="${software.title}">
+                        </div>
+                        <div class="software-info">
+                            <h3>${software.title}</h3>
+                            <p>${software.description}</p>
+                            <div class="software-meta">
+                                <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
+                                <span><i class="fas fa-star"></i> ${software.rating}</span>
+                            </div>
+                            <button class="download-btn" data-id="${software.id}">Download</button>
+                        </div>
+                    </div>
+                `).join('');
             }
+
+            // Setup search functionality
+            function setupSearch() {
+                const searchInput = document.getElementById('searchInput');
+                const searchButton = document.getElementById('searchButton');
+                const allSoftwareContainer = document.getElementById('allSoftware');
+
+                function performSearch() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    
+                    if (searchTerm.trim() === '') {
+                        displayAllSoftware();
+                        return;
+                    }
+
+                    const filteredSoftware = softwareData.filter(software => 
+                        software.title.toLowerCase().includes(searchTerm) || 
+                        software.description.toLowerCase().includes(searchTerm)
+                    );
+
+                    allSoftwareContainer.innerHTML = filteredSoftware.map(software => `
+                        <div class="software-card" data-id="${software.id}">
+                            <div class="software-image">
+                                <img src="${software.image}" alt="${software.title}">
+                            </div>
+                            <div class="software-info">
+                                <h3>${software.title}</h3>
+                                <p>${software.description}</p>
+                                <div class="software-meta">
+                                    <span><i class="fas fa-download"></i> ${software.downloads.toLocaleString()}</span>
+                                    <span><i class="fas fa-star"></i> ${software.rating}</span>
+                                </div>
+                                <button class="download-btn" data-id="${software.id}">Download</button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    if (filteredSoftware.length === 0) {
+                        allSoftwareContainer.innerHTML = `
+                            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                                <i class="fas fa-search" style="font-size: 3rem; color: var(--text-light); margin-bottom: 20px;"></i>
+                                <h3>No results found for "${searchTerm}"</h3>
+                                <p>Try different search terms</p>
+                            </div>
+                        `;
+                    }
+                }
+
+                searchButton.addEventListener('click', performSearch);
+                searchInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // Setup single-page navigation
+            function setupNavigation() {
+                const navLinks = document.querySelectorAll('.nav-link');
+                const pageSections = document.querySelectorAll('.page-section');
+
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const sectionId = this.getAttribute('data-section');
+                        
+                        // Update active nav link
+                        navLinks.forEach(navLink => navLink.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Show selected section
+                        pageSections.forEach(section => section.classList.remove('active'));
+                        document.getElementById(sectionId).classList.add('active');
+                        
+                        // Reset scroll position
+                        window.scrollTo(0, 0);
+                    });
+                });
+            }
+
+            // Check if we need to show download page (from URL hash)
+            function checkForDownloadPage() {
+                const hash = window.location.hash;
+                if (hash.startsWith('#download=')) {
+                    const softwareId = parseInt(hash.split('=')[1]);
+                    showDownloadPage(softwareId);
+                }
+            }
+
+            // Show download page for specific software
+            function showDownloadPage(softwareId) {
+                const software = softwareData.find(item => item.id === softwareId);
+                if (!software) return;
+
+                // Update download page content
+                document.getElementById('download-page-image').src = software.image;
+                document.getElementById('download-page-title').textContent = software.title;
+                document.getElementById('download-page-description').textContent = software.description;
+                document.getElementById('download-page-category').textContent = software.category;
+                document.getElementById('download-page-version').textContent = software.version;
+                document.getElementById('download-page-size').textContent = software.fileSize;
+                document.getElementById('download-page-downloads').textContent = software.downloads.toLocaleString();
+                document.getElementById('download-page-rating').textContent = software.rating;
+                
+                // Set up download button
+                const downloadBtn = document.getElementById('main-download-btn');
+                downloadBtn.onclick = function() {
+                    // In a real app, this would initiate the download
+                    alert(`Starting download of ${software.title} ${software.version}...`);
+                    // Track the download (increment counter)
+                    software.downloads += 1;
+                    // Update the displayed count
+                    document.getElementById('download-page-downloads').textContent = software.downloads.toLocaleString();
+                };
+
+                // Hide all sections and show download page
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById('download-page').classList.add('active');
+                
+                // Update URL without reloading
+                history.pushState(null, '', `#download=${softwareId}`);
+            }
+
+            // Handle download button clicks
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('download-btn')) {
+                    const softwareId = parseInt(event.target.getAttribute('data-id'));
+                    showDownloadPage(softwareId);
+                }
+                
+                // Handle clicks on software cards (not just the button)
+                const softwareCard = event.target.closest('.software-card');
+                if (softwareCard && !event.target.classList.contains('download-btn')) {
+                    const softwareId = parseInt(softwareCard.getAttribute('data-id'));
+                    showDownloadPage(softwareId);
+                }
+            });
+
+            // Handle back/forward navigation
+            window.addEventListener('popstate', function() {
+                checkForDownloadPage();
+            });
         });
-    }
-
-    // Add download button functionality
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('download-btn')) {
-            const softwareCard = event.target.closest('.software-card');
-            const softwareTitle = softwareCard.querySelector('h3').textContent;
-            alert(`Downloading ${softwareTitle}...`);
-            // In a real app, you would redirect to the download link
-        }
-    });
-});
     </script>
 </body>
 </html>
