@@ -1,0 +1,100 @@
+{
+    "software": [
+        {
+            "id": 1,
+            "title": "PhotoMaster Pro",
+            "description": "Professional photo editing software with advanced tools",
+            "category": "Design",
+            "version": "2.5.3",
+            "fileSize": "245 MB",
+            "downloads": 12500,
+            "rating": 4.8,
+            "isFeatured": true,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PhotoMaster"
+        },
+        {
+            "id": 2,
+            "title": "CodeEditor X",
+            "description": "Advanced code editor with syntax highlighting for multiple languages",
+            "category": "Development",
+            "version": "1.2.0",
+            "fileSize": "85 MB",
+            "downloads": 8900,
+            "rating": 4.7,
+            "isFeatured": true,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=CodeEditor"
+        },
+        {
+            "id": 3,
+            "title": "SecureShield",
+            "description": "Comprehensive antivirus and internet security suite",
+            "category": "Security",
+            "version": "2023.1",
+            "fileSize": "320 MB",
+            "downloads": 21500,
+            "rating": 4.9,
+            "isFeatured": true,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=SecureShield"
+        },
+        {
+            "id": 4,
+            "title": "OfficeSuite Pro",
+            "description": "Complete office productivity suite with word, spreadsheet and presentation tools",
+            "category": "Productivity",
+            "version": "15.3.2",
+            "fileSize": "420 MB",
+            "downloads": 18700,
+            "rating": 4.6,
+            "isFeatured": false,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=OfficeSuite"
+        },
+        {
+            "id": 5,
+            "title": "MediaPlayer Ultra",
+            "description": "Play all media formats with advanced playback controls",
+            "category": "Multimedia",
+            "version": "3.1.0",
+            "fileSize": "75 MB",
+            "downloads": 14300,
+            "rating": 4.5,
+            "isFeatured": false,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=MediaPlayer"
+        },
+        {
+            "id": 6,
+            "title": "DiskClean Pro",
+            "description": "Optimize your system by cleaning junk files and registry errors",
+            "category": "Utilities",
+            "version": "8.2.1",
+            "fileSize": "45 MB",
+            "downloads": 9600,
+            "rating": 4.4,
+            "isFeatured": false,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=DiskClean"
+        },
+        {
+            "id": 7,
+            "title": "GameBoost",
+            "description": "Optimize system performance for gaming",
+            "category": "Games",
+            "version": "2.0.5",
+            "fileSize": "60 MB",
+            "downloads": 12700,
+            "rating": 4.3,
+            "isFeatured": false,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=GameBoost"
+        },
+        {
+            "id": 8,
+            "title": "PDF Creator Pro",
+            "description": "Create, edit and convert PDF documents with ease",
+            "category": "Productivity",
+            "version": "5.1.3",
+            "fileSize": "110 MB",
+            "downloads": 10500,
+            "rating": 4.7,
+            "isFeatured": false,
+            "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PDF+Creator"
+        }
+    ]
+}
