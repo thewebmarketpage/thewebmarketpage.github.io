@@ -11,7 +11,7 @@
             "rating": 4.8,
             "isFeatured": true,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PhotoMaster",
-            "downloadUrl": "https://example.com/download/photomaster-pro"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/photomaster-pro"
         },
         {
             "id": 2,
@@ -24,7 +24,7 @@
             "rating": 4.7,
             "isFeatured": true,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=CodeEditor",
-            "downloadUrl": "https://example.com/download/codeeditor-x"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/codeeditor-x"
         },
         {
             "id": 3,
@@ -37,7 +37,7 @@
             "rating": 4.9,
             "isFeatured": true,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=SecureShield",
-            "downloadUrl": "https://example.com/download/secureshield"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/secureshield"
         },
         {
             "id": 4,
@@ -50,7 +50,7 @@
             "rating": 4.6,
             "isFeatured": false,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=OfficeSuite",
-            "downloadUrl": "https://example.com/download/officesuite-pro"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/officesuite-pro"
         },
         {
             "id": 5,
@@ -63,7 +63,7 @@
             "rating": 4.5,
             "isFeatured": false,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=MediaPlayer",
-            "downloadUrl": "https://example.com/download/mediaplayer-ultra"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/mediaplayer-ultra"
         },
         {
             "id": 6,
@@ -76,7 +76,7 @@
             "rating": 4.4,
             "isFeatured": false,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=DiskClean",
-            "downloadUrl": "https://example.com/download/diskclean-pro"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/diskclean-pro"
         },
         {
             "id": 7,
@@ -89,7 +89,7 @@
             "rating": 4.3,
             "isFeatured": false,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=GameBoost",
-            "downloadUrl": "https://example.com/download/gameboost"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/gameboost"
         },
         {
             "id": 8,
@@ -102,7 +102,7 @@
             "rating": 4.7,
             "isFeatured": false,
             "image": "https://via.placeholder.com/300x200/1e3a8a/ffffff?text=PDF+Creator",
-            "downloadUrl": "https://example.com/download/pdf-creator-pro"
+            "downloadUrl": "https://giatnwebmarket.com/download-center/pdf-creator-pro"
         }
     ]
 }
