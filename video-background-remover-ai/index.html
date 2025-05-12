@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free AI Video Background Remover | State-of-the-Art Technology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 20px 0;
+            border-bottom: 3px solid #00f0ff;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .logo span {
+            color: #00f0ff;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #00f0ff;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #000428, #004e92);
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #00f0ff;
+            color: #000;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background-color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #00f0ff;
+            border: 2px solid #00f0ff;
+        }
+        
+        .btn-outline:hover {
+            background-color: #00f0ff;
+            color: #000;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title p {
+            font-size: 18px;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .feature-card i {
+            font-size: 40px;
+            color: #00f0ff;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            color: #666;
+        }
+        
+        .demo-section {
+            background-color: #fff;
+        }
+        
+        .demo-container {
+            background-color: #f9f9f9;
+            padding: 40px;
+            border: 1px solid #ddd;
+        }
+        
+        .gradio-container {
+            margin: 30px 0;
+            min-height: 500px;
+        }
+        
+        .how-it-works {
+            background-color: #000;
+            color: #fff;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background-color: #00f0ff;
+            color: #000;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 50px;
+            border-radius: 0;
+            margin-bottom: 20px;
+        }
+        
+        .step h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .step p {
+            color: #aaa;
+        }
+        
+        .testimonials {
+            background-color: #f9f9f9;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .testimonial {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ddd;
+        }
+        
+        .testimonial-content {
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            font-weight: 700;
+        }
+        
+        .testimonial-role {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        footer {
+            background-color: #000;
+            color: #fff;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #00f0ff;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #00f0ff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        /* Sharp corners for all elements */
+        .btn, .feature-card, .demo-container, .testimonial, .step-number {
+            border-radius: 0 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Free<span>Video</span>AI</div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Try Now</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>FREE AI VIDEO BACKGROUND REMOVER</h1>
+            <p>The most advanced, state-of-the-art technology that transforms your videos in seconds. Completely free forever - our gift to the creative community.</p>
+            <a href="#demo" class="btn">TRY IT NOW</a>
+        </div>
+    </section>
+
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>INSTANT VIDEO BACKGROUND REMOVAL</h2>
+                <p>Powered by cutting-edge AI - no registration required</p>
+            </div>
+            <div class="demo-container">
+                <div class="gradio-container">
+                    <script
+                        type="module"
+                        src="https://gradio.s3-us-west-2.amazonaws.com/5.1.0/gradio.js"
+                    ></script>
+
+                    <gradio-app src="https://amirgame197-remove-video-background.hf.space"></gradio-app>
+                </div>
+                <p class="small">This powerful tool is completely free to use with no limitations. Share with your friends!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>UNMATCHED VIDEO PROCESSING TECHNOLOGY</h2>
+                <p>Powered by cutting-edge AI that outperforms all existing solutions</p>
+            </div>
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Lightning Fast</h3>
+                    <p>Process 4K videos in seconds using our optimized algorithms. Experience real-time performance.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-magic"></i>
+                    <h3>Pixel-Perfect Results</h3>
+                    <p>Advanced edge detection preserves every detail, even with complex subjects like hair or transparent objects.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-lock"></i>
+                    <h3>100% Private</h3>
+                    <p>Your videos are processed securely and never stored on our servers. Complete privacy guaranteed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>HOW OUR REVOLUTIONARY TECHNOLOGY WORKS</h2>
+                <p>The most advanced video processing pipeline ever created</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload</h3>
+                    <p>Drag and drop your video file or select from your device. All major formats supported.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>AI Analysis</h3>
+                    <p>Our neural networks analyze each frame at the pixel level to identify subjects with perfect accuracy.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Background Removal</h3>
+                    <p>Proprietary algorithms separate foreground from background while preserving all fine details.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Download</h3>
+                    <p>Get your processed video with transparent background ready for your creative projects.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>LOVED BY CREATORS WORLDWIDE</h2>
+                <p>Join thousands of users who transformed their video workflow</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        "This free tool has completely replaced my expensive subscription to professional video editing software. The quality is just as good!"
+                    </div>
+                    <div class="testimonial-author">Sarah Johnson</div>
+                    <div class="testimonial-role">Content Creator</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        "I use this for all my YouTube videos now. The fact that it's completely free is unbelievable given the quality of results."
+                    </div>
+                    <div class="testimonial-author">Michael Chen</div>
+                    <div class="testimonial-role">YouTuber</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        "As a student filmmaker, this gives me capabilities I could never afford before. It's like having a Hollywood VFX team for free."
+                    </div>
+                    <div class="testimonial-author">Emma Rodriguez</div>
+                    <div class="testimonial-role">Film Student</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FreeVideoAI</h3>
+                    <p>Democratizing professional video editing tools through advanced AI technology. Completely free forever.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#demo">Video Remover</a></li>
+                        <li><a href="#how-it-works">Technology</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><a href="mailto:contact@freevideo.ai">alexmarkfor@gmail.com</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 FreeVideoAI. All rights reserved. A gift to the creative community.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
